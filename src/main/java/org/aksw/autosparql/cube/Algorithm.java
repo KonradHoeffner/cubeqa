@@ -1,14 +1,22 @@
 package org.aksw.autosparql.cube;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import lombok.extern.java.Log;
+import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+
+@Log
 public class Algorithm
 {
-	public static String answer(String cubeName, String question)
-	{
-		Cube c = Cube.getInstance(cubeName);
-//		new CubeTemplator().buildTemplates(question);
-		// parse question
 
-		System.out.println(c);
+	public String answer(String cubeName, String question)
+	{
+		new CubeTemplator().buildTemplates(Cube.getInstance(cubeName), question);
+
 		return null;
 	}
 }

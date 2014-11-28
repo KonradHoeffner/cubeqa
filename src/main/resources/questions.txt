@@ -1,0 +1,33 @@
+What was the average student grade per semester in year 2010?
+What is the average monthly income of a German citizen?
+How much money was invested to fight bicycle thefts in Leipzig?
+How many citizens live in a <certain area>?
+How much does Germany spend on research a year?
+How many diseases have a rate of >100 deaths per year?
+What was the average inflation in Germany over the last 10 years?
+Which were the top 10 funded research institutions in Europe in 2013?
+How much money spend <X> on <Y>?
+What is the number of deaths and the number of clinical trials per disease per year?
+How much money did the German government spend for infrastructure projects in 2013?
+What's the gross domestic product of the 10 richest and 10 poorest countries?
+How much did building <X> cost?
+How many of the current drugs being sold in developing countries are making profits?
+How many kids are born in Berlin on a single day?
+How much money goes into police over time?
+Which type of products are costing the most to produce in a particular country?
+In Germany, how many hospitals are there?
+How many percent of tax money of a person is spend on that person's utilities (including public means)?
+For what is the money, invested in the police, used for?
+How much money Germany contribute to European projects?
+Where goes my taxes?
+How much money sends each EU country to the EU?
+How much European projects German Universities get per year?
+What is average energy use per income level?
+How much money gets each country from the EU?
+How many foreign researchers are working in Germany by governmental fund?
+Which geographical region has the highest rate of population growth?
+How much earns a politician?
+Top 10 taxpayer companies in Germany?
+What is the total death rate for all diseases for countries with populations greater than 10,000,000?
+Where is the biggest per person income?
+How much money Germany spend to support other countries?

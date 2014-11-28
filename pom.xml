@@ -10,37 +10,56 @@
 	</properties>
 
 	<dependencies>
-<!-- 		<dependency> -->
-<!-- 			<artifactId>algorithm-tbsl</artifactId> -->
-<!-- 			<groupId>org.aksw.autosparql</groupId> -->
-<!-- 			<version>1.0-SNAPSHOT</version> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<artifactId>algorithm-tbsl</artifactId>
+			<groupId>org.aksw.autosparql</groupId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.12.6</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.jena</groupId> -->
-<!-- 			<artifactId>apache-jena-libs</artifactId> -->
-<!-- 			<type>pom</type> -->
-<!-- 			<version>2.12.0</version> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>apache-jena-libs</artifactId>
+			<type>pom</type>
+			<version>2.12.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.aksw</groupId>
 			<artifactId>openspending2rdf</artifactId>
-			<packaging>jar</packaging>
+			<type>jar</type>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.stanford.nlp</groupId>
+			<artifactId>stanford-corenlp</artifactId>
+			<version>3.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.stanford.nlp</groupId>
+			<artifactId>stanford-corenlp</artifactId>
+			<version>3.5.0</version>
+			<classifier>models</classifier>
 		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
+		<dependencies>
+			<!-- to prevent "ClassCastException: java.lang.Long cannot be cast to
+				java.lang.Integer" -->
 			<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>jena-arq</artifactId>
-			<type>pom</type>
-			<version>2.12.0</version>
-		</dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.2.6</version>
+			</dependency>
+			<!-- <dependency> -->
+			<!-- <groupId>org.apache.jena</groupId> -->
+			<!-- <artifactId>jena-arq</artifactId> -->
+			<!-- <version>2.12.0</version> -->
+			<!-- </dependency> -->
+		</dependencies>
 	</dependencyManagement>
 
 	<repositories>
