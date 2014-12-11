@@ -44,7 +44,7 @@ public class Cube
 					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
 
-			ResultSet rs = CubeSparql.selectPrefixed(query);
+			ResultSet rs = CubeSparql.LINKED_SPENDING.select(query);
 
 			while(rs.hasNext())
 			{

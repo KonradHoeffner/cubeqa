@@ -5,11 +5,19 @@ import org.junit.Test;
 
 public class AlgorithmTest
 {
-	final String question = "What is the amount in 2012 in the European Union?";
+	final String[] questions =
+	{
+			"What is the total biodiversity aid from all sectors for countries with populations greater than 10,000,000?",
+//		"What was the average aid to environment per month in year 2010?"
+//		,"How much wood would a wood chuck chuck?"
+	};
 
 	@Test public void testAnswer()
 	{
-		new Algorithm().answer("black-budget", question);
+		for(String question: questions)
+		{
+			new Algorithm().answer("finnland-aid", question);
+		}
 	}
 
 }

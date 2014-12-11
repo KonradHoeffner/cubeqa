@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,19 +26,22 @@ import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
 
-
 public class CubeTemplator
 {
 	//	private final StanfordPartOfSpeechTagger tagger = StanfordPartOfSpeechTagger.INSTANCE;
 	//	private final Preprocessor	pp = new Preprocessor(true);
 
-	Properties props = new Properties();
-	StanfordCoreNLP pipeline;
-
-	public CubeTemplator()
+	static Properties props = new Properties();
+	static StanfordCoreNLP pipeline;
+	static
 	{
 		props.put("annotators", "tokenize, ssplit, pos, parse");
 		pipeline = new StanfordCoreNLP(props);
+	}
+
+	public CubeTemplator()
+	{
+
 	}
 
 	public Map<String,Set<String>> entityLabels(Map<String, String> entityUri)
@@ -61,24 +65,7 @@ public class CubeTemplator
 	@SneakyThrows
 	public void buildTemplates(Cube cube, String question)
 	{
-		//		String tagged = tagger.tag(pp.replacements(question));
-		//		System.out.println("Tagged input: " + tagged);
-		//		tagged = pp.findNEs(tagged,question);
-		//		Map<String,Set<String>> entityLabels = entityLabels(pp.ner.entityUri);
-		//		System.out.println(entityLabels);
-		//		//		tagged = pp.lowercase(tagged,question);
-		//		tagged = pp.ascii(tagged);
-		//		System.out.println("Tagged input: " + tagged);
-		//		String condensed = pp.condense(pp.condenseNominals(tagged));
-		//		System.out.println("condensed: " + condensed);
-
-		// read some text in the text variable
-		String text = question;// Add your text here!
-
-		// create an empty Annotation just with the given text
-		Annotation document = new Annotation(text);
-
-		// run all Annotators on this text
+		Annotation document = new Annotation(question);
 		pipeline.annotate(document);
 
 		// these are all the sentences in this document
@@ -99,8 +86,11 @@ public class CubeTemplator
 
 			// this is the parse tree of the current sentence
 			Tree tree = sentence.get(TreeAnnotation.class);
-//			System.out.println(tree);
-			findComponents(tree);
+			System.out.println(tree);
+			findReferences(tree);
+
+
+			//			findComponents(tree);
 
 			// this is the Stanford dependency graph of the current sentence
 			//		      SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
@@ -108,16 +98,75 @@ public class CubeTemplator
 
 	}
 
+	enum AnswerType {ANY,QUANTITY_COUNTABLE,QUANTITY_UNCOUNTABLE,LOCATION,COMPARISON}
+
+	private void findQuestionWord(Tree tree)
+	{
+//		Set<Tree> wp = preTerminals.stream().filter(l->l.label().value().equals("WP")).collect(Collectors.toSet());
+//		preTerminals.removeAll(wp);
+//		Set<String> questionWords = wp.stream().map(t->t.getChild(0).value()).collect(Collectors.toSet());
+	}
+
+	private void findReferences(Tree tree)
+	{
+
+//		List<Tree> preTerminals = tree.subTrees().stream().filter(Tree::isPreTerminal).collect(Collectors.toList());
+		Set<Tree> subTrees = tree.subTrees();
+		Set<Tree> rest = new HashSet<>(subTrees);
+		Set<Tree> pps = rest.stream().filter(l->l.label().value().equals("PP")).collect(Collectors.toSet());
+		rest.removeAll(pps);
+
+		for(Tree pp : pps)
+		{
+			System.out.println(pp);
+			Set<String> in = pp.getChildrenAsList().stream().filter(c->c.isPreTerminal()&&c.value().equals("IN")).map(c->c.getChild(0).value()).collect(Collectors.toSet());
+			System.out.println(in);
+
+//			Tree next = pp.parent().getNodeNumber(pp.nodeNumber(pp.parent())+1);
+//			System.out.println(next);
+		}
+
+
+
+	}
+
+	private static boolean isTag(Tree tree, String tag) {return tree.label().value().equals(tag);}
+	//
+	//	/** transforms e.g. (PP .. (PP ..)) into (PP ..) (PP ..) */
+	//	private static void flattenTree(Tree tree, String tag)
+	//	{
+	//		if(isTag(tree,tag)) throw new IllegalArgumentException("tree may not be a "+tag+" itself: "+tree);
+	//		for(Tree child: tree.children()) {flattenTree(child,tag,tree,Optional.empty());}
+	//	}
+	//
+	//	private static void flattenTree(Tree tree, String tag, Tree lastNonTag,Optional<Tree> firstTagged)
+	//	{
+	//		if(isTag(tree,tag))
+	//		{
+	//			if(firstTagged.isPresent())
+	//			{
+	//				//
+	//			} else
+	//			{
+	//				firstTagged = tree;
+	//			}
+	//		} else
+	//		{
+	//			lastNonTag=tree;
+	//		}
+	//		for(Tree child: tree.children()) {flattenTree(child,tag,tree,firstTagged);}
+	//	}
+
 	private Set<String> findComponents(Tree tree)
 	{
 		// recursively add all
-				Set<String> components = tree.getChildrenAsList().stream().map(this::findComponents).flatMap(Collection::stream).collect(Collectors.toSet());
-//		System.out.println(tree);
+		Set<String> components = tree.getChildrenAsList().stream().map(this::findComponents).flatMap(Collection::stream).collect(Collectors.toSet());
+		//		System.out.println(tree);
 		//		System.out.println("tree "+tree);
 		//		System.out.println("penn "+tree.pennString());
-//				if(!tree.isLeaf()) System.out.println("label "+tree.label());
-				if((!tree.isLeaf())&&tree.label().value().equals("PP")) System.out.println(tree);
-//				System.out.println(tree.getLeaves());
+		//				if(!tree.isLeaf()) System.out.println("label "+tree.label());
+		if((!tree.isLeaf())&&isTag(tree,"PP")) System.out.println(tree);
+		//				System.out.println(tree.getLeaves());
 		//		tree.taggedYield().forEach(t->System.out.print(t.tag()));
 		//		System.out.println();
 

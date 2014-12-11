@@ -1,32 +1,60 @@
 package org.aksw.autosparql.cube;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.aksw.linkedspending.tools.DataModel;
+import com.clarkparsia.sparqlowl.parser.antlr.SparqlOwlParser.defaultGraphClause_return;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 
 public class CubeSparql
 {
-	static public final String prefixInstance="http://linkedspending.aksw.org/instance/";
-	static public final String prefixOntology="http://linkedspending.aksw.org/ontology/";
-	static public final String SUPER_GRAPH = "http://linkedspending.aksw.org/";
-	private static final String	ENDPOINT	= "http://linkedspending.aksw.org/sparql";
+	static public final CubeSparql LINKED_SPENDING = new CubeSparql(
+			"http://linkedspending.aksw.org/instance/",
+			"http://linkedspending.aksw.org/ontology/",
+			"http://linkedspending.aksw.org/",
+			"http://linkedspending.aksw.org/sparql"
+//			"http://localhost:8890/sparql"
+			);
 
-	public static final String PREFIXES = "prefix dcterms: <"+DCTerms.getURI()
-			+">\n prefix : <"+prefixInstance
-//			+">\n prefix lso: <"+prefixOntology
-			+">\n prefix qb: <"+DataModel.DataCube.base+">\n";
+	public final String prefixInstance;
+	public final String prefixOntology;
+	public final String superGraph;
+	private final String	endpoint;
+	private final String prefixes;
+	private Set<String> defaultGraphs = new HashSet<>();
 
-	static String cubeUrl(String datasetName) {return prefixInstance+datasetName;}
-
-	public static ResultSet selectPrefixed(String query)
+	static public CubeSparql linkedSpending(String cubeName)
 	{
-		return select(PREFIXES+query);
+		CubeSparql cs = new CubeSparql("http://linkedspending.aksw.org/instance/",
+				"http://linkedspending.aksw.org/ontology/",
+				"http://linkedspending.aksw.org/",
+				"http://linkedspending.aksw.org/sparql");
+		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology/");
+		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeName);
+		return cs;
 	}
 
-	public static ResultSet select(String query)
+	public CubeSparql(String prefixInstance, String prefixOntology, String superGraph, String endpoint)
 	{
-		QueryEngineHTTP qe = new QueryEngineHTTP(ENDPOINT, query);
+		super();
+		this.prefixInstance = prefixInstance;
+		this.prefixOntology = prefixOntology;
+		this.superGraph = superGraph;
+		this.endpoint = endpoint;
+		 prefixes = "prefix dcterms: <"+DCTerms.getURI()
+					+">\n prefix : <"+prefixInstance
+//					+">\n prefix lso: <"+prefixOntology
+					+">\n prefix qb: <"+DataModel.DataCube.base+">\n";
+	}
+
+	String cubeUrl(String datasetName) {return prefixInstance+datasetName;}
+
+	public ResultSet select(String query)
+	{
+		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
+		defaultGraphs.forEach(qe::addDefaultGraph);
 		return qe.execSelect();
 	}
 
