@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import com.hp.hpl.jena.query.ResultSet;
@@ -19,7 +20,7 @@ public class ComponentProperty
 {
 	//	enum Domain {TIME,DATE,YEAR,AGE,CURRENCY,OTHER};
 
-	final Resource range;
+	public final Optional<Resource> range;
 
 	public final String cubeUri;
 	public final String uri;
@@ -38,10 +39,10 @@ public class ComponentProperty
 	//		catch(IllegalArgumentException e) {return Domain.OTHER;}
 	//	}
 
-	Resource guessRange()
+	Optional<Resource> guessRange()
 	{
 		// todo implement
-		return null;
+		return Optional.empty();
 	}
 
 	public ComponentProperty(String cubeUri, String uri, String type)
@@ -61,7 +62,7 @@ public class ComponentProperty
 			ResultSet rs = sparql.select(rangeQuery);
 			if(rs.hasNext())
 			{
-				range = rs.nextSolution().get("range").asResource();
+				range = Optional.of(rs.nextSolution().get("range").asResource());
 			}
 			else {range = guessRange();}
 		}

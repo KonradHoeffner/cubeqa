@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
+import org.aksw.autosparql.cube.template.CubeTemplator;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 

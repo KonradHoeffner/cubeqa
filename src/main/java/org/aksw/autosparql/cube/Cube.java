@@ -5,17 +5,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
 /** Represents an RDF Data Cube with its component properties */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @ToString
 public class Cube
 {
 	public final String name;
+	public final String uri;
 	//	public final Set<String> labels = new TreeSet<String>();
 	public final Map<String,ComponentProperty> properties;
 
@@ -38,10 +40,10 @@ public class Cube
 					"from <http://linkedspending.aksw.org/"+cubeName+"> "+
 					"from <http://linkedspending.aksw.org/ontology/> "+
 					"{"+
-					" ls:black-budget qb:structure ?dsd. ?dsd qb:component ?comp."+
+					" ls:"+cubeName+" qb:structure ?dsd. ?dsd qb:component ?comp."+
 					" {?comp qb:dimension ?p.} UNION {?comp qb:attribute ?p.} UNION {?comp qb:measure ?p.} "+
 					" ?p a ?type. FILTER (?type != <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>)"+
-					" OPTIONAL {?p rdfs:label ?label}"+
+//					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
 
 			ResultSet rs = CubeSparql.LINKED_SPENDING.select(query);
@@ -54,9 +56,10 @@ public class Cube
 				String propertyUri = qs.get("p").asResource().getURI();
 				ComponentProperty property = ComponentProperty.getInstance(cubeName, propertyUri, qs.get("type").asResource().getURI());
 				properties.put(propertyUri, property);
-				if(qs.contains("label")) {property.labels.add(qs.get("label").asLiteral().getLexicalForm());}
+//				if(qs.contains("label")) {property.labels.add(qs.get("label").asLiteral().getLexicalForm());}
 			}
-			c = new Cube(cubeName, properties);
+			String uri = "http://linkedspending.aksw.org/instance/"+cubeName;
+			c = new Cube(cubeName,uri, properties);
 		}
 		return c;
 	}

@@ -1,4 +1,4 @@
-package org.aksw.autosparql.cube;
+package org.aksw.autosparql.cube.template;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
+import org.aksw.autosparql.cube.Cube;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;

@@ -1,3 +1,4 @@
+package org.aksw.autosparql.cube.template;
 //package org.aksw.autosparql.cube;
 //
 //import java.io.InputStream;

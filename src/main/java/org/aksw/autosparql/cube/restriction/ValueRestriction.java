@@ -2,15 +2,37 @@ package org.aksw.autosparql.cube.restriction;
 
 import java.util.Collections;
 import java.util.Set;
+import org.aksw.autosparql.cube.ComponentProperty;
+import com.hp.hpl.jena.vocabulary.XSD;
 
-/** restriction on a value from a given interval **/
+/** restriction on a literal value **/
 public class ValueRestriction extends Restriction
 {
-	String value;
+	final String value;
 
 	public Set<String> wherePatterns()
 	{
-		return Collections.singleton("?obs <"+property+"> \""+value+"\"");
+		// TODO: add datatypes from range or somewhere else
+		String pattern;
+		pattern = OBS_VAR+" <"+property+"> "+uniqueVar+". filter(str("+uniqueVar+")=\""+value+"\")";
+		if(property.range.isPresent())
+		{
+			String uri = property.range.get().getURI();
+			if(uri.startsWith(XSD.getURI()))
+			{
+				pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+uri+">. )";
+			};
+		}
+
+		return Collections.singleton(pattern);
+//		String literal = "\""+value+"\"";
+//		return Collections.singleton("?obs <"+property+"> \""+literal+"\"");
+	}
+
+	public ValueRestriction(ComponentProperty property, String value)
+	{
+		super(property);
+		this.value = value;
 	}
 
 }
