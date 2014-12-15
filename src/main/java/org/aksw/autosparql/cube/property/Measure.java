@@ -1,3 +1,4 @@
+package org.aksw.autosparql.cube.property;
 //package org.aksw.autosparql.cube;
 //
 //import lombok.Data;

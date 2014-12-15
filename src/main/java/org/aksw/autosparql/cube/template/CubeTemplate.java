@@ -5,9 +5,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.aksw.autosparql.cube.Aggregate;
-import org.aksw.autosparql.cube.ComponentProperty;
 import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.CubeSparql;
+import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.restriction.Restriction;
 import com.hp.hpl.jena.query.ResultSet;
 

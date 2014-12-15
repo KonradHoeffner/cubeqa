@@ -6,6 +6,8 @@ import java.util.Set;
 /** restriction on a value from a given interval **/
 public class IntervalRestriction
 {
+// TODO chose an existing interval class and intersect multiple intervals for the same property. Low priority though as I expect almost no
+//	sentences to specify multiple restrictions on the same property.
 	double leftEndpoint;
 	double rightEndpoint;
 	boolean open;

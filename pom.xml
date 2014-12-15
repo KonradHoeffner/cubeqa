@@ -11,6 +11,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+		<dependency>
 			<artifactId>algorithm-tbsl</artifactId>
 			<groupId>org.aksw.autosparql</groupId>
 			<version>1.0-SNAPSHOT</version>

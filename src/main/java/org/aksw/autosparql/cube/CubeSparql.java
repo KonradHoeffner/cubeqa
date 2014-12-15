@@ -46,7 +46,7 @@ public class CubeSparql
 		 prefixes = "prefix dcterms: <"+DCTerms.getURI()
 					+">\n prefix : <"+prefixInstance
 //					+">\n prefix lso: <"+prefixOntology
-					+">\n prefix qb: <"+DataModel.DataCube.base+">\n";
+					+">\n prefix qb: <"+DataModel.DataCube.BASE+">\n";
 	}
 
 	String cubeUrl(String datasetName) {return prefixInstance+datasetName;}
