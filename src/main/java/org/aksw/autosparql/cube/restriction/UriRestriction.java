@@ -2,7 +2,7 @@ package org.aksw.autosparql.cube.restriction;
 
 import java.util.Collections;
 import java.util.Set;
-import org.aksw.autosparql.cube.ComponentProperty;
+import org.aksw.autosparql.cube.property.ComponentProperty;
 
 /** restriction on a value from a given interval **/
 public class UriRestriction extends Restriction

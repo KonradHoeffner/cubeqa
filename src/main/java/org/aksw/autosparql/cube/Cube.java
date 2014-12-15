@@ -1,15 +1,19 @@
 package org.aksw.autosparql.cube;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.aksw.autosparql.cube.property.ComponentProperty;
+import org.aksw.linkedspending.tools.DataModel;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /** Represents an RDF Data Cube with its component properties */
 @RequiredArgsConstructor
@@ -42,24 +46,23 @@ public class Cube
 					"{"+
 					" ls:"+cubeName+" qb:structure ?dsd. ?dsd qb:component ?comp."+
 					" {?comp qb:dimension ?p.} UNION {?comp qb:attribute ?p.} UNION {?comp qb:measure ?p.} "+
-					" ?p a ?type. FILTER (?type != <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>)"+
+					" ?p a ?type. FILTER (?type != <"+RDF.Property.getURI()+"> && ?type != <"+DataModel.DataCube.ComponentProperty.getURI()+">)"+
 //					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
 
 			ResultSet rs = CubeSparql.LINKED_SPENDING.select(query);
-
+			String uri = "http://linkedspending.aksw.org/instance/"+cubeName;
+			c = new Cube(cubeName,uri, properties);
 			while(rs.hasNext())
 			{
 				QuerySolution qs = rs.nextSolution();
 
 				// because of ComponentProperty's multiton pattern, having the same property multiple times is not a problem and in fact necessary for multiple labels
 				String propertyUri = qs.get("p").asResource().getURI();
-				ComponentProperty property = ComponentProperty.getInstance(cubeName, propertyUri, qs.get("type").asResource().getURI());
+				ComponentProperty property = ComponentProperty.getInstance(c, propertyUri, qs.get("type").asResource().getURI());
 				properties.put(propertyUri, property);
 //				if(qs.contains("label")) {property.labels.add(qs.get("label").asLiteral().getLexicalForm());}
 			}
-			String uri = "http://linkedspending.aksw.org/instance/"+cubeName;
-			c = new Cube(cubeName,uri, properties);
 		}
 		return c;
 	}
