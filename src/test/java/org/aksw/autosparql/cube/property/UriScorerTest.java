@@ -3,6 +3,7 @@ package org.aksw.autosparql.cube.property;
 import static org.junit.Assert.*;
 import java.util.Arrays;
 import org.aksw.autosparql.cube.Cube;
+import org.aksw.autosparql.cube.property.scorer.UriScorer;
 import org.junit.Test;
 
 public class UriScorerTest
