@@ -12,9 +12,9 @@ public class NumericalProperty extends ComponentProperty
 {
 	Multiset<Double> values = HashMultiset.create();
 
-	public NumericalProperty(Cube cube, String uri, PropertyType type)
+	public NumericalProperty(Cube cube, String uri)
 	{
-		super(cube, uri, type);
+		super(cube, uri);
 	}
 
 	void loadValues()
@@ -36,26 +36,5 @@ public class NumericalProperty extends ComponentProperty
 //			IteratorStream.stream(rs).forEach(qs->values.add(qs.get("value").asLiteral().getDouble(), qs.get("cnt").asLiteral().getInt()));
 //		}
 	}
-
-	double valueScore(double value)
-	{
-		if(values.contains(value)) {return 1;}
-		double maxSimilarity = 0;
-		for(double v: values) {maxSimilarity = Math.max(maxSimilarity, similarity(v,value));}
-		return maxSimilarity;
-	}
-
-	private double similarity(double v, double value)
-	{
-		// TODO steeper falloff
-		// TODO incorporate number of occurrences
-		double eps = 0.01;
-		if(Math.abs(v-value)<eps) return 1;
-		if(v==0&&value==0) return 1;
-		if(v==0^value==0) return 0;
-		return Math.min(Math.abs(v/value),Math.abs(value/v));
-	}
-
-
 
 }

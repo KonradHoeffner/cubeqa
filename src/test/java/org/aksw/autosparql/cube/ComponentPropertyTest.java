@@ -17,7 +17,7 @@ public class ComponentPropertyTest
 
 	@Test public void testGetInstance()
 	{
-		ComponentProperty amount = ComponentProperty.getInstance(Cube.getInstance("black-budget"), "http://linkedspending.aksw.org/amount", null);
+		ComponentProperty amount = ComponentProperty.getInstance(Cube.getInstance("black-budget"), "http://linkedspending.aksw.org/amount");
 		System.out.println(amount.range);
 		System.out.println(amount.labels);
 

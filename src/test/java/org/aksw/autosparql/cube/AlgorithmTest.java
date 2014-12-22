@@ -16,7 +16,7 @@ public class AlgorithmTest
 	{
 		for(String question: questions)
 		{
-			new Algorithm().answer("finnland-aid", question);
+			new Algorithm("finnland-aid").answer(question);
 		}
 	}
 

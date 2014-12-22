@@ -15,9 +15,9 @@ public class ValueRestriction extends Restriction
 		// TODO: add datatypes from range or somewhere else
 		String pattern;
 		pattern = OBS_VAR+" <"+property+"> "+uniqueVar+". filter(str("+uniqueVar+")=\""+value+"\")";
-		if(property.range.isPresent())
+		if(property.range!=null)
 		{
-			String uri = property.range.get().getURI();
+			String uri = property.range;
 			if(uri.startsWith(XSD.getURI()))
 			{
 				pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+uri+">. )";

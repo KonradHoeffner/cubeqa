@@ -1,17 +1,14 @@
 package org.aksw.autosparql.cube.template;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
+import org.aksw.autosparql.commons.nlp.ner.DBpediaSpotlightNER;
+import org.aksw.autosparql.cube.Aggregate;
+import org.aksw.autosparql.cube.AggregateMapping;
 import org.aksw.autosparql.cube.Cube;
+import org.aksw.autosparql.cube.property.ComponentProperty;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
@@ -39,10 +36,15 @@ public class CubeTemplator
 		props.put("annotators", "tokenize, ssplit, pos, parse");
 		pipeline = new StanfordCoreNLP(props);
 	}
+	static private DBpediaSpotlightNER ner = new DBpediaSpotlightNER();
 
-	public CubeTemplator()
+	private final String question;
+	private final Cube cube;
+
+	public CubeTemplator(Cube cube, String question)
 	{
-
+		this.cube = cube;
+		this.question = question;
 	}
 
 	public Map<String,Set<String>> entityLabels(Map<String, String> entityUri)
@@ -64,22 +66,15 @@ public class CubeTemplator
 	}
 
 	@SneakyThrows
-	public void buildTemplates(Cube cube, String question)
+	public void buildTemplates()
 	{
 		Annotation document = new Annotation(question);
 		pipeline.annotate(document);
 
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 
-		for(CoreMap sentence: sentences) {
-			// traversing the words in the current sentence
-			// a CoreLabel is a CoreMap with additional token-specific methods
-//			for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
-//				String text = token.get(TextAnnotation.class);
-//				String pos = token.get(PartOfSpeechAnnotation.class);
-//				String ner = token.get(NamedEntityTagAnnotation.class);
-//			}
-
+		for(CoreMap sentence: sentences)
+		{
 			// this is the parse tree of the current sentence
 			Tree tree = sentence.get(TreeAnnotation.class);
 			System.out.println(tree);
@@ -97,28 +92,55 @@ public class CubeTemplator
 
 	private void findQuestionWord(Tree tree)
 	{
-//		Set<Tree> wp = preTerminals.stream().filter(l->l.label().value().equals("WP")).collect(Collectors.toSet());
-//		preTerminals.removeAll(wp);
-//		Set<String> questionWords = wp.stream().map(t->t.getChild(0).value()).collect(Collectors.toSet());
+		//		Set<Tree> wp = preTerminals.stream().filter(l->l.label().value().equals("WP")).collect(Collectors.toSet());
+		//		preTerminals.removeAll(wp);
+		//		Set<String> questionWords = wp.stream().map(t->t.getChild(0).value()).collect(Collectors.toSet());
 	}
+
+	private String phrase(Tree tree) {return tree.getLeaves().toString().replace(", ", " ").replaceAll("[\\[\\]]", "");}
 
 	private void findReferences(Tree tree)
 	{
-
-//		List<Tree> preTerminals = tree.subTrees().stream().filter(Tree::isPreTerminal).collect(Collectors.toList());
+		Set<Aggregate> aggregates = AggregateMapping.INSTANCE.find(question);
+		if(!aggregates.isEmpty()) {System.out.println("AGGREGATES FOUND! "+aggregates);}
+		//		List<Tree> preTerminals = tree.subTrees().stream().filter(Tree::isPreTerminal).collect(Collectors.toList());
 		Set<Tree> subTrees = tree.subTrees();
 		Set<Tree> rest = new HashSet<>(subTrees);
 		Set<Tree> pps = rest.stream().filter(l->l.label().value().equals("PP")).collect(Collectors.toSet());
 		rest.removeAll(pps);
 
+		List<String> ners = ner.getNamedEntitites(phrase(tree));
+		ners.removeAll(AggregateMapping.INSTANCE.aggregateMap.keySet());
+		System.out.println("NERS: "+ners);
+
 		for(Tree pp : pps)
 		{
-			System.out.println(pp);
-			Set<String> in = pp.getChildrenAsList().stream().filter(c->c.isPreTerminal()&&c.value().equals("IN")).map(c->c.getChild(0).value()).collect(Collectors.toSet());
-			System.out.println(in);
+			Set<String> prepositions = new HashSet<>(Arrays.asList("IN","TO","INTO","OF","ON","OVER","FOR","TO","FROM"));
 
-//			Tree next = pp.parent().getNodeNumber(pp.nodeNumber(pp.parent())+1);
-//			System.out.println(next);
+			System.out.println(pp);
+			Set<String> prepos = pp.getChildrenAsList().stream().filter(c->c.isPreTerminal()&&prepositions.contains(c.value())).map(c->c.getChild(0).value()).collect(Collectors.toSet());
+			System.out.println("preposition: "+prepos);
+			Set<Tree> nps = pp.getChildrenAsList().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
+			for(Tree np : nps)
+			{
+				// can we match complete phrase?
+								String phrase = phrase(np);
+								System.out.println(phrase);
+				if(ners.contains(phrase)) {continue;} // already found but TODO use phrase for additional identification
+
+
+				ComponentProperty maxProperty = cube.properties.values().stream().max(Comparator.comparing(p->p.scorer.score(phrase))).get();
+
+
+				//				List<String> ners = ner.getNamedEntitites(phrase(np));
+
+				// can we match the whole thing?
+			}
+			//			System.out.println(nps);
+
+
+			//			Tree next = pp.parent().getNodeNumber(pp.nodeNumber(pp.parent())+1);
+			//			System.out.println(next);
 		}
 
 

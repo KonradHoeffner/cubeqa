@@ -13,10 +13,17 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 @Log
 public class Algorithm
 {
+	private final Cube cube;
 
-	public String answer(String cubeName, String question)
+	public Algorithm(String cubeName)
 	{
-		new CubeTemplator().buildTemplates(Cube.getInstance(cubeName), question);
+		this.cube = Cube.getInstance(cubeName);
+	}
+
+	public String answer(String question)
+	{
+		log.info("Answering "+question+"on cube "+cube+"...");
+		new CubeTemplator(cube, question).buildTemplates();
 
 		return null;
 	}

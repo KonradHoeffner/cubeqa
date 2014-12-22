@@ -1,12 +1,8 @@
 package org.aksw.autosparql.cube;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
@@ -14,8 +10,7 @@ import de.konradhoeffner.commons.TSVReader;
 
 public class AggregateMapping
 {
-
-	private final Map<String,Aggregate> aggregateMap;
+	public final Map<String,Aggregate> aggregateMap;
 
 	public static final AggregateMapping INSTANCE = new AggregateMapping();
 
@@ -34,7 +29,7 @@ public class AggregateMapping
 		this.aggregateMap = Collections.unmodifiableMap(aggregateMap);
 	}
 
-	static Set<Aggregate> find(String question)
+	static public Set<Aggregate> find(String question)
 	{
 		return INSTANCE.aggregateMap.keySet().stream()
 				.filter(question::contains).map(INSTANCE.aggregateMap::get).collect(Collectors.toSet());

@@ -1,5 +1,6 @@
 package org.aksw.autosparql.cube;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import org.aksw.linkedspending.tools.DataModel;
@@ -8,8 +9,10 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 
-public class CubeSparql
+public class CubeSparql implements Serializable
 {
+	private static final long	serialVersionUID	= 1L;
+
 	static public final CubeSparql LINKED_SPENDING = new CubeSparql(
 			"http://linkedspending.aksw.org/instance/",
 			"http://linkedspending.aksw.org/ontology/",

@@ -1,41 +1,46 @@
 package org.aksw.autosparql.cube.property.scorer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import com.google.common.primitives.Floats;
 import de.konradhoeffner.commons.IteratorStream;
 
+/** Scores numbers both based on proximity to nearest property value and on count. */
 public class NumericScorer extends Scorer
 {
 	final Multiset<Float> values = HashMultiset.create();
+	final int maxCount;
+	final float[] sorted;
 
-	public NumericScorer(Cube cube, ComponentProperty property)
+	public NumericScorer(ComponentProperty property)
 	{
-		super(cube,property);
+		super(property);
 		IteratorStream.stream(queryValues()).forEach(qs->values.add(qs.get("value").asLiteral().getFloat(), qs.get("cnt").asLiteral().getInt()));
+		maxCount = values.elementSet().stream().map(s->values.count(s)).max(Integer::compare).get();
+		sorted = Floats.toArray(values.elementSet());
+		Arrays.sort(sorted);
+	}
+
+	private float similarity(float v, float value)
+	{
+		// TODO steeper falloff
+		// TODO incorporate number of occurrences
+		double eps = 0.01;
+		if(Math.abs(v-value)<eps) return 1;
+		if(v==0&&value==0) return 1;
+		if(v==0^value==0) return 0;
+		return (float)Math.pow(Math.min(Math.abs(v/value),Math.abs(value/v)),4);
 	}
 
 	public double score(String value)
 	{
-return 0;
-	}
-
-	static protected float closestValue(float[] sorted, float key)
-	{
-		if(sorted.length==1) {return sorted[0];}	// trivial case
-		if(key<sorted[0]) {return sorted[0];}		// lower boundary
-		if(key>sorted[sorted.length-1]) {return sorted[sorted.length-1];} // upper boundary
-		int pos = Arrays.binarySearch(sorted, key);
-		if(pos>=0) {return sorted[pos];} // we found an exact match
-		// we didn't find an exact match, now we have two candidates: insertion point and insertion point-1 (we excluded the trivial case before)
-		// pos = -ip-1 | +ip -pos => ip = -pos-1
-		int ip = -pos-1;
-		float closest;
-		if(sorted[ip]-key<key-sorted[ip-1])	{closest=sorted[ip];} // < can be <= if smaller value is preferred
-		else							{closest=sorted[ip-1];}
-		return closest;
+		float f = Float.valueOf(value);
+//		System.out.println("value: "+value);
+		float closest = closestValue(sorted, f);
+//		System.out.println("sim: "+similarity(f,closest));
+//		System.out.println("count: "+countScore(values.count(closest),maxCount));
+		return similarity(f,closest)*countScore(values.count(closest), maxCount);
 	}
 }

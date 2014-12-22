@@ -1,22 +1,32 @@
 package org.aksw.autosparql.cube.property.scorer;
 
-import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.ComponentProperty;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import de.konradhoeffner.commons.IteratorStream;
+import org.aksw.autosparql.tbsl.algorithm.util.Similarity;
 
-public abstract class StringScorer extends Scorer
+public class StringScorer extends DatatypePropertyScorer
 {
-	final Multiset<String> values = HashMultiset.create();
-	final int maxCount;
+	private static final double	THRESHOLD	= 0.8;
 
-	public StringScorer(Cube cube, ComponentProperty property)
+	public StringScorer(ComponentProperty property)
 	{
-		super(cube,property);
-
-		IteratorStream.stream(queryValues()).forEach(qs->values.add(qs.get("value").asResource().getURI(), qs.get("cnt").asLiteral().getInt()));
-		maxCount = values.elementSet().stream().map(s->values.count(s)).max(Integer::compare).get();
+		super(property);
 	}
 
+	public double score(String value)
+	{
+		// TODO: fuzzy matching, wordnet,solr
+		double cs = countScore(values.count(value),maxCount);
+		if(cs!=0) {return cs;}
+		double score = 0;
+
+		for(String s: values.elementSet())
+		{
+			double sim = Similarity.getSimilarity(value, s);
+			if(sim<THRESHOLD) continue;
+			score = Math.max(score, sim*countScore(values.count(s),maxCount));
+		}
+		return score;
+//		values.elementSet().stream().map(s->Similarity.getSimilarity(value, s)).filter(sim->sim>THRESHOLD)
+//		.map(sim->sim*countScore(values.count(s),maxCount));
+	}
 }

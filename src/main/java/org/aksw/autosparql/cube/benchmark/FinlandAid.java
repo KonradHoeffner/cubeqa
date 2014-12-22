@@ -5,7 +5,8 @@ import java.util.List;
 
 public class FinlandAid
 {
-	List<String> questions = Arrays.asList(new String[] {
+	public static final String CUBE_NAME = "finland-aid";
+	public static final List<String> questions = Arrays.asList(new String[] {
 			"What was the average aid to environment per month in year 2010?",
 			"What is the average yearly aid over the Finnfund channel?",
 			"How much money was invested to strengthen civil society in Yemen?",
