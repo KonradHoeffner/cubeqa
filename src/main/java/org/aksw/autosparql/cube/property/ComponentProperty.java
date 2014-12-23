@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.NonNull;
+import lombok.extern.java.Log;
 import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.scorer.*;
 import org.aksw.autosparql.cube.CubeSparql;
@@ -28,6 +30,7 @@ import de.konradhoeffner.commons.Pair;
 /** Represents a component property of a RDF Data Cube.
  * Implements the Multiton Pattern, with the key being the combination of cube name and uri, because information about values is safed.
  * Immutable except for the labels.*/
+@Log
 public class ComponentProperty implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
@@ -41,7 +44,7 @@ public class ComponentProperty implements Serializable
 	public final Set<String> labels;
 	//	public final PropertyType type;
 
-	public final Scorer scorer;
+	@NonNull public final Scorer scorer;
 
 	static private final Map<Pair<String>,ComponentProperty> instances = new HashMap<>();
 
@@ -70,7 +73,7 @@ public class ComponentProperty implements Serializable
 			labels.addAll(stream(cube.sparql.select("select distinct(?l) {<"+uri+"> rdfs:label ?l}"))
 					.map(qs->qs.get("l").asLiteral().getLexicalForm()).collect(Collectors.toSet()));
 		}
-		Scorer scorer = null;
+
 		Set<String> types = new HashSet<>();
 		{
 			String typeQuery = "select distinct(?t) {<"+uri+"> a ?t."
@@ -85,7 +88,7 @@ public class ComponentProperty implements Serializable
 				range = rs.nextSolution().get("range").asResource().getURI();
 			}
 			else {range = guessRange();}
-			scorer = scorer(types);
+			this.scorer = scorer(types);
 		}
 
 		this.labels=Collections.unmodifiableSet(labels);
@@ -94,7 +97,6 @@ public class ComponentProperty implements Serializable
 		//		CubeSparql.LINKED_SPENDING.select(query);
 		//		this.domain=propertyDomain(propertyUri);
 		//		this.type=type;
-		this.scorer=scorer;
 	}
 
 	private Scorer scorer(Set<String> types)
@@ -115,16 +117,23 @@ public class ComponentProperty implements Serializable
 			{
 				Set<String> xsdNumeric = Arrays.asList(XSD.decimal,XSD.xbyte,XSD.xshort,XSD.xint,XSD.xlong,XSD.xfloat,XSD.xdouble)
 						.stream().map(Resource::getURI).collect(Collectors.toSet());
-				if(range.endsWith("Integer")||xsdNumeric.contains(uri)) {return new NumericScorer(this);}
+				//				Set<String> xsdTemporal = Arrays.asList(XSD.date,XSD.dateTime,XSD.gDay,XSD.gMonth,XSD.gMonthDay,XSD.gYear,XSD.gYearMonth)
+				//						.stream().map(Resource::getURI).collect(Collectors.toSet());
+				// TODO: ensure right parsing of all xsd temporal types
+				if(range.endsWith("Integer")||xsdNumeric.contains(range)) {return new NumericScorer(this);}
 				if(range.equals(XSD.xstring.getURI())) {return new StringScorer(this);}
 				//					if(r.equals(XSD.xboolean.getURI())) {return new BooleanScorer(this);} // TODO investigate do we need a boolean scorer?
+				if(range.equals(XSD.gYear.getURI())) {return TemporalScorers.createYearScorer(this);}
 				if(range.equals(XSD.date.getURI())||range.equals(XSD.dateTime.getURI())) {return new DateScorer(this);}
-			};
+
+			} else
+			{
+				log.info("range "+range+": creating object property for "+this.uri);
+				return new ObjectPropertyScorer(this);
+			}
 		}
-
-
-
-		return scorer;
+		throw new RuntimeException("no scorer found for component "+this+" with range "+range);
+		//		return scorer;
 	}
 
 	public static synchronized ComponentProperty getInstance(Cube cubeUri, String uri)//, String type)

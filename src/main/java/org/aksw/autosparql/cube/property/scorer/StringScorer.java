@@ -15,7 +15,7 @@ public class StringScorer extends DatatypePropertyScorer
 	public double score(String value)
 	{
 		// TODO: fuzzy matching, wordnet,solr
-		double cs = countScore(values.count(value),maxCount);
+		double cs = countScore(values.count(value));
 		if(cs!=0) {return cs;}
 		double score = 0;
 
@@ -23,7 +23,7 @@ public class StringScorer extends DatatypePropertyScorer
 		{
 			double sim = Similarity.getSimilarity(value, s);
 			if(sim<THRESHOLD) continue;
-			score = Math.max(score, sim*countScore(values.count(s),maxCount));
+			score = Math.max(score, sim*countScore(values.count(s)));
 		}
 		return score;
 //		values.elementSet().stream().map(s->Similarity.getSimilarity(value, s)).filter(sim->sim>THRESHOLD)

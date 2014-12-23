@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -49,10 +50,12 @@ public class Cube implements Serializable
 
 	private static synchronized Optional<Cube> loadCube(String cubeName)
 	{
-		try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(cubeFile(cubeName))))
+		File f = cubeFile(cubeName);
+		try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(f)))
 		{
 			return Optional.of((Cube)in.readObject());
 		}
+		catch(InvalidClassException e) {f.delete();return Optional.empty();}
 		catch (FileNotFoundException e) {return Optional.empty();}
 		catch (ClassNotFoundException | IOException e) {throw new RuntimeException(e);}
 	}

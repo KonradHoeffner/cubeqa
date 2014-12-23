@@ -8,18 +8,17 @@ import com.google.common.primitives.Floats;
 import de.konradhoeffner.commons.IteratorStream;
 
 /** Scores numbers both based on proximity to nearest property value and on count. */
-public class NumericScorer extends Scorer
+public class NumericScorer extends DatatypePropertyScorer
 {
-	final Multiset<Float> values = HashMultiset.create();
-	final int maxCount;
+	final Multiset<Float> floats = HashMultiset.create();
 	final float[] sorted;
 
 	public NumericScorer(ComponentProperty property)
 	{
 		super(property);
-		IteratorStream.stream(queryValues()).forEach(qs->values.add(qs.get("value").asLiteral().getFloat(), qs.get("cnt").asLiteral().getInt()));
-		maxCount = values.elementSet().stream().map(s->values.count(s)).max(Integer::compare).get();
-		sorted = Floats.toArray(values.elementSet());
+		values.entrySet().stream().forEach(e->floats.add(Float.valueOf(e.getElement()), e.getCount()));
+		values.clear();
+		sorted = Floats.toArray(floats.elementSet());
 		Arrays.sort(sorted);
 	}
 
@@ -37,10 +36,9 @@ public class NumericScorer extends Scorer
 	public double score(String value)
 	{
 		float f = Float.valueOf(value);
-//		System.out.println("value: "+value);
 		float closest = closestValue(sorted, f);
 //		System.out.println("sim: "+similarity(f,closest));
 //		System.out.println("count: "+countScore(values.count(closest),maxCount));
-		return similarity(f,closest)*countScore(values.count(closest), maxCount);
+		return similarity(f,closest)*countScore(floats.count(closest));
 	}
 }

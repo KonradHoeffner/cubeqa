@@ -129,7 +129,14 @@ public class CubeTemplator
 				if(ners.contains(phrase)) {continue;} // already found but TODO use phrase for additional identification
 
 
+				for(ComponentProperty p: cube.properties.values())
+				{
+					System.out.println(p);
+					System.out.println(p.scorer);
+					System.out.println(p.scorer.score(phrase));
+				}
 				ComponentProperty maxProperty = cube.properties.values().stream().max(Comparator.comparing(p->p.scorer.score(phrase))).get();
+
 
 
 				//				List<String> ners = ner.getNamedEntitites(phrase(np));
