@@ -15,7 +15,7 @@ public class DateScorerTest
 		String[] dates = {"2006-01-01","2006-01-02","2006-02-01","2014-04-01"};
 		for(String date: dates)
 		{
-			System.out.println(date+": "+scorer.score(date));
+			System.out.println(date+": "+scorer.unsafeScore(date));
 		}
 	}
 

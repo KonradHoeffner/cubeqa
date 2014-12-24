@@ -20,15 +20,15 @@ public class DateScorer extends DatatypePropertyScorer
 	{
 //		date = date.replaceAll("\\+[0-9][0-9]:[0-9][0-9]", ""); // remove time zone
 		date = date.substring(0, "1999-01-23".length()); // only date, no time
-		try
-		{
+//		try
+//		{
 			return Optional.of(LocalDate.parse(date).toEpochDay());
-		}
-		catch(DateTimeParseException e)
-		{
-			log.warning("could not parse date '"+date+"'");
-			return Optional.empty();
-			}
+//		}
+//		catch(DateTimeParseException e)
+//		{
+//			log.warning("could not parse date '"+date+"'");
+//			return Optional.empty();
+//			}
 		}
 
 	public DateScorer(ComponentProperty property)
@@ -49,7 +49,7 @@ public class DateScorer extends DatatypePropertyScorer
 		maxScoreDist = Math.min(firstToLast, 365*2);
 	}
 
-	@Override public double score(String value)
+	@Override public double unsafeScore(String value)
 	{
 		if(epochDays.length==0) {return 0;}
 		if(values.contains(value)) {return 1;}

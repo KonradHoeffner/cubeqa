@@ -46,7 +46,7 @@ public class ComponentProperty implements Serializable
 
 	@NonNull public final Scorer scorer;
 
-	static private final Map<Pair<String>,ComponentProperty> instances = new HashMap<>();
+	static private final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
 
 	//	static Domain propertyDomain(String propertyUri)
 	//	{
@@ -138,7 +138,7 @@ public class ComponentProperty implements Serializable
 
 	public static synchronized ComponentProperty getInstance(Cube cubeUri, String uri)//, String type)
 	{
-		Pair<String> key = new Pair<String>(cubeUri.uri, uri);
+		Pair<String,String> key = new Pair<String,String>(cubeUri.uri, uri);
 		ComponentProperty instance = instances.get(key);
 		if(instance==null)
 		{

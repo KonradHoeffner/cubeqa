@@ -3,6 +3,7 @@ package org.aksw.autosparql.cube.template;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
+import lombok.extern.java.Log;
 import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
 import org.aksw.autosparql.commons.nlp.ner.DBpediaSpotlightNER;
 import org.aksw.autosparql.cube.Aggregate;
@@ -11,24 +12,21 @@ import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
-import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
+import de.konradhoeffner.commons.Pair;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
-import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
 
+@Log
 public class CubeTemplator
 {
 	//	private final StanfordPartOfSpeechTagger tagger = StanfordPartOfSpeechTagger.INSTANCE;
 	//	private final Preprocessor	pp = new Preprocessor(true);
 
+	private static final double	THRESHOLD	= 0.3;
 	static Properties props = new Properties();
 	static StanfordCoreNLP pipeline;
 	static
@@ -80,8 +78,6 @@ public class CubeTemplator
 			System.out.println(tree);
 			findReferences(tree);
 
-
-
 			// this is the Stanford dependency graph of the current sentence
 			//		      SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
 		}
@@ -123,25 +119,33 @@ public class CubeTemplator
 			Set<Tree> nps = pp.getChildrenAsList().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
 			for(Tree np : nps)
 			{
+				Tree deepestNp = np;
+				// in case of nested nps, i.e. (NP (NP ( ... ))
+				while(deepestNp.children().length==1&&deepestNp.children()[0].value().equals("NP")) {deepestNp = deepestNp.getChild(0);}
 				// can we match complete phrase?
-								String phrase = phrase(np);
-								System.out.println(phrase);
-				if(ners.contains(phrase)) {continue;} // already found but TODO use phrase for additional identification
-
-
-				for(ComponentProperty p: cube.properties.values())
+				String phrase = phrase(deepestNp);
+				System.out.println(phrase);
+				// TODO: does it contain other pps? if so do that separately
+				Set<Tree> subPps = Arrays.stream(deepestNp.children()).filter(child->child.value().equals("PP")).collect(Collectors.toSet());
+				if(!subPps.isEmpty())
 				{
-					System.out.println(p);
-					System.out.println(p.scorer);
-					System.out.println(p.scorer.score(phrase));
+				for(Tree subPp : subPps) {deepestNp.remove(subPp);}
+				 phrase = phrase(deepestNp);
+				log.info("removing prepositional phrases, rest: "+phrase);
 				}
-				ComponentProperty maxProperty = cube.properties.values().stream().max(Comparator.comparing(p->p.scorer.score(phrase))).get();
+//				if(ners.contains(phrase)) {continue;} // already found but TODO use phrase for additional identification
 
+				Optional<Pair<ComponentProperty,Double>> maxProperty = scorePhrase(phrase);
 
+				if(!maxProperty.isPresent()||maxProperty.get().b<THRESHOLD)
+				{
+					log.info("found no correspondence for phrase "+phrase);
 
+				} else
+				{
+					log.info("found correspondence of "+maxProperty.get().b+" with property "+maxProperty.get().a);
+				}
 				//				List<String> ners = ner.getNamedEntitites(phrase(np));
-
-				// can we match the whole thing?
 			}
 			//			System.out.println(nps);
 
@@ -149,8 +153,19 @@ public class CubeTemplator
 			//			Tree next = pp.parent().getNodeNumber(pp.nodeNumber(pp.parent())+1);
 			//			System.out.println(next);
 		}
+	}
 
-
+	private Optional<Pair<ComponentProperty, Double>> scorePhrase(String phrase)
+	{
+		for(ComponentProperty p: cube.properties.values())
+		{
+//			System.out.println(p);
+//			System.out.println(p.scorer);
+//			System.out.println(p.scorer.score(phrase));
+		}
+		return
+				cube.properties.values().stream().map(p->new Pair<ComponentProperty,Double>(p, p.scorer.score(phrase)))
+				.max(Comparator.comparing(Pair::getB));
 
 	}
 

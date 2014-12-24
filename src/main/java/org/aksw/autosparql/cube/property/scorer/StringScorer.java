@@ -12,7 +12,7 @@ public class StringScorer extends DatatypePropertyScorer
 		super(property);
 	}
 
-	public double score(String value)
+	@Override public double unsafeScore(String value)
 	{
 		// TODO: fuzzy matching, wordnet,solr
 		double cs = countScore(values.count(value));

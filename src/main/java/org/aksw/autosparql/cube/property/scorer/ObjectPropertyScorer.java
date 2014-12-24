@@ -15,7 +15,7 @@ public class ObjectPropertyScorer extends Scorer
 		super(property,node->node.asResource().getURI());
 	}
 
-	public double score(String value)
+	public double unsafeScore(String value)
 	{
 		return countScore(values.count(value));
 	}

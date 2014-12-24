@@ -31,7 +31,7 @@ public class ParseScorer<T> extends DatatypePropertyScorer
 		values.clear(); // from now on we only touch the integer years
 	}
 
-	public double score(String value)
+	@Override public double unsafeScore(String value)
 	{
 		return countScore(parsed.count(Year.parse(value.replaceAll("\\+[0-9][0-9]:[0-9][0-9]",""))));
 		// TODO temporal bugfix, no serialization of function interface?

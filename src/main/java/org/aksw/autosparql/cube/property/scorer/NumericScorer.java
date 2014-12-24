@@ -33,7 +33,7 @@ public class NumericScorer extends DatatypePropertyScorer
 		return (float)Math.pow(Math.min(Math.abs(v/value),Math.abs(value/v)),4);
 	}
 
-	public double score(String value)
+	@Override public double unsafeScore(String value)
 	{
 		float f = Float.valueOf(value);
 		float closest = closestValue(sorted, f);

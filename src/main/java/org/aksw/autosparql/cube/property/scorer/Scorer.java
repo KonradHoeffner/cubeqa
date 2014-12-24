@@ -39,7 +39,20 @@ public abstract class Scorer implements Serializable
 		}
 	}
 
-	abstract public double score(String value);
+	abstract protected double unsafeScore(String value);
+
+	public double score(String value)
+	{
+		try
+		{
+			return unsafeScore(value);
+		}
+		catch(Exception e)
+		{
+//			log.warning(e.getClass().getName()+": "+e.getMessage());
+			return 0;
+		}
+	}
 
 	protected ResultSet queryValues()
 	{

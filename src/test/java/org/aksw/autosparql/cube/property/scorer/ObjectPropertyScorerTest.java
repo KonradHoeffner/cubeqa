@@ -13,7 +13,7 @@ public class ObjectPropertyScorerTest
 	{
 		Cube cube = Cube.getInstance("finland-aid");
 		ObjectPropertyScorer scorer = new ObjectPropertyScorer(cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-recipient-country"));
-		assertTrue(scorer.score("https://openspending.org/finland-aid/recipient-country/et")>0.6);
+		assertTrue(scorer.unsafeScore("https://openspending.org/finland-aid/recipient-country/et")>0.6);
 	}
 
 }
