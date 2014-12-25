@@ -10,11 +10,11 @@ public class FinlandAidTest
 	@Test public void test()
 	{
 		Algorithm a = new Algorithm(FinlandAid.CUBE_NAME);
-		for(String question: FinlandAid.questions)
-		{
-			a.answer(question);
-			break;
-		}
+		a.answer(FinlandAid.questions.get(25));
+		//		for(String question: FinlandAid.questions)
+//		{
+//			a.answer(question);
+//		}
 	}
 
 }

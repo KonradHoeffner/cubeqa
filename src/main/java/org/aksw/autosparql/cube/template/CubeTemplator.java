@@ -81,7 +81,6 @@ public class CubeTemplator
 			// this is the Stanford dependency graph of the current sentence
 			//		      SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
 		}
-
 	}
 
 	enum AnswerType {ANY,QUANTITY_COUNTABLE,QUANTITY_UNCOUNTABLE,LOCATION,COMPARISON}
@@ -94,6 +93,14 @@ public class CubeTemplator
 	}
 
 	private String phrase(Tree tree) {return tree.getLeaves().toString().replace(", ", " ").replaceAll("[\\[\\]]", "");}
+
+	// tree.remove is unsupported
+	void treeRemove(Tree tree, Tree child)
+	{
+		List<Tree> children = tree.getChildrenAsList();
+		children.remove(child);
+		tree.setChildren(children);
+	}
 
 	private void findReferences(Tree tree)
 	{
@@ -108,7 +115,7 @@ public class CubeTemplator
 		List<String> ners = ner.getNamedEntitites(phrase(tree));
 		ners.removeAll(AggregateMapping.INSTANCE.aggregateMap.keySet());
 		System.out.println("NERS: "+ners);
-
+		Set<Tree> checkedNps = new HashSet<>();
 		for(Tree pp : pps)
 		{
 			Set<String> prepositions = new HashSet<>(Arrays.asList("IN","TO","INTO","OF","ON","OVER","FOR","TO","FROM"));
@@ -117,41 +124,53 @@ public class CubeTemplator
 			Set<String> prepos = pp.getChildrenAsList().stream().filter(c->c.isPreTerminal()&&prepositions.contains(c.value())).map(c->c.getChild(0).value()).collect(Collectors.toSet());
 			System.out.println("preposition: "+prepos);
 			Set<Tree> nps = pp.getChildrenAsList().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
+			checkedNps.addAll(nps);
 			for(Tree np : nps)
 			{
 				Tree deepestNp = np;
 				// in case of nested nps, i.e. (NP (NP ( ... ))
-				while(deepestNp.children().length==1&&deepestNp.children()[0].value().equals("NP")) {deepestNp = deepestNp.getChild(0);}
-				// can we match complete phrase?
-				String phrase = phrase(deepestNp);
-				System.out.println(phrase);
-				// TODO: does it contain other pps? if so do that separately
-				Set<Tree> subPps = Arrays.stream(deepestNp.children()).filter(child->child.value().equals("PP")).collect(Collectors.toSet());
-				if(!subPps.isEmpty())
+				while(deepestNp.children().length==1&&deepestNp.children()[0].value().equals("NP"))
 				{
-				for(Tree subPp : subPps) {deepestNp.remove(subPp);}
-				 phrase = phrase(deepestNp);
-				log.info("removing prepositional phrases, rest: "+phrase);
+					deepestNp = deepestNp.getChild(0);
+					checkedNps.add(deepestNp);
 				}
-//				if(ners.contains(phrase)) {continue;} // already found but TODO use phrase for additional identification
-
-				Optional<Pair<ComponentProperty,Double>> maxProperty = scorePhrase(phrase);
-
-				if(!maxProperty.isPresent()||maxProperty.get().b<THRESHOLD)
-				{
-					log.info("found no correspondence for phrase "+phrase);
-
-				} else
-				{
-					log.info("found correspondence of "+maxProperty.get().b+" with property "+maxProperty.get().a);
-				}
-				//				List<String> ners = ner.getNamedEntitites(phrase(np));
+				match(deepestNp);
+				Set<Tree> subNps = deepestNp.subTrees().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
+				checkedNps.addAll(subNps);
 			}
-			//			System.out.println(nps);
+		}
+		Set<Tree> leftOverNps = tree.subTrees().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
+		System.out.println("*** NON PP NPS ***");
+		leftOverNps.removeAll(checkedNps);
+		leftOverNps.forEach(this::match);
+	}
 
+	private boolean match(Tree ref)
+	{
+		// can we match complete phrase?
+		String phrase = phrase(ref);
+		System.out.println(phrase);
+		// TODO: does it contain other pps? if so do that separately
+		Set<Tree> subPps = Arrays.stream(ref.children()).filter(child->child.value().equals("PP")).collect(Collectors.toSet());
+		if(!subPps.isEmpty())
+		{
 
-			//			Tree next = pp.parent().getNodeNumber(pp.nodeNumber(pp.parent())+1);
-			//			System.out.println(next);
+			for(Tree subPp : subPps) {treeRemove(ref,subPp);}
+			phrase = phrase(ref);
+			log.info("removing prepositional phrases, rest: "+phrase);
+		}
+		//				if(ners.contains(phrase)) {continue;} // already found but TODO use phrase for additional identification
+
+		Optional<Pair<ComponentProperty,Double>> maxProperty = scorePhrase(phrase);
+
+		if(!maxProperty.isPresent()||maxProperty.get().b<THRESHOLD)
+		{
+			log.info("found no correspondence for phrase "+phrase);
+			return false;
+		} else
+		{
+			log.info("found correspondence of "+maxProperty.get().b+" with property "+maxProperty.get().a);
+			return true;
 		}
 	}
 
@@ -159,9 +178,9 @@ public class CubeTemplator
 	{
 		for(ComponentProperty p: cube.properties.values())
 		{
-//			System.out.println(p);
-//			System.out.println(p.scorer);
-//			System.out.println(p.scorer.score(phrase));
+			//			System.out.println(p);
+			//			System.out.println(p.scorer);
+			//			System.out.println(p.scorer.score(phrase));
 		}
 		return
 				cube.properties.values().stream().map(p->new Pair<ComponentProperty,Double>(p, p.scorer.score(phrase)))

@@ -6,7 +6,7 @@ import org.aksw.autosparql.cube.property.ComponentProperty;
 
 public class TemporalScorers
 {
-	static public Scorer createYearScorer(ComponentProperty p)
+	static public MultiSetScorer createYearScorer(ComponentProperty p)
 	{
 		return new ParseScorer<Year>(p,
 				s->Year.parse(s.replaceAll("\\+[0-9][0-9]:[0-9][0-9]","")));

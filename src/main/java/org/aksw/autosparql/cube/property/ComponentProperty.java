@@ -18,7 +18,6 @@ import org.aksw.autosparql.cube.property.scorer.*;
 import org.aksw.autosparql.cube.CubeSparql;
 import org.aksw.autosparql.cube.property.scorer.DateScorer;
 import org.aksw.autosparql.cube.property.scorer.ObjectPropertyScorer;
-import org.aksw.autosparql.cube.property.scorer.Scorer;
 import org.aksw.autosparql.cube.property.scorer.StringScorer;
 import org.aksw.linkedspending.tools.DataModel;
 import com.hp.hpl.jena.query.ResultSet;

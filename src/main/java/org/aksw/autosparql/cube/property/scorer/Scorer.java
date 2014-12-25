@@ -16,27 +16,12 @@ import de.konradhoeffner.commons.IteratorStream;
 @Log
 public abstract class Scorer implements Serializable
 {
-	final protected Multiset<String> values = HashMultiset.create();
-	final protected int maxCount;
-
 	private static final long	serialVersionUID	= 1L;
 	final ComponentProperty property;
 
-	public Scorer(ComponentProperty property, Function<RDFNode,String> f)
+	public Scorer(ComponentProperty property)
 	{
 		this.property=property;
-		IteratorStream.stream(queryValues()).forEach(qs->values.add(f.apply(qs.get("value")), qs.get("cnt").asLiteral().getInt()));
-
-		Optional<Integer> max = values.elementSet().stream().map(s->values.count(s)).max(Integer::compare);
-		if(!max.isPresent())
-		{
-			log.warning("no values for property "+property+": "+values);
-			maxCount=0;
-		}
-		else
-		{
-			maxCount = max.get();
-		}
 	}
 
 	abstract protected double unsafeScore(String value);
@@ -60,13 +45,6 @@ public abstract class Scorer implements Serializable
 				+ "{?obs a qb:Observation. ?obs <"+property.uri+"> ?value. } group by ?value";
 		ResultSet rs = CubeSparql.linkedSpending(property.cube.name).select(query);
 		return rs;
-	}
-
-	protected double countScore(int count)
-	{
-		// +1 to prevent div by 0 the nearer the score to the max, the higher the value, but don't fall of too steep so use log.
-		if(count==0) return 0;
-		return Math.log(count+1)/Math.log(maxCount+1);
 	}
 
 	static protected float closestValue(float[] sorted, float key)
