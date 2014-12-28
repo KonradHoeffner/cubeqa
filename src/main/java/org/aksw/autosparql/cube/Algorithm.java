@@ -13,7 +13,7 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 @Log
 public class Algorithm
 {
-	private final Cube cube;
+	public final Cube cube;
 
 	public Algorithm(String cubeName)
 	{
@@ -23,8 +23,6 @@ public class Algorithm
 	public String answer(String question)
 	{
 		log.info("Answering "+question+"on cube "+cube+"...");
-		new CubeTemplator(cube, question).buildTemplates();
-
-		return null;
+		return new CubeTemplator(cube, question).buildTemplates().sparqlQuery();
 	}
 }

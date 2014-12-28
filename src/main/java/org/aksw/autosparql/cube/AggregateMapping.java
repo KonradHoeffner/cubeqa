@@ -29,9 +29,16 @@ public class AggregateMapping
 		this.aggregateMap = Collections.unmodifiableMap(aggregateMap);
 	}
 
-	static public Set<Aggregate> find(String question)
+	static public Set<Aggregate> aggregatesContained(String phrase)
 	{
 		return INSTANCE.aggregateMap.keySet().stream()
-				.filter(question::contains).map(INSTANCE.aggregateMap::get).collect(Collectors.toSet());
+				.filter(phrase::contains).map(INSTANCE.aggregateMap::get).collect(Collectors.toSet());
 	}
+
+	static public Set<Aggregate> aggregatesReferenced(String phrase)
+	{
+		return INSTANCE.aggregateMap.keySet().stream()
+				.filter(phrase::equalsIgnoreCase).map(INSTANCE.aggregateMap::get).collect(Collectors.toSet());
+	}
+
 }

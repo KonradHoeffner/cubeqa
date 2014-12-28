@@ -1,5 +1,6 @@
 package org.aksw.autosparql.cube.template;
 
+import static org.aksw.autosparql.cube.Trees.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
@@ -10,6 +11,8 @@ import org.aksw.autosparql.cube.Aggregate;
 import org.aksw.autosparql.cube.AggregateMapping;
 import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.ComponentProperty;
+import org.aksw.autosparql.cube.property.scorer.ScoreResult;
+import org.aksw.autosparql.cube.restriction.Restriction;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import de.konradhoeffner.commons.Pair;
@@ -64,20 +67,22 @@ public class CubeTemplator
 	}
 
 	@SneakyThrows
-	public void buildTemplates()
+	public CubeTemplate buildTemplates()
 	{
 		Annotation document = new Annotation(question);
 		pipeline.annotate(document);
 
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 
-		for(CoreMap sentence: sentences)
+//		for(CoreMap sentence: sentences)
 		{
+			CoreMap sentence = sentences.get(0);
 			// this is the parse tree of the current sentence
 			Tree tree = sentence.get(TreeAnnotation.class);
 			System.out.println(tree);
-			findReferences(tree);
-
+			CubeTemplate template  = buildTemplate(tree);
+			System.out.println(template.sparqlQuery());
+			return template;
 			// this is the Stanford dependency graph of the current sentence
 			//		      SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
 		}
@@ -92,29 +97,40 @@ public class CubeTemplator
 		//		Set<String> questionWords = wp.stream().map(t->t.getChild(0).value()).collect(Collectors.toSet());
 	}
 
-	private String phrase(Tree tree) {return tree.getLeaves().toString().replace(", ", " ").replaceAll("[\\[\\]]", "");}
-
-	// tree.remove is unsupported
-	void treeRemove(Tree tree, Tree child)
+	/** determine aggregate reference, if existing, and remove from the tree **/
+	private Optional<Aggregate> findAggregate(Tree tree)
 	{
-		List<Tree> children = tree.getChildrenAsList();
-		children.remove(child);
-		tree.setChildren(children);
+		Set<Aggregate> aggregates = new HashSet<Aggregate>();
+		Set<Tree> subTrees = tree.subTrees();
+
+		subTrees.stream().map(t->new Pair<Tree,Set<Aggregate>>(t,AggregateMapping.aggregatesReferenced(phrase(tree))))
+		.filter(pair->!pair.getB().isEmpty())
+		.findFirst()
+		.ifPresent(pair->
+		{
+			removeSubtree(tree, pair.getA());
+			System.out.println(pair.getB());
+			aggregates.addAll(pair.getB());
+		});
+
+		if(aggregates.isEmpty()) {return Optional.empty();}
+		else {return Optional.of(aggregates.iterator().next());}
 	}
 
-	private void findReferences(Tree tree)
+	private CubeTemplate buildTemplate(Tree tree)
 	{
-		Set<Aggregate> aggregates = AggregateMapping.INSTANCE.find(question);
-		if(!aggregates.isEmpty()) {System.out.println("AGGREGATES FOUND! "+aggregates);}
-		//		List<Tree> preTerminals = tree.subTrees().stream().filter(Tree::isPreTerminal).collect(Collectors.toList());
+		Set<Restriction> restrictions = new HashSet<Restriction>();
+		Set<Pair<ComponentProperty,Double>> answerProperties = new HashSet<>();
+		Optional<Aggregate> aggregate = findAggregate(tree);
+
 		Set<Tree> subTrees = tree.subTrees();
 		Set<Tree> rest = new HashSet<>(subTrees);
 		Set<Tree> pps = rest.stream().filter(l->l.label().value().equals("PP")).collect(Collectors.toSet());
 		rest.removeAll(pps);
 
-		List<String> ners = ner.getNamedEntitites(phrase(tree));
-		ners.removeAll(AggregateMapping.INSTANCE.aggregateMap.keySet());
-		System.out.println("NERS: "+ners);
+		//		List<String> ners = ner.getNamedEntitites(phrase(tree));
+		//		ners.removeAll(AggregateMapping.INSTANCE.aggregateMap.keySet());
+		//		System.out.println("NERS: "+ners);
 		Set<Tree> checkedNps = new HashSet<>();
 		for(Tree pp : pps)
 		{
@@ -134,7 +150,9 @@ public class CubeTemplator
 					deepestNp = deepestNp.getChild(0);
 					checkedNps.add(deepestNp);
 				}
-				match(deepestNp);
+				Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> matched = match(deepestNp);
+				restrictions.addAll(matched.a);
+				answerProperties.addAll(matched.b);
 				Set<Tree> subNps = deepestNp.subTrees().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
 				checkedNps.addAll(subNps);
 			}
@@ -142,11 +160,26 @@ public class CubeTemplator
 		Set<Tree> leftOverNps = tree.subTrees().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
 		System.out.println("*** NON PP NPS ***");
 		leftOverNps.removeAll(checkedNps);
-		leftOverNps.forEach(this::match);
+		for(Tree leftOverNp: leftOverNps)
+		{
+			Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> matched = match(leftOverNp);
+			restrictions.addAll(matched.a);
+			answerProperties.addAll(matched.b);
+		}
+		// todo: multiple answer properties
+		ComponentProperty defaultAnswerProperty = cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount");
+		ComponentProperty answerProperty = defaultAnswerProperty;
+		if(!answerProperties.isEmpty())
+		{
+			answerProperty = answerProperties.stream().max(Comparator.comparing(Pair::getB)).map(Pair::getA).get();
+		}
+		return new CubeTemplate(cube.uri, restrictions, answerProperty, aggregate);
 	}
 
-	private boolean match(Tree ref)
+	private Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> match(Tree ref)
 	{
+		Set<Restriction> restrictions = new HashSet<Restriction>();
+		Set<Pair<ComponentProperty,Double>> answerProperties = new HashSet<>();
 		// can we match complete phrase?
 		String phrase = phrase(ref);
 		System.out.println(phrase);
@@ -155,37 +188,61 @@ public class CubeTemplator
 		if(!subPps.isEmpty())
 		{
 
-			for(Tree subPp : subPps) {treeRemove(ref,subPp);}
+			for(Tree subPp : subPps) {removeChild(ref,subPp);}
 			phrase = phrase(ref);
 			log.info("removing prepositional phrases, rest: "+phrase);
 		}
 		//				if(ners.contains(phrase)) {continue;} // already found but TODO use phrase for additional identification
 
-		Optional<Pair<ComponentProperty,Double>> maxProperty = scorePhrase(phrase);
+		String finalPhrase = phrase;
+		Optional<Pair<ComponentProperty,Double>> referencedProperty = scorePhraseProperties(finalPhrase);
+		referencedProperty.ifPresent(p->
+		{
+			log.info("found PROPERTY correspondence of "+p.b+" between prase "+finalPhrase+" with property "+p.a);
+		});
 
-		if(!maxProperty.isPresent()||maxProperty.get().b<THRESHOLD)
+		Optional<ScoreResult> referencedPropertyValue = scorePhraseValues(phrase);
+
+		if(!referencedPropertyValue.isPresent())
 		{
 			log.info("found no correspondence for phrase "+phrase);
-			return false;
 		} else
 		{
-			log.info("found correspondence of "+maxProperty.get().b+" with property "+maxProperty.get().a);
-			return true;
+			ScoreResult result = referencedPropertyValue.get();
+			log.info("found VALUE correspondence of "+result.score+" between prase "+finalPhrase+" with property "+result.property
+					+" and value '"+result.value+"' Restriction: "+result.toRestriction());
+
 		}
+		if(referencedProperty.isPresent()&&referencedPropertyValue.isPresent()) // both are present, select the best match
+		{
+			if(referencedProperty.get().b<referencedPropertyValue.get().score)
+			{
+				restrictions.add(referencedPropertyValue.get().toRestriction());
+			} else
+			{
+				answerProperties.add(referencedProperty.get());
+			}
+		} else // add both as at most one is not empty anyways
+		{
+			referencedPropertyValue.ifPresent(v->restrictions.add(v.toRestriction()));
+			referencedProperty.ifPresent(p->answerProperties.add(p));
+		}
+
+		return new Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>>(restrictions,answerProperties);
 	}
 
-	private Optional<Pair<ComponentProperty, Double>> scorePhrase(String phrase)
+	private Optional<ScoreResult> scorePhraseValues(String phrase)
 	{
-		for(ComponentProperty p: cube.properties.values())
-		{
-			//			System.out.println(p);
-			//			System.out.println(p.scorer);
-			//			System.out.println(p.scorer.score(phrase));
-		}
 		return
-				cube.properties.values().stream().map(p->new Pair<ComponentProperty,Double>(p, p.scorer.score(phrase)))
-				.max(Comparator.comparing(Pair::getB));
+				cube.properties.values().stream().map(p->p.scorer.score(phrase)).filter(Optional::isPresent).map(Optional::get)
+				.max(Comparator.comparing(ScoreResult::getScore));
+	}
 
+	private Optional<Pair<ComponentProperty, Double>> scorePhraseProperties(String phrase)
+	{
+		return
+				cube.properties.values().stream().map(p->new Pair<ComponentProperty,Double>(p, p.match(phrase)))
+				.filter(p->p.b>0.8).max(Comparator.comparing(Pair::getB));
 	}
 
 	private static boolean isTag(Tree tree, String tag) {return tree.label().value().equals(tag);}

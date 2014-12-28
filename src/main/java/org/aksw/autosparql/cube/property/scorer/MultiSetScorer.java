@@ -1,5 +1,6 @@
 package org.aksw.autosparql.cube.property.scorer;
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -8,6 +9,7 @@ import org.aksw.autosparql.cube.CubeSparql;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import de.konradhoeffner.commons.IteratorStream;
@@ -16,6 +18,7 @@ import de.konradhoeffner.commons.IteratorStream;
 public abstract class MultiSetScorer extends Scorer
 {
 	final protected Multiset<String> values = HashMultiset.create();
+//	final protected HashMap<String,RDFNode> valueToNode = new HashMap<>();
 	final protected int maxCount;
 
 	private static final long	serialVersionUID	= 1L;
@@ -23,18 +26,28 @@ public abstract class MultiSetScorer extends Scorer
 	public MultiSetScorer(ComponentProperty property, Function<RDFNode,Set<String>> f)
 	{
 		super(property);
-		IteratorStream.stream(queryValues()).forEach(qs->{f.apply(qs.get("value")).forEach(s->values.add(s, qs.get("cnt").asLiteral().getInt()));});
+		ResultSet rs = queryValues();
+		while(rs.hasNext())
+		{
+			QuerySolution qs = rs.next();
+			RDFNode node = qs.get("value");
+			f.apply(node).forEach(s->
+			{
+//				valueToNode.put(s, node);
+				values.add(s, qs.get("cnt").asLiteral().getInt());
+			});
+		}
 
-		Optional<Integer> max = values.elementSet().stream().map(s->values.count(s)).max(Integer::compare);
-		if(!max.isPresent())
-		{
-			log.warning("no values for property "+property+": "+values);
-			maxCount=0;
-		}
-		else
-		{
-			maxCount = max.get();
-		}
+	Optional<Integer> max = values.elementSet().stream().map(s->values.count(s)).max(Integer::compare);
+	if(!max.isPresent())
+	{
+		log.warning("no values for property "+property+": "+values);
+		maxCount=0;
+	}
+	else
+	{
+		maxCount = max.get();
+	}
 	}
 
 	protected ResultSet queryValues()

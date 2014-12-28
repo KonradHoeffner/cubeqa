@@ -7,35 +7,44 @@ import java.util.function.Function;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.cube.CubeSparql;
 import org.aksw.autosparql.cube.property.ComponentProperty;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.Jaro;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import de.konradhoeffner.commons.IteratorStream;
 
+/** Scorers match phrases or words to component property values.
+ * Scorers are used when a phrase does not match to a component property label.
+ * Scorers return a similarity value in [0,1].
+ */
 @Log
 public abstract class Scorer implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 	final ComponentProperty property;
+	protected static final AbstractStringMetric similarity = new Jaro();
 
 	public Scorer(ComponentProperty property)
 	{
 		this.property=property;
 	}
 
-	abstract protected double unsafeScore(String value);
+	abstract protected Optional<ScoreResult> unsafeScore(String value);
 
-	public double score(String value)
+	/** @param phrase a word or phrase
+	 * @return 	a pair similarity score in [0,1]*/
+	public Optional<ScoreResult> score(String phrase)
 	{
 		try
 		{
-			return unsafeScore(value);
+			return unsafeScore(phrase);
 		}
 		catch(Exception e)
 		{
 //			log.warning(e.getClass().getName()+": "+e.getMessage());
-			return 0;
+			return Optional.empty();
 		}
 	}
 

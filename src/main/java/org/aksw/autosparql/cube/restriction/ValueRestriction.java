@@ -2,10 +2,12 @@ package org.aksw.autosparql.cube.restriction;
 
 import java.util.Collections;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import com.hp.hpl.jena.vocabulary.XSD;
 
 /** restriction on a literal value **/
+@EqualsAndHashCode(callSuper=true)
 public class ValueRestriction extends Restriction
 {
 	final String value;
@@ -14,19 +16,17 @@ public class ValueRestriction extends Restriction
 	{
 		// TODO: add datatypes from range or somewhere else
 		String pattern;
-		pattern = OBS_VAR+" <"+property+"> "+uniqueVar+". filter(str("+uniqueVar+")=\""+value+"\")";
-		if(property.range!=null)
+		if(property.range==null||!(property.range.startsWith(XSD.getURI())))
 		{
-			String uri = property.range;
-			if(uri.startsWith(XSD.getURI()))
-			{
-				pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+uri+">. )";
-			};
+			pattern = OBS_VAR+" <"+property+"> "+uniqueVar+". filter(str("+uniqueVar+")=\""+value+"\")";
+		} else
+		{
+			pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+property.range+">. )";
 		}
 
 		return Collections.singleton(pattern);
-//		String literal = "\""+value+"\"";
-//		return Collections.singleton("?obs <"+property+"> \""+literal+"\"");
+		//		String literal = "\""+value+"\"";
+		//		return Collections.singleton("?obs <"+property+"> \""+literal+"\"");
 	}
 
 	public ValueRestriction(ComponentProperty property, String value)

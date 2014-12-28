@@ -2,9 +2,11 @@ package org.aksw.autosparql.cube.restriction;
 
 import java.util.Collections;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 
 /** top n items */
+@EqualsAndHashCode(callSuper=true)
 public class TopRestriction extends Restriction
 {
 	public enum Modifier {ASC,DESC};
@@ -22,4 +24,5 @@ public class TopRestriction extends Restriction
 		this.n=n;
 		this.modifier=modifier;
 	}
+
 }

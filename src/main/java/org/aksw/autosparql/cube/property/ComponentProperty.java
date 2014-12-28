@@ -3,13 +3,8 @@ package org.aksw.autosparql.cube.property;
 import static de.konradhoeffner.commons.IteratorStream.stream;
 import static org.aksw.linkedspending.tools.DataModel.*;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.extern.java.Log;
@@ -20,6 +15,12 @@ import org.aksw.autosparql.cube.property.scorer.DateScorer;
 import org.aksw.autosparql.cube.property.scorer.ObjectPropertyScorer;
 import org.aksw.autosparql.cube.property.scorer.StringScorer;
 import org.aksw.linkedspending.tools.DataModel;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.Jaro;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.MongeElkan;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
+import uk.ac.shef.wit.simmetrics.similaritymetrics.Soundex;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -33,6 +34,12 @@ import de.konradhoeffner.commons.Pair;
 public class ComponentProperty implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
+	private static final AtomicInteger id = new AtomicInteger(0);
+	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
+
+	static final List<AbstractStringMetric> similarities = Arrays.<AbstractStringMetric>asList(new MongeElkan(),new Jaro(),new Levenshtein(), new QGramsDistance());//,new Soundex());
+
+	public final String var;
 
 	public final String range;
 
@@ -44,8 +51,6 @@ public class ComponentProperty implements Serializable
 	//	public final PropertyType type;
 
 	@NonNull public final Scorer scorer;
-
-	static private final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
 
 	//	static Domain propertyDomain(String propertyUri)
 	//	{
@@ -62,10 +67,21 @@ public class ComponentProperty implements Serializable
 		return null;
 	}
 
-	public ComponentProperty(Cube cube, String uri)//, PropertyType type)
+	public double match(String label)
 	{
+		OptionalDouble d = similarities.stream().flatMapToDouble(
+				sim->labels.stream().mapToDouble(
+						l->sim.getSimilarity(l,label))).max();
+
+		return d.isPresent()?d.getAsDouble():0;
+	}
+
+	private ComponentProperty(Cube cube, String uri)//, PropertyType type)
+	{
+		var = "v"+id.getAndIncrement();
 		this.cube = cube;
 		this.uri = uri;
+
 		Set<String> labels = new HashSet<>();
 		{
 			labels.add(CubeSparql.suffix(uri));
@@ -137,6 +153,7 @@ public class ComponentProperty implements Serializable
 
 	public static synchronized ComponentProperty getInstance(Cube cubeUri, String uri)//, String type)
 	{
+
 		Pair<String,String> key = new Pair<String,String>(cubeUri.uri, uri);
 		ComponentProperty instance = instances.get(key);
 		if(instance==null)

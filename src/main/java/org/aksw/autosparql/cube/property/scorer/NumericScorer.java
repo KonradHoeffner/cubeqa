@@ -1,14 +1,11 @@
 package org.aksw.autosparql.cube.property.scorer;
 
-import java.util.Arrays;
-import org.aksw.autosparql.cube.CubeSparql;
+import java.util.Optional;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import com.google.common.collect.Range;
-import com.google.common.primitives.Floats;
 import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
 
-/** Scores numbers both based on proximity to nearest property value and on count. */
+/** tests if a number is included in the range. */
 public class NumericScorer extends Scorer
 {
 	final Range<Double> range;
@@ -22,9 +19,10 @@ public class NumericScorer extends Scorer
 		range = Range.closed(qs.get("min").asLiteral().getDouble(), qs.get("max").asLiteral().getDouble());
 	}
 
-	@Override public double unsafeScore(String value)
+	@Override public Optional<ScoreResult> unsafeScore(String value)
 	{
-		double d = Double.valueOf(value);
-		return range.contains(d)?1:0;
+		throw new IllegalArgumentException("not implemented");
+//		double d = Double.valueOf(value);
+//		return range.contains(d)?1:0;
 	}
 }
