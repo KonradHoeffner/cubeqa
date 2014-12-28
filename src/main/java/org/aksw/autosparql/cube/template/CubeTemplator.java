@@ -74,7 +74,7 @@ public class CubeTemplator
 
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 
-//		for(CoreMap sentence: sentences)
+		//		for(CoreMap sentence: sentences)
 		{
 			CoreMap sentence = sentences.get(0);
 			// this is the parse tree of the current sentence
@@ -103,7 +103,7 @@ public class CubeTemplator
 		Set<Aggregate> aggregates = new HashSet<Aggregate>();
 		Set<Tree> subTrees = tree.subTrees();
 
-		subTrees.stream().map(t->new Pair<Tree,Set<Aggregate>>(t,AggregateMapping.aggregatesReferenced(phrase(tree))))
+		subTrees.stream().map(t->new Pair<Tree,Set<Aggregate>>(t,AggregateMapping.aggregatesReferenced(phrase(t))))
 		.filter(pair->!pair.getB().isEmpty())
 		.findFirst()
 		.ifPresent(pair->
@@ -113,7 +113,15 @@ public class CubeTemplator
 			aggregates.addAll(pair.getB());
 		});
 
-		if(aggregates.isEmpty()) {return Optional.empty();}
+		if(aggregates.isEmpty())
+		{
+			// TODO: check if this is really useful
+			aggregates.addAll(AggregateMapping.aggregatesContained(phrase(tree)));
+		}
+		if(aggregates.isEmpty())
+		{
+			return Optional.empty();
+		}
 		else {return Optional.of(aggregates.iterator().next());}
 	}
 

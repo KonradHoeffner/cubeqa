@@ -21,7 +21,7 @@ public class ValueRestriction extends Restriction
 			pattern = OBS_VAR+" <"+property+"> "+uniqueVar+". filter(str("+uniqueVar+")=\""+value+"\")";
 		} else
 		{
-			pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+property.range+">. )";
+			pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+property.range+">.";
 		}
 
 		return Collections.singleton(pattern);
