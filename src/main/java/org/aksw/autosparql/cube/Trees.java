@@ -1,6 +1,7 @@
 package org.aksw.autosparql.cube;
 
 import java.util.List;
+import java.util.Set;
 import edu.stanford.nlp.trees.Tree;
 
 /** Utility class for stanford trees.
@@ -17,6 +18,13 @@ public class Trees
 		tree.setChildren(children);
 	}
 
+	static public void removeChildren(Tree tree, Set<Tree> children)
+	{
+		List<Tree> allChildren = tree.getChildrenAsList();
+		allChildren.removeAll(children);
+		tree.setChildren(allChildren);
+	}
+
 	static public void removeSubtree(Tree tree, Tree child)
 	{
 		List<Tree> children = tree.getChildrenAsList();
@@ -24,4 +32,5 @@ public class Trees
 		tree.setChildren(children);
 		for(Tree subTree: tree.getChildrenAsList()) removeSubtree(subTree, child);
 	}
+
 }

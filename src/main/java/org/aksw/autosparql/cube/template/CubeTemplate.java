@@ -19,9 +19,22 @@ public class CubeTemplate
 	final String cubeUri;
 
 	final Set<Restriction> restrictions;
-	final ComponentProperty answerProperty;
+	final Set<ComponentProperty> answerProperties;
 	final Set<ComponentProperty> perProperties = new HashSet<>();
 	final Optional<Aggregate> aggregate;
+
+	boolean isComplete()
+	{
+		return !restrictions.isEmpty()&&!answerProperties.isEmpty();
+	}
+
+	public void union(CubeTemplate t)
+	{
+		if(!cubeUri.equals(t.cubeUri)) throw new IllegalArgumentException("cube uri different");
+		// TODO join restrictions if possible (e.g. intervals for numericals, detect impossibilities)
+		restrictions.addAll(t.restrictions);
+		answerProperties.addAll(answerProperties);
+	}
 
 	public String sparqlQuery()
 	{
@@ -35,13 +48,12 @@ public class CubeTemplate
 		String resultDef = "xsd:decimal(?result)";
 		if(aggregate.isPresent()) {resultDef = aggregate.get()+"("+resultDef+")";}
 		sb.append("select "+resultDef+" ");
-		perProperties.remove(answerProperty);
+		perProperties.removeAll(answerProperties);
 		for(ComponentProperty p: perProperties) {sb.append(" ?"+p.var);}
 		sb.append("{");
 		for(String pattern: wherePatterns) {sb.append(pattern);sb.append(" ");}
-		sb.append("?obs <"+answerProperty.uri+"> ?result.");
-		for(ComponentProperty p: perProperties)
-		{sb.append("?obs <"+p+"> ?"+p.var);}
+		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
+		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p+"> ?"+p.var);}
 		sb.append("}");
 		if(!orderLimitPatterns.isEmpty()) sb.append(orderLimitPatterns.iterator().next());
 		return sb.toString();

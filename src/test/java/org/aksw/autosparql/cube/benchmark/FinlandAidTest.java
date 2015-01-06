@@ -11,8 +11,15 @@ import com.hp.hpl.jena.query.ResultSet;
 
 public class FinlandAidTest
 {
+	@Test public void testSingle()
+	{
+		Algorithm a = new Algorithm(FinlandAid.CUBE_NAME);
+		String query = a.answer(FinlandAid.questions.get(0));
+		System.out.println(query);
+	}
 
-	@Test public void test() throws FileNotFoundException
+//	@Test
+	public void testAll() throws FileNotFoundException
 	{
 		Algorithm a = new Algorithm(FinlandAid.CUBE_NAME);
 		//		a.answer(FinlandAid.questions.get(25));

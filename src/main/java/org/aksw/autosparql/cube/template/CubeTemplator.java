@@ -3,6 +3,8 @@ package org.aksw.autosparql.cube.template;
 import static org.aksw.autosparql.cube.Trees.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;
@@ -66,8 +68,9 @@ public class CubeTemplator
 		return entityLabels;
 	}
 
+	/** @return the template for the given question*/
 	@SneakyThrows
-	public CubeTemplate buildTemplates()
+	public CubeTemplate buildTemplate()
 	{
 		Annotation document = new Annotation(question);
 		pipeline.annotate(document);
@@ -90,12 +93,12 @@ public class CubeTemplator
 
 	enum AnswerType {ANY,QUANTITY_COUNTABLE,QUANTITY_UNCOUNTABLE,LOCATION,COMPARISON}
 
-	private void findQuestionWord(Tree tree)
-	{
-		//		Set<Tree> wp = preTerminals.stream().filter(l->l.label().value().equals("WP")).collect(Collectors.toSet());
-		//		preTerminals.removeAll(wp);
-		//		Set<String> questionWords = wp.stream().map(t->t.getChild(0).value()).collect(Collectors.toSet());
-	}
+//	private void findQuestionWord(Tree tree)
+//	{
+//		//		Set<Tree> wp = preTerminals.stream().filter(l->l.label().value().equals("WP")).collect(Collectors.toSet());
+//		//		preTerminals.removeAll(wp);
+//		//		Set<String> questionWords = wp.stream().map(t->t.getChild(0).value()).collect(Collectors.toSet());
+//	}
 
 	/** determine aggregate reference, if existing, and remove from the tree **/
 	private Optional<Aggregate> findAggregate(Tree tree)
@@ -125,6 +128,61 @@ public class CubeTemplator
 		else {return Optional.of(aggregates.iterator().next());}
 	}
 
+	static final Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("IN","TO","INTO","OF","ON","OVER","FOR","TO","FROM"));
+
+
+	private Set<Restriction> findReferences(Tree tree, Set<String> possibleValues, Set<ComponentProperty> referencedProperties)
+	{
+		if(tree.children().length==1&&!tree.isPreTerminal()) return findReferences(tree.getChild(0),possibleValues,referencedProperties);
+		Set<Restriction> restrictions = new HashSet<>();
+
+		match(tree);
+		if(!tree.isPreTerminal())
+		{
+
+		}
+
+		return restrictions;
+	}
+
+	private CubeTemplate buildPartialTemplate(Tree pp)
+	{
+		Set<Tree> checked = new HashSet<>();
+
+		System.out.println(pp);
+		Set<Tree> prepositions = pp.getChildrenAsList().stream().filter(c->c.isPreTerminal()&&PREPOSITIONS.contains(c.value())).collect(Collectors.toSet());
+		removeChildren(pp, prepositions);
+		Set<String> prepositionLabels = prepositions.stream().map(c->c.getChild(0).value()).collect(Collectors.toSet());
+		System.out.println("prepositions: "+prepositionLabels);
+
+
+		//		Set<Tree> nps = pp.getChildrenAsList().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
+//
+//		for(Tree np : nps)
+//			{
+//				Tree deepest = np;
+//				System.out.println(deepest.children().length);
+//				// in case of nested nps, i.e. (NP (NP ( ... ))
+//				while(deepest.children().length==1&&!deepest.isPreTerminal())//&&deepest.children()[0].value().equals("NP"))
+//				{
+//					deepest = deepest.getChild(0);
+//					checked.add(deepest);
+//				}
+//				System.out.println("np: "+deepest);
+//				System.out.println("childs: "+deepest.getChildrenAsList());
+//
+////				Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> matched = match(deepestNp);
+////				restrictions.addAll(matched.a);
+////				answerProperties.addAll(matched.b);
+////				Set<Tree> subNps = deepestNp.subTrees().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
+////				checkedNps.addAll(subNps);
+//			}
+//		checked.addAll(nps);
+
+		return null;
+//
+	}
+
 	private CubeTemplate buildTemplate(Tree tree)
 	{
 		Set<Restriction> restrictions = new HashSet<Restriction>();
@@ -139,63 +197,66 @@ public class CubeTemplator
 		//		List<String> ners = ner.getNamedEntitites(phrase(tree));
 		//		ners.removeAll(AggregateMapping.INSTANCE.aggregateMap.keySet());
 		//		System.out.println("NERS: "+ners);
-		Set<Tree> checkedNps = new HashSet<>();
+
+
 		for(Tree pp : pps)
 		{
-			Set<String> prepositions = new HashSet<>(Arrays.asList("IN","TO","INTO","OF","ON","OVER","FOR","TO","FROM"));
-
-			System.out.println(pp);
-			Set<String> prepos = pp.getChildrenAsList().stream().filter(c->c.isPreTerminal()&&prepositions.contains(c.value())).map(c->c.getChild(0).value()).collect(Collectors.toSet());
-			System.out.println("preposition: "+prepos);
-			Set<Tree> nps = pp.getChildrenAsList().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
-			checkedNps.addAll(nps);
-			for(Tree np : nps)
-			{
-				Tree deepestNp = np;
-				// in case of nested nps, i.e. (NP (NP ( ... ))
-				while(deepestNp.children().length==1&&deepestNp.children()[0].value().equals("NP"))
-				{
-					deepestNp = deepestNp.getChild(0);
-					checkedNps.add(deepestNp);
-				}
-				Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> matched = match(deepestNp);
-				restrictions.addAll(matched.a);
-				answerProperties.addAll(matched.b);
-				Set<Tree> subNps = deepestNp.subTrees().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
-				checkedNps.addAll(subNps);
-			}
+			buildPartialTemplate(pp);
 		}
-		Set<Tree> leftOverNps = tree.subTrees().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
-		System.out.println("*** NON PP NPS ***");
-		leftOverNps.removeAll(checkedNps);
-		for(Tree leftOverNp: leftOverNps)
-		{
-			Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> matched = match(leftOverNp);
-			restrictions.addAll(matched.a);
-			answerProperties.addAll(matched.b);
-		}
-		// todo: multiple answer properties
-		ComponentProperty defaultAnswerProperty = cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount");
-		ComponentProperty answerProperty = defaultAnswerProperty;
-		if(!answerProperties.isEmpty())
-		{
-			answerProperty = answerProperties.stream().max(Comparator.comparing(Pair::getB)).map(Pair::getA).get();
-		}
-		return new CubeTemplate(cube.uri, restrictions, answerProperty, aggregate);
+//		Set<Tree> leftOverNps = tree.subTrees().stream().filter(c->c.value().equals("NP")).collect(Collectors.toSet());
+//		System.out.println("*** NON PP NPS ***");
+//		leftOverNps.removeAll(checkedNps);
+//		for(Tree leftOverNp: leftOverNps)
+//		{
+//			Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> matched = match(leftOverNp);
+//			restrictions.addAll(matched.a);
+//			answerProperties.addAll(matched.b);
+//		}
+//		// todo: multiple answer properties
+//		ComponentProperty defaultAnswerProperty = cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount");
+//		ComponentProperty answerProperty = defaultAnswerProperty;
+//		if(!answerProperties.isEmpty())
+//		{
+//			answerProperty = answerProperties.stream().max(Comparator.comparing(Pair::getB)).map(Pair::getA).get();
+//		}
+//		return new CubeTemplate(cube.uri, restrictions, answerProperty, aggregate);
+		return null;
 	}
 
-	private Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> match(Tree ref)
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	class MatchResult
+	{
+		public final String phrase;
+		/** the estimated probability that the phrase refers to a property with a given property label */
+		public final Map<ComponentProperty,Double> nameRefs;
+		/** the estimated probability that the phrase refers to a property with a given property value*/
+		public final Map<ComponentProperty,ScoreResult> valueRefs;
+//		public final Map<ComponentProperty,Double> valueRefs;
+
+		public void join(MatchResult otherResult)
+		{
+			Set<ComponentProperty> nameValue = this.nameRefs.keySet();
+			nameValue.retainAll(otherResult.valueRefs.keySet());
+//			nameValue.retainAll(otherResult.valueRefs.stream().map(ScoreResult::getProperty).collect(Collectors.toSet()));
+
+			nameValue.stream().map(property->new Pair<>(property,nameRefs.get(property)*valueRefs.get(property).score))
+			.max(Comparator.comparing(Pair::getB));
+		}
+	}
+
+//	private Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> match(Tree ref)
+	private MatchResult match(Tree ref)
 	{
 		Set<Restriction> restrictions = new HashSet<Restriction>();
-		Set<Pair<ComponentProperty,Double>> answerProperties = new HashSet<>();
+//		Set<Pair<ComponentProperty,Double>> answerProperties = new HashSet<>();
 		// can we match complete phrase?
 		String phrase = phrase(ref);
-		System.out.println(phrase);
+		System.out.println("matching phrase "+ phrase);
 		// TODO: does it contain other pps? if so do that separately
 		Set<Tree> subPps = Arrays.stream(ref.children()).filter(child->child.value().equals("PP")).collect(Collectors.toSet());
 		if(!subPps.isEmpty())
 		{
-
 			for(Tree subPp : subPps) {removeChild(ref,subPp);}
 			phrase = phrase(ref);
 			log.info("removing prepositional phrases, rest: "+phrase);
@@ -203,82 +264,59 @@ public class CubeTemplator
 		//				if(ners.contains(phrase)) {continue;} // already found but TODO use phrase for additional identification
 
 		String finalPhrase = phrase;
-		Optional<Pair<ComponentProperty,Double>> referencedProperty = scorePhraseProperties(finalPhrase);
-		referencedProperty.ifPresent(p->
+		Map<ComponentProperty,Double> nameRefs = scorePhraseProperties(finalPhrase);
+		nameRefs.entrySet().forEach(e->
 		{
-			log.info("found PROPERTY correspondence of "+p.b+" between prase "+finalPhrase+" with property "+p.a);
+			log.info("found PROPERTY NAME correspondence of "+e.getKey()+" between phrase "+finalPhrase+" with property "+e.getValue());
 		});
 
-		Optional<ScoreResult> referencedPropertyValue = scorePhraseValues(phrase);
+		Map<ComponentProperty,ScoreResult> valueRefs = scorePhraseValues(phrase);
 
-		if(!referencedPropertyValue.isPresent())
+		if(valueRefs.isEmpty())
 		{
-			log.info("found no correspondence for phrase "+phrase);
+			if(nameRefs.isEmpty()) {log.info("found no correspondence for phrase "+phrase);}
 		} else
+		valueRefs.values().forEach(result->
 		{
-			ScoreResult result = referencedPropertyValue.get();
-			log.info("found VALUE correspondence of "+result.score+" between prase "+finalPhrase+" with property "+result.property
+			log.info("found PROPERTY VALUE correspondence of "+result.score+" between prase "+finalPhrase+" with property "+result.property
 					+" and value '"+result.value+"' Restriction: "+result.toRestriction());
+		});
 
-		}
-		if(referencedProperty.isPresent()&&referencedPropertyValue.isPresent()) // both are present, select the best match
-		{
-			if(referencedProperty.get().b<referencedPropertyValue.get().score)
-			{
-				restrictions.add(referencedPropertyValue.get().toRestriction());
-			} else
-			{
-				answerProperties.add(referencedProperty.get());
-			}
-		} else // add both as at most one is not empty anyways
-		{
-			referencedPropertyValue.ifPresent(v->restrictions.add(v.toRestriction()));
-			referencedProperty.ifPresent(p->answerProperties.add(p));
-		}
-
-		return new Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>>(restrictions,answerProperties);
+//		if(nameRefs.isPresent()&&valueRefs.isPresent()) // both are present, select the best match
+//		{
+//			if(nameRefs.get().b<valueRefs.get().score)
+//			{
+//				restrictions.add(valueRefs.get().toRestriction());
+//			} else
+//			{
+//				answerProperties.add(nameRefs.get());
+//			}
+//		} else // add both as at most one is not empty anyways
+//		{
+//			valueRefs.ifPresent(v->restrictions.add(v.toRestriction()));
+//			nameRefs.ifPresent(p->answerProperties.add(p));
+//		}
+//
+//		return new Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>>(restrictions,answerProperties);
+		return new MatchResult(finalPhrase, nameRefs, valueRefs);
 	}
 
-	private Optional<ScoreResult> scorePhraseValues(String phrase)
+	private Map<ComponentProperty,ScoreResult> scorePhraseValues(String phrase)
 	{
 		return
 				cube.properties.values().stream().map(p->p.scorer.score(phrase)).filter(Optional::isPresent).map(Optional::get)
-				.max(Comparator.comparing(ScoreResult::getScore));
+				.collect(Collectors.toMap(result->result.property, result->result));
+//				.max(Comparator.comparing(ScoreResult::getScore));
 	}
 
-	private Optional<Pair<ComponentProperty, Double>> scorePhraseProperties(String phrase)
+	private Map<ComponentProperty, Double> scorePhraseProperties(String phrase)
 	{
 		return
 				cube.properties.values().stream().map(p->new Pair<ComponentProperty,Double>(p, p.match(phrase)))
-				.filter(p->p.b>0.8).max(Comparator.comparing(Pair::getB));
+				.filter(p->p.b>0.8).collect(Collectors.toMap(p->p.a, p->p.b));
 	}
 
 	private static boolean isTag(Tree tree, String tag) {return tree.label().value().equals(tag);}
-	//
-	//	/** transforms e.g. (PP .. (PP ..)) into (PP ..) (PP ..) */
-	//	private static void flattenTree(Tree tree, String tag)
-	//	{
-	//		if(isTag(tree,tag)) throw new IllegalArgumentException("tree may not be a "+tag+" itself: "+tree);
-	//		for(Tree child: tree.children()) {flattenTree(child,tag,tree,Optional.empty());}
-	//	}
-	//
-	//	private static void flattenTree(Tree tree, String tag, Tree lastNonTag,Optional<Tree> firstTagged)
-	//	{
-	//		if(isTag(tree,tag))
-	//		{
-	//			if(firstTagged.isPresent())
-	//			{
-	//				//
-	//			} else
-	//			{
-	//				firstTagged = tree;
-	//			}
-	//		} else
-	//		{
-	//			lastNonTag=tree;
-	//		}
-	//		for(Tree child: tree.children()) {flattenTree(child,tag,tree,firstTagged);}
-	//	}
 
 	private Set<String> findComponents(Tree tree)
 	{
@@ -298,4 +336,50 @@ public class CubeTemplator
 		//		return components;
 		return components;
 	}
+
+//	/** transforms e.g. (PP .. (PP ..)) into (PP ..) (PP ..) */
+//	private static void flattenTree(Tree tree, String tag)
+//	{
+//		throw new UnsupportedOperationException();
+//		if(isTag(tree,tag)) throw new IllegalArgumentException("tree may not be a "+tag+" itself: "+tree);
+//		for(Tree child: tree.children()) {flattenTree(child,tag,tree,Optional.empty());}
+//	}
+//
+//	private static void flattenTree(Tree tree, String tag, Tree lastNonTag,Optional<Tree> firstTagged)
+//	{
+//		if(isTag(tree,tag))
+//		{
+//			if(firstTagged.isPresent())
+//			{
+//				//
+//			} else
+//			{
+//				firstTagged = tree;
+//			}
+//		} else
+//		{
+//			lastNonTag=tree;
+//		}
+//		for(Tree child: tree.children()) {flattenTree(child,tag,tree,firstTagged);}
+//	}
+
+//boolean flattened;
+//Tree[] ppa = pps.toArray(new Tree[0]);
+//do
+//{
+//	flattened = false;
+//	outer:
+//	for(int i=0;i<ppa.length;i++)
+//		for(int j=0;j<ppa.length;j++)
+//		{
+//			if(i==j) continue;
+//			if(strictContainsRecursive(ppa[i], ppa[j]))
+//			{
+//				ppa[i]
+//				flattened = true;
+//				break outer;
+//			}
+//		}
+//
+//} while(flattened);
 }

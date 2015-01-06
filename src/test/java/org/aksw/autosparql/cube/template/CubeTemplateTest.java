@@ -1,5 +1,6 @@
 package org.aksw.autosparql.cube.template;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +24,7 @@ public class CubeTemplateTest
 
 //		ComponentProperty receipientCountry = new ComponentProperty("finland-aid", "http://linkedspending.aksw.org/ontology/finland-aid-recipient-country-spec",null);
 		restrictions.add(new UriRestriction(receipientCountry,"https://openspending.org/finland-aid/recipient-country/cn"));
-		CubeTemplate ct = new CubeTemplate(cube.uri,restrictions,amount,Optional.of(Aggregate.SUM));
+		CubeTemplate ct = new CubeTemplate(cube.uri,restrictions,Collections.singleton(amount),Optional.of(Aggregate.SUM));
 		ct.perProperties.add(ComponentProperty.getInstance(cube, "http://linkedspending.aksw.org/ontology/finland-aid-reporting-year"));
 		System.out.println(ct.sparqlQuery());
 	}

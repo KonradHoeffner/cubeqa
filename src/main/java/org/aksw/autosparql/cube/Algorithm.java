@@ -23,6 +23,6 @@ public class Algorithm
 	public String answer(String question)
 	{
 		log.info("Answering "+question+"on cube "+cube+"...");
-		return new CubeTemplator(cube, question).buildTemplates().sparqlQuery();
+		return new CubeTemplator(cube, question).buildTemplate().sparqlQuery();
 	}
 }
