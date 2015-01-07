@@ -8,9 +8,11 @@ import org.aksw.autosparql.cube.restriction.ValueRestriction;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @RequiredArgsConstructor
 @Getter
+@ToString
 public class ScoreResult implements Serializable
 {
 	public final ComponentProperty property;

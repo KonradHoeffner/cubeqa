@@ -13,7 +13,7 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import de.konradhoeffner.commons.IteratorStream;
+import de.konradhoeffner.commons.Streams;
 
 /** Scorers match phrases or words to component property values.
  * Scorers are used when a phrase does not match to a component property label.

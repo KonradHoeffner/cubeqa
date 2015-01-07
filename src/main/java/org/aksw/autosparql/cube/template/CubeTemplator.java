@@ -76,8 +76,6 @@ public class CubeTemplator
 		pipeline.annotate(document);
 
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-
-		//		for(CoreMap sentence: sentences)
 		{
 			CoreMap sentence = sentences.get(0);
 			// this is the parse tree of the current sentence
@@ -86,8 +84,6 @@ public class CubeTemplator
 			CubeTemplate template  = buildTemplate(tree);
 			System.out.println(template.sparqlQuery());
 			return template;
-			// this is the Stanford dependency graph of the current sentence
-			//		      SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
 		}
 	}
 

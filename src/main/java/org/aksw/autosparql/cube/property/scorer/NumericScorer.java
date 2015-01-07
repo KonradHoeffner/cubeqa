@@ -21,8 +21,7 @@ public class NumericScorer extends Scorer
 
 	@Override public Optional<ScoreResult> unsafeScore(String value)
 	{
-		throw new IllegalArgumentException("not implemented");
-//		double d = Double.valueOf(value);
-//		return range.contains(d)?1:0;
+		double d = Double.valueOf(value);
+		return Optional.of(new ScoreResult(property, value, range.contains(d)?1.0:0.0));
 	}
 }

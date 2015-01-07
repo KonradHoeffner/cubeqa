@@ -1,6 +1,6 @@
 package org.aksw.autosparql.cube.property;
 
-import static de.konradhoeffner.commons.IteratorStream.stream;
+import static de.konradhoeffner.commons.Streams.stream;
 import static org.aksw.linkedspending.tools.DataModel.*;
 import java.io.Serializable;
 import java.util.*;
@@ -194,6 +194,11 @@ public class ComponentProperty implements Serializable
 	@Override public String toString()
 	{
 		return uri;
+	}
+
+	public String shortName()
+	{
+		return cube.name+'-'+uri.substring(Math.max(uri.lastIndexOf('/'),uri.lastIndexOf('#'))+1);
 	}
 
 }
