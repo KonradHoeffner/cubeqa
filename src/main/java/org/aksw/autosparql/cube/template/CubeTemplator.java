@@ -12,6 +12,7 @@ import org.aksw.autosparql.commons.nlp.ner.DBpediaSpotlightNER;
 import org.aksw.autosparql.cube.Aggregate;
 import org.aksw.autosparql.cube.AggregateMapping;
 import org.aksw.autosparql.cube.Cube;
+import org.aksw.autosparql.cube.Trees;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.property.scorer.ScoreResult;
 import org.aksw.autosparql.cube.restriction.Restriction;
@@ -219,28 +220,6 @@ public class CubeTemplator
 		return null;
 	}
 
-	@AllArgsConstructor
-	@EqualsAndHashCode
-	class MatchResult
-	{
-		public final String phrase;
-		/** the estimated probability that the phrase refers to a property with a given property label */
-		public final Map<ComponentProperty,Double> nameRefs;
-		/** the estimated probability that the phrase refers to a property with a given property value*/
-		public final Map<ComponentProperty,ScoreResult> valueRefs;
-//		public final Map<ComponentProperty,Double> valueRefs;
-
-		public void join(MatchResult otherResult)
-		{
-			Set<ComponentProperty> nameValue = this.nameRefs.keySet();
-			nameValue.retainAll(otherResult.valueRefs.keySet());
-//			nameValue.retainAll(otherResult.valueRefs.stream().map(ScoreResult::getProperty).collect(Collectors.toSet()));
-
-			nameValue.stream().map(property->new Pair<>(property,nameRefs.get(property)*valueRefs.get(property).score))
-			.max(Comparator.comparing(Pair::getB));
-		}
-	}
-
 //	private Pair<Set<Restriction>,Set<Pair<ComponentProperty,Double>>> match(Tree ref)
 	private MatchResult match(Tree ref)
 	{
@@ -302,7 +281,6 @@ public class CubeTemplator
 		return
 				cube.properties.values().stream().map(p->p.scorer.score(phrase)).filter(Optional::isPresent).map(Optional::get)
 				.collect(Collectors.toMap(result->result.property, result->result));
-//				.max(Comparator.comparing(ScoreResult::getScore));
 	}
 
 	private Map<ComponentProperty, Double> scorePhraseProperties(String phrase)
@@ -312,8 +290,6 @@ public class CubeTemplator
 				.filter(p->p.b>0.8).collect(Collectors.toMap(p->p.a, p->p.b));
 	}
 
-	private static boolean isTag(Tree tree, String tag) {return tree.label().value().equals(tag);}
-
 	private Set<String> findComponents(Tree tree)
 	{
 		// recursively add all
@@ -322,7 +298,7 @@ public class CubeTemplator
 		//		System.out.println("tree "+tree);
 		//		System.out.println("penn "+tree.pennString());
 		//				if(!tree.isLeaf()) System.out.println("label "+tree.label());
-		if((!tree.isLeaf())&&isTag(tree,"PP")) System.out.println(tree);
+		if((!tree.isLeaf())&&Trees.isTag(tree,"PP")) System.out.println(tree);
 		//				System.out.println(tree.getLeaves());
 		//		tree.taggedYield().forEach(t->System.out.print(t.tag()));
 		//		System.out.println();

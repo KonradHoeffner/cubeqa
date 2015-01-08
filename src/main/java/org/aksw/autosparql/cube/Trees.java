@@ -33,4 +33,5 @@ public class Trees
 		for(Tree subTree: tree.getChildrenAsList()) removeSubtree(subTree, child);
 	}
 
+	static public boolean isTag(Tree tree, String tag) {return tree.label().value().equals(tag);}
 }

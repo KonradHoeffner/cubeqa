@@ -14,7 +14,7 @@ public class FinlandAidTest
 	@Test public void testSingle()
 	{
 		Algorithm a = new Algorithm(FinlandAid.CUBE_NAME);
-		String query = a.answer(FinlandAid.questions.get(0));
+		String query = a.answer(FinlandAid.questions.get(2));
 		System.out.println(query);
 	}
 

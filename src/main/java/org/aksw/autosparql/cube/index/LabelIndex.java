@@ -1,7 +1,9 @@
 package org.aksw.autosparql.cube.index;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +24,8 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.spell.NGramDistance;
+import org.apache.lucene.search.spell.StringDistance;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -35,6 +39,7 @@ public class LabelIndex
 	private IndexWriter indexWriter;
 	private final Directory dir;
 	private IndexReader reader;
+	private StringDistance distance = new NGramDistance();
 
 	private static final Map<String,LabelIndex> instances = new HashMap<>();
 
@@ -88,13 +93,20 @@ public class LabelIndex
 		{
 			// TODO score with fuzzy matches too high
 			Document doc = searcher.doc(hit.doc);
-			urisWithScore.put(doc.get("uri"),(double) hit.score);
+//			for(String l: doc.getValues("label"))
+//			{
+//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
+//			}
+			double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(label, l))).max().getAsDouble();
+			// Lucene returns document retrieval score instead of similarity score
+			urisWithScore.put(doc.get("uri"),score);
+//			urisWithScore.put(doc.get("uri"),(double) hit.score);
 		}
 		return urisWithScore;
 	}
 
-	@SneakyThrows
-	public void add(String uri, Set<String> labels)
+
+	public void add(String uri, Set<String> labels) throws IOException
 	{
 		if(indexWriter==null) throw new IllegalStateException("indexWriter is null, call startWrites() first.");
 		Document doc = new Document();

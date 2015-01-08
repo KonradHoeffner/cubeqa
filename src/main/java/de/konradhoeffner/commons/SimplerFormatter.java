@@ -17,8 +17,8 @@ public class SimplerFormatter extends Formatter
 
 		sb//.append(new Date(record.getMillis()))
 //		.append(" ")
-		.append(record.getLevel().getLocalizedName())
-		.append(": ")
+//		.append(record.getLevel().getLocalizedName())
+//		.append(": ")
 		.append(formatMessage(record))
 		.append(LINE_SEPARATOR);
 
