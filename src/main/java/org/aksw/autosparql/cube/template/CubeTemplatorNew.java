@@ -20,11 +20,11 @@ public class CubeTemplatorNew
 	CubeTemplate buildTemplate()
 	{
 		Tree root = StanfordNlp.parse(question);
-		visit(root);
+		visitRecursive(root);
 		return null;
 	}
 
-	Object visit(Tree tree)
+	Object visitRecursive(Tree tree)
 	{
 		while(!tree.isPreTerminal()&&tree.children().length==1)
 		{
@@ -35,7 +35,8 @@ public class CubeTemplatorNew
 		MatchResult result = identify(tree);
 		if(result.isEmpty())
 		{
-			tree.getChildrenAsList().forEach(this::visit);
+			tree.getChildrenAsList().stream().filter(c->!c.isLeaf()).forEach(this::visitRecursive);
+			// combine
 		}
 		else
 		{

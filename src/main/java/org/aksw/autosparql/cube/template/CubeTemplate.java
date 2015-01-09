@@ -21,19 +21,11 @@ public class CubeTemplate
 	final Set<Restriction> restrictions;
 	final Set<ComponentProperty> answerProperties;
 	final Set<ComponentProperty> perProperties = new HashSet<>();
-	final Optional<Aggregate> aggregate;
+	final Set<Aggregate> aggregates;
 
 	boolean isComplete()
 	{
 		return !restrictions.isEmpty()&&!answerProperties.isEmpty();
-	}
-
-	public void union(CubeTemplate t)
-	{
-		if(!cubeUri.equals(t.cubeUri)) throw new IllegalArgumentException("cube uri different");
-		// TODO join restrictions if possible (e.g. intervals for numericals, detect impossibilities)
-		restrictions.addAll(t.restrictions);
-		answerProperties.addAll(answerProperties);
 	}
 
 	public String sparqlQuery()
@@ -46,7 +38,7 @@ public class CubeTemplate
 
 		StringBuilder sb = new StringBuilder();
 		String resultDef = "xsd:decimal(?result)";
-		if(aggregate.isPresent()) {resultDef = aggregate.get()+"("+resultDef+")";}
+		if(!aggregates.isEmpty()) {resultDef = aggregates.iterator().next()+"("+resultDef+")";}
 		sb.append("select "+resultDef+" ");
 		perProperties.removeAll(answerProperties);
 		for(ComponentProperty p: perProperties) {sb.append(" ?"+p.var);}
