@@ -15,7 +15,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.aksw.autosparql.cube.property.ComponentProperty;
-import arq.load;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;

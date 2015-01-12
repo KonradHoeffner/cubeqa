@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 
 /** restriction on a value from a given interval **/
 

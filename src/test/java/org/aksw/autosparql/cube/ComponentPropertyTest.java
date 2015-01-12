@@ -1,10 +1,7 @@
 package org.aksw.autosparql.cube;
 
-import org.apache.lucene.search.spell.LevensteinDistance;
 import org.junit.Test;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.CosineSimilarity;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.MatchingCoefficient;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.MongeElkan;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.SmithWatermanGotohWindowedAffine;

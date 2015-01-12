@@ -1,13 +1,11 @@
 package org.aksw.autosparql.cube.property.scorer;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.cube.property.ComponentProperty;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 
 @Log
 public class DateScorer extends DatatypePropertyScorer

@@ -2,7 +2,6 @@ package de.konradhoeffner.commons;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 

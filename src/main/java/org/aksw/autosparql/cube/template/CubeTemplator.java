@@ -3,8 +3,6 @@ package org.aksw.autosparql.cube.template;
 import static org.aksw.autosparql.cube.Trees.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.commons.knowledgebase.DBpediaKnowledgebase;

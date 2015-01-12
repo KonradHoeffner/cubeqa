@@ -1,6 +1,5 @@
 package org.aksw.autosparql.cube.property.scorer;
 
-import static org.junit.Assert.*;
 import org.aksw.autosparql.cube.Cube;
 import org.junit.Test;
 

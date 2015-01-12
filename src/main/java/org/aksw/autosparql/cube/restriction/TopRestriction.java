@@ -1,11 +1,6 @@
 package org.aksw.autosparql.cube.restriction;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import org.aksw.autosparql.cube.property.ComponentProperty;

@@ -1,6 +1,5 @@
 package org.aksw.autosparql.cube;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class AlgorithmTest

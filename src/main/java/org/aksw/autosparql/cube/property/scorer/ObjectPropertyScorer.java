@@ -1,8 +1,5 @@
 package org.aksw.autosparql.cube.property.scorer;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;

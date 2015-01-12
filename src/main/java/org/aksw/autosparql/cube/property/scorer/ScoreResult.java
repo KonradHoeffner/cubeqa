@@ -5,7 +5,6 @@ import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.restriction.Restriction;
 import org.aksw.autosparql.cube.restriction.UriRestriction;
 import org.aksw.autosparql.cube.restriction.ValueRestriction;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

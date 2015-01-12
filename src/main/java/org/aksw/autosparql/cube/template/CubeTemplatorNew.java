@@ -2,6 +2,7 @@ package org.aksw.autosparql.cube.template;
 
 import static org.aksw.autosparql.cube.Trees.phrase;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.cube.Cube;
@@ -17,14 +18,13 @@ public class CubeTemplatorNew
 	private final Cube cube;
 	private final String question;
 
-	CubeTemplate buildTemplate()
+	public CubeTemplate buildTemplate()
 	{
 		Tree root = StanfordNlp.parse(question);
-		visitRecursive(root);
-		return null;
+		return visitRecursive(root).toTemplate();
 	}
 
-	Object visitRecursive(Tree tree)
+	CubeTemplateFragment visitRecursive(Tree tree)
 	{
 		while(!tree.isPreTerminal()&&tree.children().length==1)
 		{
@@ -35,14 +35,17 @@ public class CubeTemplatorNew
 		MatchResult result = identify(tree);
 		if(result.isEmpty())
 		{
-			tree.getChildrenAsList().stream().filter(c->!c.isLeaf()).forEach(this::visitRecursive);
-			// combine
+			return CubeTemplateFragment.combine(
+					tree.getChildrenAsList().stream()
+					.filter(c->!c.isLeaf())
+					.map(this::visitRecursive)
+					.collect(Collectors.toSet()));
 		}
 		else
 		{
 			log.info("identified for tree"+tree+":"+result);
+			return result.toFragment(cube);
 		}
-		return null;
 	}
 
 	MatchResult identify(Tree tree)

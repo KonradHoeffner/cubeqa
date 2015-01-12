@@ -1,10 +1,8 @@
 package org.aksw.autosparql.cube.template;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.aksw.autosparql.cube.Aggregate;
 import org.aksw.autosparql.cube.Cube;
@@ -16,7 +14,7 @@ import com.hp.hpl.jena.query.ResultSet;
 @RequiredArgsConstructor
 public class CubeTemplate
 {
-	final String cubeUri;
+	final Cube cube;
 
 	final Set<Restriction> restrictions;
 	final Set<ComponentProperty> answerProperties;
@@ -31,7 +29,7 @@ public class CubeTemplate
 	public String sparqlQuery()
 	{
 		Set<String> wherePatterns = restrictions.stream().flatMap(r->r.wherePatterns().stream()).collect(Collectors.toSet());
-		wherePatterns.add("?obs qb:dataSet <"+cubeUri+">. ?obs a qb:Observation.");
+		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">. ?obs a qb:Observation.");
 
 		Set<String> orderLimitPatterns = restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
 		if(orderLimitPatterns.size()>1) throw new IllegalArgumentException("more than one orderlimit pattern");

@@ -1,6 +1,5 @@
 package org.aksw.autosparql.cube.property.scorer;
 
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -12,7 +11,6 @@ import com.google.common.collect.Multiset;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import de.konradhoeffner.commons.Streams;
 
 @Log
 public abstract class MultiSetScorer extends Scorer

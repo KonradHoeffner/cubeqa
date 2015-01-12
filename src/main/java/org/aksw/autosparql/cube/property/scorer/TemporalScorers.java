@@ -1,6 +1,5 @@
 package org.aksw.autosparql.cube.property.scorer;
 
-import java.time.Month;
 import java.time.Year;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 

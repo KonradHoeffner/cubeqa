@@ -1,6 +1,5 @@
 package org.aksw.autosparql.cube.detector;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TopDetectorTest

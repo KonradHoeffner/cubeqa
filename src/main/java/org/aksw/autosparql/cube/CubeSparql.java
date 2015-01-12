@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import org.aksw.linkedspending.tools.DataModel;
-import com.clarkparsia.sparqlowl.parser.antlr.SparqlOwlParser.defaultGraphClause_return;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.vocabulary.DCTerms;

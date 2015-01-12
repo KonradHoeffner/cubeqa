@@ -2,16 +2,18 @@ package org.aksw.autosparql.cube.template;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.property.scorer.ScoreResult;
 import de.konradhoeffner.commons.Pair;
-import edu.stanford.nlp.util.Comparators;
 
 @EqualsAndHashCode
+@Getter
 class MatchResult
 {
 	public final String phrase;
@@ -45,5 +47,11 @@ class MatchResult
 		score = Math.max(Collections.max(nameRefs.values()),
 				valueRefs.values().stream().mapToDouble(ScoreResult::getScore).max().orElse(0));
 	}
+
+	public CubeTemplateFragment toFragment(Cube cube)
+	 {
+		return new CubeTemplateFragment(cube, new HashSet<>(), new HashSet<>(),new HashSet<>(),new HashSet<>(), Collections.singleton(this));
+	 }
+
 
 }

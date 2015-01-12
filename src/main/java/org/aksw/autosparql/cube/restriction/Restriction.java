@@ -3,12 +3,12 @@ package org.aksw.autosparql.cube.restriction;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.aksw.autosparql.cube.property.ComponentProperty;
-import org.aksw.autosparql.tbsl.algorithm.exploration.Index.newSpecialSQliteIndex;
 
 @RequiredArgsConstructor
+@Getter
 public abstract class Restriction
 {
 	final ComponentProperty property;

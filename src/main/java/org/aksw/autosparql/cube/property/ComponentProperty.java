@@ -20,7 +20,6 @@ import uk.ac.shef.wit.simmetrics.similaritymetrics.Jaro;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.MongeElkan;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.Soundex;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
