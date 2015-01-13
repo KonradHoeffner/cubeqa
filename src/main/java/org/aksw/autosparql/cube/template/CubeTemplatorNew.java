@@ -1,7 +1,12 @@
 package org.aksw.autosparql.cube.template;
 
 import static org.aksw.autosparql.cube.Trees.phrase;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -16,12 +21,20 @@ import edu.stanford.nlp.trees.Tree;
 public class CubeTemplatorNew
 {
 	private final Cube cube;
-	private final String question;
+	//	private final String question;
 
-	public CubeTemplate buildTemplate()
+	public CubeTemplate buildTemplate(String question)
 	{
 		Tree root = StanfordNlp.parse(question);
 		return visitRecursive(root).toTemplate();
+	}
+
+	List<CubeTemplateFragment> fragments(List<Tree> trees, Predicate<CubeTemplateFragment> predicate)
+	{
+		return trees.stream()
+				.map(this::visitRecursive)
+				.filter(predicate)
+				.collect(Collectors.toList());
 	}
 
 	CubeTemplateFragment visitRecursive(Tree tree)
@@ -31,26 +44,59 @@ public class CubeTemplatorNew
 			// skipping down
 			tree = tree.getChild(0);
 		}
-		log.info("visiting tree "+tree);
-		MatchResult result = identify(tree);
+		String phrase = phrase(tree);
+		if(phrase.length()<3)
+		{
+			System.out.println("phrase less than 3 characters, skipped: "+phrase);
+			return new CubeTemplateFragment(cube, phrase);
+		}
+		System.out.println("visiting tree "+tree);
+		System.out.println("Phrase \""+phrase+"\"");
+		MatchResult result = identify(phrase);
 		if(result.isEmpty())
 		{
-			return CubeTemplateFragment.combine(
-					tree.getChildrenAsList().stream()
-					.filter(c->!c.isLeaf())
-					.map(this::visitRecursive)
-					.collect(Collectors.toSet()));
+			// can't match the whole phrase, match subtrees separately
+			List<CubeTemplateFragment> matchedFragments = fragments(tree.getChildrenAsList(), f->!f.isEmpty());
+			List<CubeTemplateFragment> unmatchedFragments = fragments(tree.getChildrenAsList(), f->f.isEmpty());
+
+			List<CubeTemplateFragment> fragments = new ArrayList<>(matchedFragments);
+
+			if(!unmatchedFragments.isEmpty())
+			{
+				MatchResult unmatchedResult = identify(CubeTemplateFragment.combine(unmatchedFragments).phrase);
+				System.out.print("unmatched fragments with phrase \""+unmatchedResult.phrase+"\"...");
+				unmatchedFragments.stream().map(f->f.phrase).collect(Collectors.toList());
+				// can we match these leftover fragments together?
+
+				if(unmatchedResult.isEmpty())
+				{
+					System.out.println("unmatched");
+				} else
+				{
+					System.out.println("matched to "+unmatchedResult);
+					fragments.add(unmatchedResult.toFragment(cube));
+				}
+			}
+
+			if(fragments.isEmpty())
+			{
+				System.out.println("no match found for phrase \"" +phrase+"\"");
+				return new CubeTemplateFragment(cube,phrase);
+			} else
+			{
+				return CubeTemplateFragment.combine(fragments);
+			}
 		}
 		else
 		{
+			// whole phrase matched, subtrees skipped
 			log.info("identified for tree"+tree+":"+result);
 			return result.toFragment(cube);
 		}
 	}
 
-	MatchResult identify(Tree tree)
+	public MatchResult identify(String phrase)
 	{
-		String phrase = phrase(tree);
 		Map<ComponentProperty,Double> nameRefs = Scorers.scorePhraseProperties(cube,phrase);
 		Map<ComponentProperty,ScoreResult> valueRefs = Scorers.scorePhraseValues(cube,phrase);
 		return new MatchResult(phrase, nameRefs, valueRefs);

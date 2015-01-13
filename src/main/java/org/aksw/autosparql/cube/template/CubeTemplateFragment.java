@@ -2,6 +2,7 @@ package org.aksw.autosparql.cube.template;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
@@ -23,6 +24,7 @@ public class CubeTemplateFragment
 	private static final double TO_TEMPLATE_VALUE_SCORE_THRESHOLD = 0.2;
 
 	final Cube cube;
+	final String phrase;
 
 	final Set<Restriction> restrictions;
 	final Set<ComponentProperty> answerProperties;
@@ -39,9 +41,16 @@ public class CubeTemplateFragment
 	  return properties;
   }
 
-	public static CubeTemplateFragment combine(Set<CubeTemplateFragment> fragments)
+   public CubeTemplateFragment(Cube cube, String phrase)
+   {
+	   this(cube, phrase, new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>());
+   }
+
+	public static CubeTemplateFragment combine(List<CubeTemplateFragment> fragments)
 	{
-		if(fragments.isEmpty()) throw new IllegalArgumentException("empty fragment set, can't combine");
+		if(fragments.isEmpty()) {throw new IllegalArgumentException("empty fragment set, can't combine");}
+
+		// return new CubeTemplateFragment(cube);
 		if(fragments.stream().map(f->f.cube.uri).collect(Collectors.toSet()).size()>1) throw new IllegalArgumentException("different cube uris, can't combine");
 		// TODO join restrictions if possible (e.g. intervals for numericals, detect impossibilities)
 		Set<Restriction> restrictions = new HashSet<>();
@@ -56,7 +65,9 @@ public class CubeTemplateFragment
 			perProperties.addAll(f.perProperties);
 			aggregates.addAll(f.aggregates);
 		});
-		CubeTemplateFragment fragment = new CubeTemplateFragment(fragments.iterator().next().cube, restrictions, answerProperties, perProperties, aggregates,matchResults);
+		String combinedPhrase = fragments.stream().map(CubeTemplateFragment::getPhrase).reduce("", (a,b)->a+" "+b);
+		CubeTemplateFragment fragment = new CubeTemplateFragment(fragments.iterator().next().cube,combinedPhrase,
+				restrictions, answerProperties, perProperties, aggregates,matchResults);
 
 		// *** combining match results
 		// **** get all properties that are not yet assigned but somewhere referenced both as name and as value
@@ -84,6 +95,8 @@ public class CubeTemplateFragment
 						});
 			});
 		}
+		// add back all non used match results
+		matchResults.addAll(fragmentsMatchResults);
 
 //		Set<ComponentProperty> nameValue = this.nameRefs.keySet();
 //		nameValue.retainAll(otherResult.valueRefs.keySet());
@@ -114,5 +127,11 @@ public class CubeTemplateFragment
 		}
 
 		return new CubeTemplate(cube, restrictions, answerProperties, aggregates);
+	}
+
+	public boolean isEmpty()
+	{
+		return restrictions.isEmpty()&&answerProperties.isEmpty()&&perProperties.isEmpty()
+				&&aggregates.isEmpty()&&matchResults.isEmpty();
 	}
 }

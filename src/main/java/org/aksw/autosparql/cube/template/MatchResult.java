@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.property.scorer.ScoreResult;
@@ -14,6 +15,7 @@ import de.konradhoeffner.commons.Pair;
 
 @EqualsAndHashCode
 @Getter
+@ToString
 class MatchResult
 {
 	public final String phrase;
@@ -44,13 +46,13 @@ class MatchResult
 		this.phrase = phrase;
 		this.nameRefs = nameRefs;
 		this.valueRefs = valueRefs;
-		score = Math.max(Collections.max(nameRefs.values()),
+		score = Math.max(nameRefs.values().stream().reduce(0.0,Double::max),
 				valueRefs.values().stream().mapToDouble(ScoreResult::getScore).max().orElse(0));
 	}
 
 	public CubeTemplateFragment toFragment(Cube cube)
 	 {
-		return new CubeTemplateFragment(cube, new HashSet<>(), new HashSet<>(),new HashSet<>(),new HashSet<>(), Collections.singleton(this));
+		return new CubeTemplateFragment(cube, phrase, new HashSet<>(), new HashSet<>(),new HashSet<>(),new HashSet<>(), Collections.singleton(this));
 	 }
 
 

@@ -36,7 +36,8 @@ public class ComponentProperty implements Serializable
 	private static final AtomicInteger id = new AtomicInteger(0);
 	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
 
-	static final List<AbstractStringMetric> similarities = Arrays.<AbstractStringMetric>asList(new MongeElkan(),new Jaro(),new Levenshtein(), new QGramsDistance());//,new Soundex());
+	static final List<AbstractStringMetric> similarities = Arrays.<AbstractStringMetric>asList(
+			new QGramsDistance());//,new Soundex()); new MongeElkan(),new Jaro(),new Levenshtein(),
 
 	public final String var;
 
@@ -68,10 +69,12 @@ public class ComponentProperty implements Serializable
 
 	public double match(String label)
 	{
+//		System.out.println(labels);
+//		for(AbstractStringMetric sim: similarities)
+//		for(String l: labels) {System.out.println(l+" "+sim+" "+sim.getSimilarity(l, label));}
 		OptionalDouble d = similarities.stream().flatMapToDouble(
 				sim->labels.stream().mapToDouble(
 						l->sim.getSimilarity(l,label))).max();
-
 		return d.isPresent()?d.getAsDouble():0;
 	}
 
