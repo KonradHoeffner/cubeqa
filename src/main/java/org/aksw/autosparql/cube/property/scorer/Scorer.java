@@ -3,12 +3,15 @@ package org.aksw.autosparql.cube.property.scorer;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.cube.CubeSparql;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Jaro;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import de.konradhoeffner.commons.Streams;
 
 /** Scorers match phrases or words to component property values.
  * Scorers are used when a phrase does not match to a component property label.
@@ -18,7 +21,7 @@ import com.hp.hpl.jena.query.ResultSet;
 public abstract class Scorer implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
-	final ComponentProperty property;
+	protected final ComponentProperty property;
 	protected static final AbstractStringMetric similarity = new Jaro();
 
 	public Scorer(ComponentProperty property)
@@ -49,6 +52,11 @@ public abstract class Scorer implements Serializable
 				+ "{?obs a qb:Observation. ?obs <"+property.uri+"> ?value. } group by ?value";
 		ResultSet rs = CubeSparql.linkedSpending(property.cube.name).select(query);
 		return rs;
+	}
+
+	protected Stream<RDFNode> valueStream()
+	{
+		return Streams.stream(queryValues()).map(qs->qs.get("value"));
 	}
 
 	static protected float closestValue(float[] sorted, float key)

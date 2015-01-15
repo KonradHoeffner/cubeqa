@@ -1,4 +1,4 @@
-package org.aksw.autosparql.cube.property.scorer;
+package org.aksw.autosparql.cube.property.scorer.old;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.cube.property.ComponentProperty;
+import org.aksw.autosparql.cube.property.scorer.DatatypePropertyScorer;
+import org.aksw.autosparql.cube.property.scorer.ScoreResult;
 
 @Log
 public class DateScorer extends DatatypePropertyScorer

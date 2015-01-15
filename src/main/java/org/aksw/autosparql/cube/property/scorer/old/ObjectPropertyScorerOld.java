@@ -1,3 +1,4 @@
+package org.aksw.autosparql.cube.property.scorer.old;
 //package org.aksw.autosparql.cube.property.scorer;
 //
 //import java.util.Collections;

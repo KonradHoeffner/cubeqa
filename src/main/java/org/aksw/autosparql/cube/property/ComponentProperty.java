@@ -11,9 +11,10 @@ import lombok.extern.java.Log;
 import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.scorer.*;
 import org.aksw.autosparql.cube.CubeSparql;
-import org.aksw.autosparql.cube.property.scorer.DateScorer;
 import org.aksw.autosparql.cube.property.scorer.ObjectPropertyScorer;
 import org.aksw.autosparql.cube.property.scorer.StringScorer;
+import org.aksw.autosparql.cube.property.scorer.old.DateScorer;
+import org.aksw.autosparql.cube.property.scorer.old.TemporalScorers;
 import org.aksw.linkedspending.tools.DataModel;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Jaro;
@@ -155,7 +156,6 @@ public class ComponentProperty implements Serializable
 
 	public static synchronized ComponentProperty getInstance(Cube cubeUri, String uri)//, String type)
 	{
-
 		Pair<String,String> key = new Pair<String,String>(cubeUri.uri, uri);
 		ComponentProperty instance = instances.get(key);
 		if(instance==null)

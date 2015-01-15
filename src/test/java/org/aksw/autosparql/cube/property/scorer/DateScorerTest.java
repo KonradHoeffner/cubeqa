@@ -1,6 +1,7 @@
 package org.aksw.autosparql.cube.property.scorer;
 
 import org.aksw.autosparql.cube.Cube;
+import org.aksw.autosparql.cube.property.scorer.old.DateScorer;
 import org.junit.Test;
 
 public class DateScorerTest

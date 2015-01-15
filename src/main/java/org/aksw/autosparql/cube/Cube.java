@@ -109,7 +109,7 @@ public class Cube implements Serializable
 
 				// because of ComponentProperty's multiton pattern, having the same property multiple times is not a problem and in fact necessary for multiple labels
 				String propertyUri = qs.get("p").asResource().getURI();
-				if(!propertyUri.contains("recipient-country")) continue;
+
 				ComponentProperty property = ComponentProperty.getInstance(c, propertyUri);//, qs.get("type").asResource().getURI());
 				properties.put(propertyUri, property);
 				//				if(qs.contains("label")) {property.labels.add(qs.get("label").asLiteral().getLexicalForm());}

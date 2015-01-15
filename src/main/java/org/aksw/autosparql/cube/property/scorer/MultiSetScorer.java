@@ -48,19 +48,12 @@ public abstract class MultiSetScorer extends Scorer
 	}
 	}
 
-	protected ResultSet queryValues()
-	{
-		String query = "select ?value (count(?value) as ?cnt)"
-				+ "{?obs a qb:Observation. ?obs <"+property.uri+"> ?value. } group by ?value";
-		ResultSet rs = CubeSparql.linkedSpending(property.cube.name).select(query);
-		return rs;
-	}
 
-	protected double countScore(int count)
-	{
-		// +1 to prevent div by 0 the nearer the score to the max, the higher the value, but don't fall of too steep so use log.
-		if(count==0) return 0;
-		return Math.sqrt(Math.log(count+1)/Math.log(maxCount+1)); // ad hoc, sqrt is to have a less steep falloff
-	}
+//	protected double countScore(int count)
+//	{
+//		// +1 to prevent div by 0 the nearer the score to the max, the higher the value, but don't fall of too steep so use log.
+//		if(count==0) return 0;
+//		return Math.sqrt(Math.log(count+1)/Math.log(maxCount+1)); // ad hoc, sqrt is to have a less steep falloff
+//	}
 
 }
