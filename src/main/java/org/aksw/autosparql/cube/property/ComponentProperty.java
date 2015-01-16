@@ -16,11 +16,8 @@ import org.aksw.autosparql.cube.property.scorer.StringScorer;
 import org.aksw.autosparql.cube.property.scorer.old.DateScorer;
 import org.aksw.autosparql.cube.property.scorer.old.TemporalScorers;
 import org.aksw.linkedspending.tools.DataModel;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.Jaro;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.MongeElkan;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.QGramsDistance;
+import org.apache.lucene.search.spell.NGramDistance;
+import org.apache.lucene.search.spell.StringDistance;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -33,12 +30,11 @@ import de.konradhoeffner.commons.Pair;
 @Log
 public class ComponentProperty implements Serializable
 {
-	private static final long	serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 4L;
 	private static final AtomicInteger id = new AtomicInteger(0);
 	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
 
-	static final List<AbstractStringMetric> similarities = Arrays.<AbstractStringMetric>asList(
-			new QGramsDistance());//,new Soundex()); new MongeElkan(),new Jaro(),new Levenshtein(),
+	protected static transient StringDistance similarity = new NGramDistance();
 
 	public final String var;
 
@@ -73,9 +69,11 @@ public class ComponentProperty implements Serializable
 //		System.out.println(labels);
 //		for(AbstractStringMetric sim: similarities)
 //		for(String l: labels) {System.out.println(l+" "+sim+" "+sim.getSimilarity(l, label));}
-		OptionalDouble d = similarities.stream().flatMapToDouble(
-				sim->labels.stream().mapToDouble(
-						l->sim.getSimilarity(l,label))).max();
+//		OptionalDouble d = similarities.stream().flatMapToDouble(
+		System.out.println("matching "+label+" to "+labels);
+
+		OptionalDouble d = labels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
+
 		return d.isPresent()?d.getAsDouble():0;
 	}
 

@@ -35,28 +35,25 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-public class LabelIndex extends Index
+public class StringIndex extends Index
 {
-	private static final Map<String,LabelIndex> instances = new HashMap<>();
+	private static final Map<String,StringIndex> instances = new HashMap<>();
 
 	@SneakyThrows
-	private LabelIndex(ComponentProperty property)
+	private StringIndex(ComponentProperty property)
 	{
 		super(property);
 	}
 
 	@SneakyThrows
-	public void fill(Set<String> uris, Function<String,Set<String>> labelFunction)
+	public void fill(Set<String> strings)
 	{
 		if(!subFolder.exists())
 		{
 			startWrites();
-			for(String uri: uris)
+			for(String s: strings)
 			{
-				//				Set<String> labels = labelFunction.apply(uri);
-				//				System.out.println(labels);
-				//				add(uri, labels);
-				add(uri, labelFunction.apply(uri));
+				add(s);
 			}
 			stopWrites();
 		}
@@ -64,13 +61,9 @@ public class LabelIndex extends Index
 	}
 
 	@SneakyThrows
-	public Map<String,Double> getUrisWithScore(String label)
+	public Map<String,Double> getStringsWithScore(String s)
 	{
-		//		PhraseQuery q = new PhraseQuery();
-		//		q.add(new Term("label",label));
-
-		//		Query q = new QueryParser("label", analyzer).parse(querystr);
-		Query q = new FuzzyQuery(new Term("label",label));
+		Query q = new FuzzyQuery(new Term("string",s));
 //		System.out.println(q);
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
@@ -78,7 +71,7 @@ public class LabelIndex extends Index
 		searcher.search(q, collector);
 		ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
-		Map<String,Double> urisWithScore = new HashMap<>();
+		Map<String,Double> stringsWithScore = new HashMap<>();
 		for(ScoreDoc hit: hits)
 		{
 			// TODO score with fuzzy matches too high
@@ -87,36 +80,28 @@ public class LabelIndex extends Index
 			//			{
 			//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
 			//			}
-			double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(label, l))).max().getAsDouble();
+			double score = Arrays.stream(doc.getValues("string")).mapToDouble(l->(distance.getDistance(s, l))).max().getAsDouble();
 			// Lucene returns document retrieval score instead of similarity score
-			urisWithScore.put(doc.get("uri"),score);
+			stringsWithScore.put(doc.get("uri"),score);
 			//			urisWithScore.put(doc.get("uri"),(double) hit.score);
 		}
-		return urisWithScore;
+		return stringsWithScore;
 	}
 
-	public void add(String uri, Set<String> labels) throws IOException
+	public void add(String s) throws IOException
 	{
 		if(indexWriter==null) throw new IllegalStateException("indexWriter is null, call startWrites() first.");
 		Document doc = new Document();
-		doc.add(new StringField("uri", uri, Field.Store.YES));
-		//		doc.add(new TextField("cube", cube.name, Field.Store.YES));
-		//		doc.add(new TextField("property", cube.name, Field.Store.YES));
-
-		labels.forEach(l->
-		{
-//			doc.add(new TextField("normalizedlabel", l, Field.Store.YES));
-			doc.add(new StringField("label", l, Field.Store.YES));
-		});
+		doc.add(new TextField("string", s, Field.Store.YES));
 		indexWriter.addDocument(doc, analyzer);
 	}
 
-	public static synchronized LabelIndex getInstance(ComponentProperty property)
+	public static synchronized StringIndex getInstance(ComponentProperty property)
 	{
-		LabelIndex index = instances.get(property.uri);
+		StringIndex index = instances.get(property.uri);
 		if(index==null)
 		{
-			index = new LabelIndex(property);
+			index = new StringIndex(property);
 			instances.put(property.uri,index);
 		}
 		return index;

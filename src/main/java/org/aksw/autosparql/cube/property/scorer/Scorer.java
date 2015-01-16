@@ -7,8 +7,6 @@ import java.util.stream.Stream;
 import lombok.extern.java.Log;
 import org.aksw.autosparql.cube.CubeSparql;
 import org.aksw.autosparql.cube.property.ComponentProperty;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.AbstractStringMetric;
-import uk.ac.shef.wit.simmetrics.similaritymetrics.Jaro;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import de.konradhoeffner.commons.Streams;
@@ -22,7 +20,6 @@ public abstract class Scorer implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 	protected final ComponentProperty property;
-	protected static final AbstractStringMetric similarity = new Jaro();
 
 	public Scorer(ComponentProperty property)
 	{

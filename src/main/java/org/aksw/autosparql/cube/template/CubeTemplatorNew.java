@@ -2,6 +2,7 @@ package org.aksw.autosparql.cube.template;
 
 import static org.aksw.autosparql.cube.Trees.phrase;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class CubeTemplatorNew
 
 	CubeTemplateFragment visitRecursive(Tree tree)
 	{
-		while(!tree.isPreTerminal()&&tree.children().length==1)
+		while(/*!tree.isPreTerminal()&&*/tree.children().length==1)
 		{
 			// skipping down
 			tree = tree.getChild(0);
@@ -51,21 +52,24 @@ public class CubeTemplatorNew
 			return new CubeTemplateFragment(cube, phrase);
 		}
 		System.out.println("visiting tree "+tree);
-		System.out.println("Phrase \""+phrase+"\"");
+		System.out.print("Phrase \""+phrase+"\"...");
 		MatchResult result = identify(phrase);
 		if(result.isEmpty())
 		{
 			// can't match the whole phrase, match subtrees separately
-			List<CubeTemplateFragment> matchedFragments = fragments(tree.getChildrenAsList(), f->!f.isEmpty());
-			List<CubeTemplateFragment> unmatchedFragments = fragments(tree.getChildrenAsList(), f->f.isEmpty());
+			System.out.println("unmatched, looking at subtrees");
+			List<CubeTemplateFragment> fragments = fragments(tree.getChildrenAsList(),x->true);
+			List<CubeTemplateFragment> matchedFragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
+			List<CubeTemplateFragment> unmatchedFragments = new LinkedList<>(fragments);
+			unmatchedFragments.removeAll(matchedFragments);
 
-			List<CubeTemplateFragment> fragments = new ArrayList<>(matchedFragments);
+			List<CubeTemplateFragment> selectedFragments = new ArrayList<>(matchedFragments);
 
 			if(!unmatchedFragments.isEmpty())
 			{
 				MatchResult unmatchedResult = identify(CubeTemplateFragment.combine(unmatchedFragments).phrase);
 				System.out.print("unmatched fragments with phrase \""+unmatchedResult.phrase+"\"...");
-				unmatchedFragments.stream().map(f->f.phrase).collect(Collectors.toList());
+//				unmatchedFragments.stream().map(f->f.phrase).collect(Collectors.toList());
 				// can we match these leftover fragments together?
 
 				if(unmatchedResult.isEmpty())
@@ -74,17 +78,16 @@ public class CubeTemplatorNew
 				} else
 				{
 					System.out.println("matched to "+unmatchedResult);
-					fragments.add(unmatchedResult.toFragment(cube));
+					selectedFragments.add(unmatchedResult.toFragment(cube));
 				}
 			}
-
-			if(fragments.isEmpty())
+			if(selectedFragments.isEmpty())
 			{
 				System.out.println("no match found for phrase \"" +phrase+"\"");
 				return new CubeTemplateFragment(cube,phrase);
 			} else
 			{
-				return CubeTemplateFragment.combine(fragments);
+				return CubeTemplateFragment.combine(selectedFragments);
 			}
 		}
 		else

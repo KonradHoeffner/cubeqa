@@ -13,20 +13,8 @@ import de.konradhoeffner.commons.Streams;
 /** Scores object properties, which scores exclusively by count in relation to maxCount.*/
 public class ObjectPropertyScorer extends MultiSetScorer
 {
-	//		Map<String,String> labelToUri = new HashMap<String,String>();
 	transient LabelIndex index;
 
-	//    private void writeObject(ObjectOutputStream out) throws IOException
-	//    {
-	//    	out.defaultWriteObject();
-	//    }
-	//
-	//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
-	//    {
-	//    	System.out.println("property: "+property.);
-	//    	in.defaultReadObject();
-	//    	index = LabelIndex.getInstance(property);
-	//    }
 
 	private synchronized void loadOrCreateIndex()
 	{

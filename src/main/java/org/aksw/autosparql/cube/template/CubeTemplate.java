@@ -28,6 +28,7 @@ public class CubeTemplate
 
 	public String sparqlQuery()
 	{
+		if(!isComplete())  throw new IllegalStateException("not complete");
 		Set<String> wherePatterns = restrictions.stream().flatMap(r->r.wherePatterns().stream()).collect(Collectors.toSet());
 		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">. ?obs a qb:Observation.");
 
