@@ -1,10 +1,11 @@
 package org.aksw.autosparql.cube;
 
 import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.template.CubeTemplator;
-import org.aksw.autosparql.cube.template.CubeTemplatorNew;
+import org.aksw.autosparql.cube.template.CubeTemplator;
 
-@Log
+@Log4j
 public class Algorithm
 {
 	public final Cube cube;
@@ -17,6 +18,6 @@ public class Algorithm
 	public String answer(String question)
 	{
 		log.info("Answering "+question+"on cube "+cube+"...");
-		return new CubeTemplatorNew(cube).buildTemplate(question).sparqlQuery();
+		return new CubeTemplator(cube).buildTemplate(question).sparqlQuery();
 	}
 }

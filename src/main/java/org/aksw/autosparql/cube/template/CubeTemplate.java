@@ -36,7 +36,8 @@ public class CubeTemplate
 		if(orderLimitPatterns.size()>1) throw new IllegalArgumentException("more than one orderlimit pattern");
 
 		StringBuilder sb = new StringBuilder();
-		String resultDef = "xsd:decimal(?result)";
+//		answerProperties.forEach(action)
+		String resultDef = "xsd:decimal(?"+answerProperties.iterator().next().var+")";
 		if(!aggregates.isEmpty()) {resultDef = aggregates.iterator().next()+"("+resultDef+")";}
 		sb.append("select "+resultDef+" ");
 		perProperties.removeAll(answerProperties);

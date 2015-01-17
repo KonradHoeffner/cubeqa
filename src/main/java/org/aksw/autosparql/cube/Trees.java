@@ -8,7 +8,7 @@ import edu.stanford.nlp.trees.Tree;
  * @author Konrad Höffner */
 public class Trees
 {
-	static public String phrase(Tree tree) {return tree.getLeaves().toString().replace(", ", " ").replaceAll("[\\[\\]]", "");}
+	static public String phrase(Tree tree) {return tree.getLeaves().toString().replace(", ", " ").replaceAll("[\\[\\]]", "").trim();}
 
 	// tree.remove is unsupported
 	static public void removeChild(Tree tree, Tree child)

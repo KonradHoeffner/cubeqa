@@ -5,21 +5,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.aksw.autosparql.cube.detector.TopDetector.TopDetectorResult;
-import org.aksw.autosparql.cube.restriction.Restriction;
 import org.aksw.autosparql.cube.restriction.TopRestriction.Modifier;
 import org.apache.lucene.analysis.core.StopAnalyzer;
-import org.apache.lucene.analysis.util.CharArraySet;
 
-public class TopDetector
+public class IntervalDetector
 {
+
 	static final Set<String> stopwords = new StopAnalyzer().getStopwordSet().stream().map(Object::toString).collect(Collectors.toSet());
 
 	@Data
@@ -67,5 +65,4 @@ public class TopDetector
 		}
 		return Optional.empty();
 	}
-
 }

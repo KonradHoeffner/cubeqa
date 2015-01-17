@@ -3,8 +3,7 @@ package org.aksw.autosparql.cube.property.scorer;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import lombok.extern.java.Log;
-import org.aksw.autosparql.cube.CubeSparql;
+import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -12,7 +11,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
-@Log
+@Log4j
 public abstract class MultiSetScorer extends Scorer
 {
 	final protected Multiset<String> values = HashMultiset.create();
@@ -39,7 +38,7 @@ public abstract class MultiSetScorer extends Scorer
 	Optional<Integer> max = values.elementSet().stream().map(s->values.count(s)).max(Integer::compare);
 	if(!max.isPresent())
 	{
-		log.warning("no values for property "+property+": "+values);
+		log.warn("no values for property "+property+": "+values);
 		maxCount=0;
 	}
 	else

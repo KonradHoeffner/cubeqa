@@ -10,7 +10,7 @@ package org.aksw.autosparql.cube.property.scorer.old;
 //import com.google.common.collect.Multiset.Entry;
 //import com.hp.hpl.jena.sparql.util.DateTimeStruct.DateTimeParseException;
 //
-//@Log
+//@Log4j
 //public class YearScorerOld extends DatatypePropertyScorer
 //{
 //	final Multiset<Integer> years = HashMultiset.create();
@@ -18,7 +18,7 @@ package org.aksw.autosparql.cube.property.scorer.old;
 //	Optional<Integer> parseYear(String s)
 //	{
 //		try{return Optional.of(Year.parse(s).getValue());}
-//		catch(DateTimeParseException e) {log.warning("Could not parse year "+s);return Optional.empty();}
+//		catch(DateTimeParseException e) {log.warn("Could not parse year "+s);return Optional.empty();}
 //	}
 //
 //	public YearScorerOld(ComponentProperty property)

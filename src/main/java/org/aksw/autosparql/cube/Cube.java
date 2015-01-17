@@ -134,4 +134,11 @@ public class Cube implements Serializable
 		return this.name.equals(((Cube)obj).name);
 	}
 
+	public ComponentProperty getDefaultAnswerProperty()
+	{
+		// TODO: generalize
+
+		return ComponentProperty.getInstance(this,"http://linkedspending.aksw.org/ontology/finland-aid-amount");
+	}
+
 }

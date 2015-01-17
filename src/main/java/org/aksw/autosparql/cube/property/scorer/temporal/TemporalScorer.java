@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.property.scorer.ScoreResult;
 import org.aksw.autosparql.cube.property.scorer.Scorer;
@@ -18,7 +19,7 @@ import org.joda.time.Interval;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
-@Log
+@Log4j
 public class TemporalScorer extends Scorer
 {
 	private static final long	MS_PER_DAY	= 24*3600*1000;
@@ -47,7 +48,7 @@ public class TemporalScorer extends Scorer
 			try {intervals.add(parse.apply(s));}
 			catch(Exception e ) {if(unparseable.size()<10) unparseable.add(s);}
 		});
-		if(!unparseable.isEmpty()) {log.warning("could not parse years "+unparseable);}
+		if(!unparseable.isEmpty()) {log.warn("could not parse years "+unparseable);}
 	}
 
 

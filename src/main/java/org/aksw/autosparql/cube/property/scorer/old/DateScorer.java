@@ -4,12 +4,12 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.property.scorer.DatatypePropertyScorer;
 import org.aksw.autosparql.cube.property.scorer.ScoreResult;
 
-@Log
+@Log4j
 public class DateScorer extends DatatypePropertyScorer
 {
 	private static final double	MIN_PARSE_ERROR_SUCCESS	= 0.9;
@@ -30,7 +30,7 @@ public class DateScorer extends DatatypePropertyScorer
 //		}
 //		catch(DateTimeParseException e)
 //		{
-//			log.warning("could not parse date '"+date+"'");
+//			log.warn("could not parse date '"+date+"'");
 //			return Optional.empty();
 //			}
 		}
@@ -42,7 +42,7 @@ public class DateScorer extends DatatypePropertyScorer
 				.mapToLong(Optional::get).sorted().toArray();
 		if(epochDays.length==0)
 		{
-			log.warning(property+": no values for date scorer");
+			log.warn(property+": no values for date scorer");
 			firstToLast = 0;
 			maxScoreDist = 0;
 			return;

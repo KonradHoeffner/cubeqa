@@ -3,12 +3,13 @@ package org.aksw.autosparql.cube.template;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.Aggregate;
 import org.aksw.autosparql.cube.Cube;
 import org.aksw.autosparql.cube.property.ComponentProperty;
@@ -18,10 +19,12 @@ import org.aksw.autosparql.cube.restriction.Restriction;
 @RequiredArgsConstructor
 @EqualsAndHashCode
 @Getter
-@Log
+@Log4j
 public class CubeTemplateFragment
 {
 	private static final double TO_TEMPLATE_VALUE_SCORE_THRESHOLD = 0.2;
+
+	private static final double	MIN_COMBINED_SCORE	= 0.1;
 
 	final Cube cube;
 	final String phrase;
@@ -32,19 +35,19 @@ public class CubeTemplateFragment
 	final Set<Aggregate> aggregates;
 	final Set<MatchResult> matchResults;
 
-   private Set<ComponentProperty> unreferredProperties()
-  {
-	  Set<ComponentProperty> properties = new HashSet<>(cube.properties.values());
-	  properties.removeAll(restrictions.stream().map(Restriction::getProperty).collect(Collectors.toSet()));
-	  properties.removeAll(answerProperties);
-	  properties.removeAll(perProperties);
-	  return properties;
-  }
+	private Set<ComponentProperty> unreferredProperties()
+	{
+		Set<ComponentProperty> properties = new HashSet<>(cube.properties.values());
+		properties.removeAll(restrictions.stream().map(Restriction::getProperty).collect(Collectors.toSet()));
+		properties.removeAll(answerProperties);
+		properties.removeAll(perProperties);
+		return properties;
+	}
 
-   public CubeTemplateFragment(Cube cube, String phrase)
-   {
-	   this(cube, phrase, new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>());
-   }
+	public CubeTemplateFragment(Cube cube, String phrase)
+	{
+		this(cube, phrase, new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>());
+	}
 
 	public static CubeTemplateFragment combine(List<CubeTemplateFragment> fragments)
 	{
@@ -65,7 +68,7 @@ public class CubeTemplateFragment
 			perProperties.addAll(f.perProperties);
 			aggregates.addAll(f.aggregates);
 		});
-		String combinedPhrase = fragments.stream().map(CubeTemplateFragment::getPhrase).reduce("", (a,b)->a+" "+b);
+		String combinedPhrase = fragments.stream().map(CubeTemplateFragment::getPhrase).reduce("", (a,b)->a+" "+b).trim();
 		CubeTemplateFragment fragment = new CubeTemplateFragment(fragments.iterator().next().cube,combinedPhrase,
 				restrictions, answerProperties, perProperties, aggregates,matchResults);
 
@@ -74,32 +77,36 @@ public class CubeTemplateFragment
 		// strictly, they should be referenced in different matchresult objects but that calculation would be too complicated, sort that out later
 		Set<ComponentProperty> properties = fragment.unreferredProperties();
 		Set<MatchResult> fragmentsMatchResults = fragments.stream().map(CubeTemplateFragment::getMatchResults).map(Set::stream).flatMap(id->id).collect(Collectors.toSet());
-		properties.retainAll(fragmentsMatchResults.stream().map(mr->mr.nameRefs.keySet()).map(Set::stream).flatMap(id->id).collect(Collectors.toSet()));
-		properties.retainAll(fragmentsMatchResults .stream().map(mr->mr.valueRefs.keySet()).map(Set::stream).flatMap(id->id).collect(Collectors.toSet()));
+		properties.retainAll(fragmentsMatchResults.stream().map(mr->mr.nameRefs.keySet()).flatMap(Set::stream).collect(Collectors.toSet()));
+		properties.retainAll(fragmentsMatchResults .stream().map(mr->mr.valueRefs.keySet()).flatMap(Set::stream).collect(Collectors.toSet()));
 		for(ComponentProperty property: properties)
 		{
 			// greedy algorithm, does not work when highestNameRef has the only value Ref TODO intelligently check more pairs
-			// we should always get a highest name in the first iteration per construction of framentsMatchResults
+			// we should always get a highest name in the first iteration per construction of fragmentsMatchResults
 			// but later this one can be used for another property, so use ifpresent
-//			Set<Pair<MatchResult,MatchResult>> pairs = new HashSet<>();
-//			fragmentsMatchResults.for
 
-			fragmentsMatchResults.stream().max(Comparator.comparingDouble(mr->mr.nameRefs.get(property))).ifPresent(highestNameRef->
+			fragmentsMatchResults.stream().max(Comparator.comparingDouble(mr->mr.nameRefs.get(property)==null?0:mr.nameRefs.get(property)))
+			.ifPresent(highestNameRef->
 			{
-				fragmentsMatchResults.stream().filter(mr->mr!=highestNameRef).max(Comparator.comparingDouble(mr->mr.valueRefs.get(property).score))
+				fragmentsMatchResults.stream().filter(mr->mr!=highestNameRef)
+				.max(Comparator.comparingDouble(mr->mr.valueRefs.get(property)==null?0:mr.valueRefs.get(property).score))
 				.ifPresent(highestValueRef->
-						{
-							restrictions.add(highestValueRef.valueRefs.get(property).toRestriction());
-							fragmentsMatchResults.remove(highestNameRef);
-							fragmentsMatchResults.remove(highestValueRef);
-						});
+				{
+					double score = highestNameRef.nameRefs.get(property)*highestValueRef.valueRefs.get(property).score;
+					if(score>MIN_COMBINED_SCORE)
+					{
+					restrictions.add(highestValueRef.valueRefs.get(property).toRestriction());
+					fragmentsMatchResults.remove(highestNameRef);
+					fragmentsMatchResults.remove(highestValueRef);
+					}
+				});
 			});
 		}
 		// add back all non used match results
 		matchResults.addAll(fragmentsMatchResults);
 
-//		Set<ComponentProperty> nameValue = this.nameRefs.keySet();
-//		nameValue.retainAll(otherResult.valueRefs.keySet());
+		//		Set<ComponentProperty> nameValue = this.nameRefs.keySet();
+		//		nameValue.retainAll(otherResult.valueRefs.keySet());
 
 		return fragment;
 	}
@@ -111,7 +118,8 @@ public class CubeTemplateFragment
 
 		// for each phrase there can be at most one match and each match represents another phrase so we for each match result we take at most one reference
 
-//		Set<ScoreResult> leftOverResults =  matchResults.stream().map(MatchResult::getValueRefs).map(Map::values).flatMap(Collection::stream).collect(Collectors.toSet());
+		//		Set<ScoreResult> leftOverResults =  matchResults.stream().map(MatchResult::getValueRefs).map(Map::values).flatMap(Collection::stream).collect(Collectors.toSet());
+		// try to get more restrictions
 		for(MatchResult mr: matchResults)
 		{
 			// we only use those whose properties which are not already referred to
@@ -125,7 +133,17 @@ public class CubeTemplateFragment
 				restrictions.add(scoreResult.toRestriction());
 			});
 		}
-
+		// if no answer property, search in match results for property refs and take the highest scored, if no property refs take default one
+		if(answerProperties.isEmpty())
+		{
+			matchResults.stream().map(MatchResult::getNameRefs).map(Map::entrySet).flatMap(Set::stream).max(Comparator.comparing(e->e.getValue()))
+			.ifPresent(e->answerProperties.add(e.getKey()));
+			if(answerProperties.isEmpty())
+			{
+				log.warn("no answer property found, using default of "+cube.getDefaultAnswerProperty());
+				answerProperties.add(cube.getDefaultAnswerProperty());
+			}
+		}
 		return new CubeTemplate(cube, restrictions, answerProperties, aggregates);
 	}
 

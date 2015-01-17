@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multiset.Entry;
 
-@Log
+@Log4j
 public class ParseScorer<T> extends DatatypePropertyScorer
 {
 	final Multiset<T> parsed = HashMultiset.create();
@@ -36,7 +36,7 @@ public class ParseScorer<T> extends DatatypePropertyScorer
 			catch(Exception ex) {unparseable.add(e.getElement());}
 		}
 		if(!unparseable.isEmpty())
-		{log.warning(property+": could not parse "+unparseable.size()+" of "+(unparseable.size()+parsed.size())+": "+unparseable);}
+		{log.warn(property+": could not parse "+unparseable.size()+" of "+(unparseable.size()+parsed.size())+": "+unparseable);}
 //		values.clear(); // from now on we only touch the integer years
 	}
 

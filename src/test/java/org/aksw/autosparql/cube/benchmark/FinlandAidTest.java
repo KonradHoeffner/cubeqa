@@ -11,10 +11,11 @@ import com.hp.hpl.jena.query.ResultSet;
 
 public class FinlandAidTest
 {
-	@Test public void testSingle()
+	@Test
+	public void testSingle()
 	{
 		Algorithm a = new Algorithm(FinlandAid.CUBE_NAME);
-		String query = a.answer(FinlandAid.questions.get(2));
+		String query = a.answer(FinlandAid.questions.get(5));
 		System.out.println(query);
 	}
 

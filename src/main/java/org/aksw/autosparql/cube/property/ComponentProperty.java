@@ -1,21 +1,28 @@
 package org.aksw.autosparql.cube.property;
 
 import static de.konradhoeffner.commons.Streams.stream;
-import static org.aksw.linkedspending.tools.DataModel.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.OptionalDouble;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.NonNull;
-import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.Cube;
-import org.aksw.autosparql.cube.property.scorer.*;
 import org.aksw.autosparql.cube.CubeSparql;
+import org.aksw.autosparql.cube.property.scorer.NumericScorer;
 import org.aksw.autosparql.cube.property.scorer.ObjectPropertyScorer;
+import org.aksw.autosparql.cube.property.scorer.Scorer;
 import org.aksw.autosparql.cube.property.scorer.StringScorer;
 import org.aksw.autosparql.cube.property.scorer.old.DateScorer;
 import org.aksw.autosparql.cube.property.scorer.old.TemporalScorers;
 import org.aksw.linkedspending.tools.DataModel;
+import org.aksw.linkedspending.tools.DataModel.Owl;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import com.hp.hpl.jena.query.ResultSet;
@@ -27,18 +34,20 @@ import de.konradhoeffner.commons.Pair;
 /** Represents a component property of a RDF Data Cube.
  * Implements the Multiton Pattern, with the key being the combination of cube name and uri, because information about values is safed.
  * Immutable except for the labels.*/
-@Log
+@Log4j
 public class ComponentProperty implements Serializable
 {
-	private static final long	serialVersionUID	= 4L;
+	private static final long	serialVersionUID	= 5L;
 	private static final AtomicInteger id = new AtomicInteger(0);
 	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
+	private static final double	RANGE_LABEL_MULTIPLIER	= 0.5; // range labels may be less specific then the property name and thus get a lower score
 
 	protected static transient StringDistance similarity = new NGramDistance();
 
 	public final String var;
 
 	public final String range;
+	public final Set<String> rangeLabels = new HashSet<>();
 
 	public final Cube cube;
 	public final String uri;
@@ -66,15 +75,19 @@ public class ComponentProperty implements Serializable
 
 	public double match(String label)
 	{
-//		System.out.println(labels);
-//		for(AbstractStringMetric sim: similarities)
-//		for(String l: labels) {System.out.println(l+" "+sim+" "+sim.getSimilarity(l, label));}
-//		OptionalDouble d = similarities.stream().flatMapToDouble(
-		System.out.println("matching "+label+" to "+labels);
+		//		System.out.println(labels);
+		//		for(AbstractStringMetric sim: similarities)
+		//		for(String l: labels) {System.out.println(l+" "+sim+" "+sim.getSimilarity(l, label));}
+		//		OptionalDouble d = similarities.stream().flatMapToDouble(
+		//		System.out.println("matching "+label+" to "+labels);
 
-		OptionalDouble d = labels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
+		OptionalDouble dlo = labels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
+		double dl = dlo.isPresent()?dlo.getAsDouble():0;
+		OptionalDouble dro = rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
+		// we only want objectproperties, so exclude xsd
+		double dr = (dro.isPresent()&&!range.startsWith(XSD.getURI()))?dro.getAsDouble()*RANGE_LABEL_MULTIPLIER:0;
 
-		return d.isPresent()?d.getAsDouble():0;
+		return Math.max(dl, dr);
 	}
 
 	private ComponentProperty(Cube cube, String uri)//, PropertyType type)
@@ -97,13 +110,18 @@ public class ComponentProperty implements Serializable
 			types.addAll(stream(cube.sparql.select(typeQuery))
 					.map(qs->qs.get("t").asResource().getURI()).collect(Collectors.toSet()));
 			// easiest and fastest way to determine type of values, but isn't always modelled
-			String rangeQuery = "select ?range {<"+uri+"> rdfs:range ?range}";
+			String rangeQuery = "select ?range ?label {<"+uri+"> rdfs:range ?range. OPTIONAL {?range rdfs:label ?label}}";
 			ResultSet rs = cube.sparql.select(rangeQuery);
-			if(rs.hasNext())
+			Set<String> ranges = new HashSet<>();
+			// very bad code TODO take multiple ranges into account, maybe create helper class "labelled uri"
+			stream(rs).forEach(qs->
 			{
-				range = rs.nextSolution().get("range").asResource().getURI();
-			}
-			else {range = guessRange();}
+				ranges.add(qs.get("range").asResource().getURI());
+				if(qs.get("label")!=null) {rangeLabels.add(qs.get("label").asLiteral().getLexicalForm());}
+
+			});
+			this.range=ranges.isEmpty()?null:ranges.iterator().next();
+			//			else {range = guessRange();}
 			this.scorer = scorer(types);
 		}
 
