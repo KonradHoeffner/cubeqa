@@ -39,6 +39,8 @@ public class Cube implements Serializable
 	static private File cacheFolder = new File("cache");
 	static {cacheFolder.mkdir();}
 
+	static public final Cube FINLAND_AID = Cube.getInstance("finland-aid");
+
 	static String extractName(RDFNode node)
 	{
 		String uri = node.asResource().getURI();

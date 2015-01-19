@@ -40,6 +40,7 @@ public class ComponentProperty implements Serializable
 	private static final long	serialVersionUID	= 5L;
 	private static final AtomicInteger id = new AtomicInteger(0);
 	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
+	private static final boolean MATCH_RANGE = true;
 	private static final double	RANGE_LABEL_MULTIPLIER	= 0.5; // range labels may be less specific then the property name and thus get a lower score
 
 	protected static transient StringDistance similarity = new NGramDistance();
@@ -83,7 +84,7 @@ public class ComponentProperty implements Serializable
 
 		OptionalDouble dlo = labels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
 		double dl = dlo.isPresent()?dlo.getAsDouble():0;
-		OptionalDouble dro = rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
+		OptionalDouble dro = MATCH_RANGE? rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,label)).max():OptionalDouble.of(0);
 		// we only want objectproperties, so exclude xsd
 		double dr = (dro.isPresent()&&!range.startsWith(XSD.getURI()))?dro.getAsDouble()*RANGE_LABEL_MULTIPLIER:0;
 

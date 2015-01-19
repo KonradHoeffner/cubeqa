@@ -7,11 +7,11 @@ import org.aksw.autosparql.cube.property.ComponentProperty;
 
 /** top n items */
 @EqualsAndHashCode(callSuper=true)
-public class TopRestriction extends Restriction
+public class TopRestriction extends RestrictionWithPhrase
 {
-	public enum Modifier {ASC,DESC};
+	public enum OrderModifier {ASC,DESC};
 	final int n;
-	final Modifier modifier;
+	final OrderModifier modifier;
 
 	@Override public Set<String> orderLimitPatterns()
 	{
@@ -19,9 +19,9 @@ public class TopRestriction extends Restriction
 	}
 
 
-	public TopRestriction(ComponentProperty property, int n, Modifier modifier)
+	public TopRestriction(ComponentProperty property,String phrase, int n, OrderModifier modifier)
 	{
-		super(property);
+		super(property, phrase);
 		this.n=n;
 		this.modifier=modifier;
 	}

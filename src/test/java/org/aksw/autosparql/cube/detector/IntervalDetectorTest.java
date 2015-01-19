@@ -1,6 +1,6 @@
 package org.aksw.autosparql.cube.detector;
 
-import static org.junit.Assert.*;
+import org.aksw.autosparql.cube.Cube;
 import org.junit.Test;
 
 public class IntervalDetectorTest
@@ -8,10 +8,11 @@ public class IntervalDetectorTest
 
 	@Test public void testDetect()
 	{
-		System.out.println(TopDetector.INSTANCE.detect("10 poorest countries"));
-		System.out.println(TopDetector.INSTANCE.detect("top 5 beaches"));
-		System.out.println(TopDetector.INSTANCE.detect("7 lowest prices"));
-		System.out.println(TopDetector.INSTANCE.detect("Top 10 aid receivers"));
+		Cube cube = Cube.FINLAND_AID;
+		System.out.println(IntervalDetector.INSTANCE.detect(cube,"extended amounts of > 1000000"));
+//		System.out.println(TopDetector.INSTANCE.detect(cube,"top 5 beaches"));
+//		System.out.println(TopDetector.INSTANCE.detect(cube,"7 lowest prices"));
+//		System.out.println(TopDetector.INSTANCE.detect(cube,"Top 10 aid receivers"));
 	}
 
 }

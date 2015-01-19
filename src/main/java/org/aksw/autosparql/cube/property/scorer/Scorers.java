@@ -10,7 +10,7 @@ import de.konradhoeffner.commons.Pair;
 /** This class consists exclusively of static methods that operate on scorers. **/
 public class Scorers
 {
-	private static final double	THRESHOLD	= 0.4;
+	private static final double	THRESHOLD	= 0.3;
 
 	/** Score the given phrase with every property's scorer and returns all obtained results.
 	 * For some properties the score may be 0 or below a threshold, in that case no result

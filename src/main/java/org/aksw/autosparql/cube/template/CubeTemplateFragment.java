@@ -144,7 +144,7 @@ public class CubeTemplateFragment
 				answerProperties.add(cube.getDefaultAnswerProperty());
 			}
 		}
-		return new CubeTemplate(cube, restrictions, answerProperties, aggregates);
+		return new CubeTemplate(cube, restrictions, answerProperties, perProperties,aggregates);
 	}
 
 	public boolean isEmpty()

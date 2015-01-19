@@ -1,6 +1,5 @@
 package org.aksw.autosparql.cube.index;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,37 +8,21 @@ import java.util.Set;
 import java.util.function.Function;
 import lombok.SneakyThrows;
 import org.aksw.autosparql.cube.property.ComponentProperty;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.core.KeywordAnalyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
-import org.apache.lucene.search.spell.NGramDistance;
-import org.apache.lucene.search.spell.StringDistance;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 
 public class LabelIndex extends Index
 {
 	private static final Map<String,LabelIndex> instances = new HashMap<>();
 
-	@SneakyThrows
 	private LabelIndex(ComponentProperty property)
 	{
 		super(property);

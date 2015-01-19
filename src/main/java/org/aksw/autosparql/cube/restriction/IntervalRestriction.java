@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 /** restriction on a value from a given interval **/
 
 @EqualsAndHashCode(callSuper=true)
-public class IntervalRestriction extends Restriction
+public class IntervalRestriction extends RestrictionWithPhrase
 {
 // TODO chose an existing interval class and intersect multiple intervals for the same property. Low priority though as I expect almost no
 //	sentences to specify multiple restrictions on the same property.
@@ -23,22 +23,23 @@ public class IntervalRestriction extends Restriction
 		if(leftEndpoint>Double.NEGATIVE_INFINITY)
 		{
 			String leftComparator = open?">":">=";
-			String leftFilter = "filter(?p "+leftComparator+" \""+leftEndpoint+"\"). ";
+			String leftFilter = "filter(?"+property.var+" "+leftComparator+" \""+leftEndpoint+"\"). ";
 			terms.add(leftFilter);
 		}
 		if(rightEndpoint<Double.POSITIVE_INFINITY)
 		{
 			String rightComparator = open?"<":"<=";
-			String rightFilter = "filter(?p "+rightComparator+" \""+rightEndpoint+"\"). ";
+			String rightFilter = "filter(?"+property.var+" "+rightComparator+" \""+rightEndpoint+"\"). ";
 			terms.add(rightFilter);
 		}
+		terms.add("?obs <"+property+"> ?"+property.var+".");
 		return terms;
 	}
 
 
-	public IntervalRestriction(ComponentProperty property, double leftEndpoint, double rightEndpoint, boolean open)
+	public IntervalRestriction(ComponentProperty property, String phrase, double leftEndpoint, double rightEndpoint, boolean open)
 	{
-		super(property);
+		super(property,phrase);
 		this.leftEndpoint = leftEndpoint;
 		this.rightEndpoint = rightEndpoint;
 		this.open = open;

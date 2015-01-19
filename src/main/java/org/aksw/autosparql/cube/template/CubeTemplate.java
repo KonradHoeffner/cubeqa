@@ -18,7 +18,7 @@ public class CubeTemplate
 
 	final Set<Restriction> restrictions;
 	final Set<ComponentProperty> answerProperties;
-	final Set<ComponentProperty> perProperties = new HashSet<>();
+	final Set<ComponentProperty> perProperties;
 	final Set<Aggregate> aggregates;
 
 	boolean isComplete()

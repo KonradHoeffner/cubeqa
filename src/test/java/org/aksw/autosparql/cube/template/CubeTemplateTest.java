@@ -22,7 +22,7 @@ public class CubeTemplateTest
 
 //		ComponentProperty receipientCountry = new ComponentProperty("finland-aid", "http://linkedspending.aksw.org/ontology/finland-aid-recipient-country-spec",null);
 		restrictions.add(new UriRestriction(receipientCountry,"https://openspending.org/finland-aid/recipient-country/cn"));
-		CubeTemplate ct = new CubeTemplate(cube,restrictions,Collections.singleton(amount),Collections.singleton(Aggregate.SUM));
+		CubeTemplate ct = new CubeTemplate(cube,restrictions,Collections.singleton(amount),Collections.emptySet(),Collections.singleton(Aggregate.SUM));
 		ct.perProperties.add(ComponentProperty.getInstance(cube, "http://linkedspending.aksw.org/ontology/finland-aid-reporting-year"));
 		System.out.println(ct.sparqlQuery());
 	}

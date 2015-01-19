@@ -1,8 +1,6 @@
 package org.aksw.autosparql.cube;
 
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j;
-import org.aksw.autosparql.cube.template.CubeTemplator;
 import org.aksw.autosparql.cube.template.CubeTemplator;
 
 @Log4j

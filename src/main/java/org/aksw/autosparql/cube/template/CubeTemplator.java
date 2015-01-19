@@ -2,17 +2,21 @@ package org.aksw.autosparql.cube.template;
 
 import static org.aksw.autosparql.cube.Trees.phrase;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.Cube;
+import org.aksw.autosparql.cube.detector.Detector;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.property.scorer.ScoreResult;
 import org.aksw.autosparql.cube.property.scorer.Scorers;
+import org.aksw.autosparql.cube.restriction.RestrictionWithPhrase;
 import edu.stanford.nlp.trees.Tree;
 
 @RequiredArgsConstructor
@@ -51,6 +55,41 @@ public class CubeTemplator
 		}
 		System.out.println("visiting tree "+tree);
 		System.out.print("Phrase \""+phrase+"\"...");
+
+		CubeTemplateFragment detectedFragment = null;
+		CubeTemplateFragment undetectedFragment = null;
+		for(Detector detector: Detector.DETECTORS)
+		{
+			Optional<RestrictionWithPhrase> restriction = detector.detect(cube,phrase);
+			if(restriction.isPresent())
+			{
+				detectedFragment = new CubeTemplateFragment(cube, restriction.get().phrase);
+				System.err.println(restriction.get().phrase);
+				detectedFragment.restrictions.add(restriction.get());
+				break;
+			}
+		}
+		// part or all of the phrase matched with a detector
+		if(detectedFragment!=null)
+		{
+			// whole phrase matched by detector, nothing else to do
+			if(detectedFragment.phrase.equals(phrase))
+			{
+				log.info("Whole phrase matched by detector, finished with this phrase.");
+				return detectedFragment;
+			} else
+			{
+				// left over phrase
+				phrase = phrase.replace(detectedFragment.phrase,"");
+				log.debug("Detector matched part: '"+detectedFragment.phrase+"', left over phrase: "+phrase);
+				if(phrase.length()<3)
+				{
+					System.out.println("left over phrase less than 3 characters, skipped: "+phrase);
+					return detectedFragment;
+				}
+			}
+		}
+		// either we detected nothing or only part of the phrase
 		MatchResult result = identify(phrase);
 		if(result.isEmpty())
 		{
@@ -68,7 +107,7 @@ public class CubeTemplator
 				String unmatchedFragmentPhrase = CubeTemplateFragment.combine(unmatchedFragments).phrase;
 				if(unmatchedFragmentPhrase.length()<3)
 				{
-//					System.out.println("unmatched fragment \""+unmatchedFragmentPhrase+"\" length < 3, skipped");
+					//					System.out.println("unmatched fragment \""+unmatchedFragmentPhrase+"\" length < 3, skipped");
 				}
 				else
 				{
@@ -90,17 +129,25 @@ public class CubeTemplator
 			if(selectedFragments.isEmpty())
 			{
 				System.out.println("no match found for phrase \"" +phrase+"\"");
-				return new CubeTemplateFragment(cube,phrase);
+				undetectedFragment = new CubeTemplateFragment(cube,phrase);
 			} else
 			{
-				return CubeTemplateFragment.combine(selectedFragments);
+				undetectedFragment = CubeTemplateFragment.combine(selectedFragments);
 			}
 		}
 		else
 		{
 			// whole phrase matched, subtrees skipped
 			System.out.println("matched to "+result);
-			return result.toFragment(cube);
+			undetectedFragment = result.toFragment(cube);
+		}
+
+		if(detectedFragment==null)
+		{
+			return undetectedFragment;
+		} else
+		{
+			return CubeTemplateFragment.combine(Arrays.asList(detectedFragment,undetectedFragment));
 		}
 	}
 

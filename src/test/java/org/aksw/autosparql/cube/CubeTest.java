@@ -9,7 +9,7 @@ public class CubeTest
 
 	@Test public void testSerialization()
 	{
-		Cube cube = Cube.getInstance("finland-aid");
+		@SuppressWarnings("unused") Cube cube = Cube.getInstance("finland-aid");
 		assertTrue(new File("cache/finland-aid.ser").exists());
 
 	}

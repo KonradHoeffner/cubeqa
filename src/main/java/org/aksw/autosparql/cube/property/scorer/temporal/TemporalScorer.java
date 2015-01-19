@@ -1,6 +1,5 @@
 package org.aksw.autosparql.cube.property.scorer.temporal;
 
-import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
@@ -9,7 +8,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.aksw.autosparql.cube.property.scorer.ScoreResult;

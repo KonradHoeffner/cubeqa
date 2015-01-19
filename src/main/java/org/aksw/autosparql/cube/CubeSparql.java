@@ -16,8 +16,8 @@ public class CubeSparql implements Serializable
 			"http://linkedspending.aksw.org/instance/",
 			"http://linkedspending.aksw.org/ontology/",
 			"http://linkedspending.aksw.org/",
-//			"http://linkedspending.aksw.org/sparql"
-			"http://localhost:8890/sparql"
+			"http://linkedspending.aksw.org/sparql"
+//			"http://localhost:8890/sparql"
 			);
 
 	public final String prefixInstance;
