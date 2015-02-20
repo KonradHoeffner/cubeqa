@@ -92,12 +92,15 @@ public class CubeTemplateFragment
 				.max(Comparator.comparingDouble(mr->mr.valueRefs.get(property)==null?0:mr.valueRefs.get(property).score))
 				.ifPresent(highestValueRef->
 				{
-					double score = highestNameRef.nameRefs.get(property)*highestValueRef.valueRefs.get(property).score;
-					if(score>MIN_COMBINED_SCORE)
+					if(highestNameRef.nameRefs.get(property)!=null&&highestValueRef.valueRefs.get(property)!=null)
 					{
-					restrictions.add(highestValueRef.valueRefs.get(property).toRestriction());
-					fragmentsMatchResults.remove(highestNameRef);
-					fragmentsMatchResults.remove(highestValueRef);
+						double score = highestNameRef.nameRefs.get(property)*highestValueRef.valueRefs.get(property).score;
+						if(score>MIN_COMBINED_SCORE)
+						{
+							restrictions.add(highestValueRef.valueRefs.get(property).toRestriction());
+							fragmentsMatchResults.remove(highestNameRef);
+							fragmentsMatchResults.remove(highestValueRef);
+						}
 					}
 				});
 			});
@@ -129,7 +132,7 @@ public class CubeTemplateFragment
 			.max(Comparator.comparing(ScoreResult::getScore))
 			.ifPresent(scoreResult->
 			{
-				log.info("toTemplate: adding restriction "+scoreResult.toRestriction()+" from score result "+scoreResult);
+				log.debug("toTemplate: adding restriction "+scoreResult.toRestriction()+" from score result "+scoreResult);
 				restrictions.add(scoreResult.toRestriction());
 			});
 		}
@@ -140,7 +143,7 @@ public class CubeTemplateFragment
 			.ifPresent(e->answerProperties.add(e.getKey()));
 			if(answerProperties.isEmpty())
 			{
-				log.warn("no answer property found, using default of "+cube.getDefaultAnswerProperty());
+				log.debug("no answer property found, using default of "+cube.getDefaultAnswerProperty());
 				answerProperties.add(cube.getDefaultAnswerProperty());
 			}
 		}

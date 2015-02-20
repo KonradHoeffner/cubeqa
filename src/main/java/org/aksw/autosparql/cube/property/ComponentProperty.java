@@ -55,7 +55,7 @@ public class ComponentProperty implements Serializable
 	//	public final Domain domain;
 
 	public final Set<String> labels;
-	//	public final PropertyType type;
+//	public final PropertyType type;
 
 	@NonNull public final Scorer scorer;
 
@@ -91,6 +91,9 @@ public class ComponentProperty implements Serializable
 		return Math.max(dl, dr);
 	}
 
+	public static enum PropertyType {DIMENSION,MEASURE,ATTRIBUTE}
+	public final PropertyType propertyType;
+
 	private ComponentProperty(Cube cube, String uri)//, PropertyType type)
 	{
 		var = "v"+id.getAndIncrement();
@@ -102,6 +105,17 @@ public class ComponentProperty implements Serializable
 			labels.add(CubeSparql.suffix(uri));
 			labels.addAll(stream(cube.sparql.select("select distinct(?l) {<"+uri+"> rdfs:label ?l}"))
 					.map(qs->qs.get("l").asLiteral().getLexicalForm()).collect(Collectors.toSet()));
+		}
+
+		String propertyTypeQuery = "select ?p {?spec ?p <"+uri+">. filter(contains(str(?p),\"http://purl.org/linked-data/cube#\"))} limit 1";
+//		System.out.println(propertyTypeQuery);
+		String pt = cube.sparql.select(propertyTypeQuery).next().get("?p").asResource().getURI();
+		switch(pt)
+		{
+			case "http://purl.org/linked-data/cube#measure": this.propertyType=PropertyType.MEASURE;break;
+			case "http://purl.org/linked-data/cube#attribute": this.propertyType=PropertyType.ATTRIBUTE;break;
+			case "http://purl.org/linked-data/cube#dimension": this.propertyType=PropertyType.DIMENSION;break;
+			default:throw new RuntimeException("property type '"+pt+"' not recognized for property "+uri);
 		}
 
 		Set<String> types = new HashSet<>();

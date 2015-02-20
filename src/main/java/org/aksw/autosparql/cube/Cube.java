@@ -128,12 +128,12 @@ public class Cube implements Serializable
 	//		return cubes;
 	//	}
 
-	@Override public int hashCode() {return name.hashCode();}
+	@Override public int hashCode() {return uri.hashCode();}
 
 	@Override public boolean equals(Object obj)
 	{
 		if(!(obj instanceof Cube)) return false;
-		return this.name.equals(((Cube)obj).name);
+		return this.uri.equals(((Cube)obj).uri);
 	}
 
 	public ComponentProperty getDefaultAnswerProperty()

@@ -11,16 +11,15 @@
 	</properties>
 
 	<dependencies>
-<!-- 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.1</version>
-		</dependency> -->
+	<dependency>
+	<groupId>junit</groupId>
+	<artifactId>junit-dep</artifactId>
+	<version>4.8.2</version>
+    <scope>test</scope>
+</dependency>
+		<!-- <dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-api</artifactId>
+			<version>2.1</version> </dependency> <dependency> <groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId> <version>2.1</version> </dependency> -->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
@@ -107,6 +106,14 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- to prevent "SLF4J: Class path contains multiple SLF4J bindings."
+				- everywhere the same version -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.7.10</version>
+			</dependency>
+
 			<!-- to prevent "ClassCastException: java.lang.Long cannot be cast to
 				java.lang.Integer" -->
 			<dependency>
@@ -126,16 +133,17 @@
 		<repository>
 			<id>maven.aksw.internal</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
-			<url>http://maven.aksw.org/archiva/repository/internal</url>
+			<url>http://maven.aksw.org/repository/internal</url>
 		</repository>
 		<repository>
 			<id>maven.aksw.snapshots</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
-			<url>http://maven.aksw.org/archiva/repository/snapshots</url>
+			<url>http://maven.aksw.org/repository/snapshots</url>
 		</repository>
 	</repositories>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>test/main/java</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

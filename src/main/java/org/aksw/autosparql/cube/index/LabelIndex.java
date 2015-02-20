@@ -49,11 +49,12 @@ public class LabelIndex extends Index
 	@SneakyThrows
 	public Map<String,Double> getUrisWithScore(String label)
 	{
+		String nlabel = normalize(label);
 		//		PhraseQuery q = new PhraseQuery();
 		//		q.add(new Term("label",label));
 
 		//		Query q = new QueryParser("label", analyzer).parse(querystr);
-		Query q = new FuzzyQuery(new Term("label",label));
+		Query q = new FuzzyQuery(new Term("normalizedlabel",nlabel));
 //		System.out.println(q);
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
@@ -70,7 +71,7 @@ public class LabelIndex extends Index
 			//			{
 			//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
 			//			}
-			double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(label, l))).max().getAsDouble();
+			double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(nlabel, l))).max().getAsDouble();
 			// Lucene returns document retrieval score instead of similarity score
 			urisWithScore.put(doc.get("uri"),score);
 			//			urisWithScore.put(doc.get("uri"),(double) hit.score);
@@ -89,6 +90,7 @@ public class LabelIndex extends Index
 		labels.forEach(l->
 		{
 //			doc.add(new TextField("normalizedlabel", l, Field.Store.YES));
+			doc.add(new StringField("normalizedlabel", normalize(l), Field.Store.YES));
 			doc.add(new StringField("label", l, Field.Store.YES));
 		});
 		indexWriter.addDocument(doc, analyzer);

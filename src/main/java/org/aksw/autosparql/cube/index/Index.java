@@ -53,6 +53,11 @@ public abstract class Index
 		dir = FSDirectory.open(subFolder);
 	}
 
+	static protected String normalize(String s)
+	{
+		return s.replace("&", "and").toLowerCase();
+	}
+
 	@SneakyThrows
 	final protected synchronized void stopWrites()
 	{

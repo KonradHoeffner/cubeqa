@@ -50,11 +50,11 @@ public class CubeTemplator
 		String phrase = phrase(tree);
 		if(phrase.length()<3)
 		{
-			System.out.println("phrase less than 3 characters, skipped: "+phrase);
+			log.trace("phrase less than 3 characters, skipped: "+phrase);
 			return new CubeTemplateFragment(cube, phrase);
 		}
-		System.out.println("visiting tree "+tree);
-		System.out.print("Phrase \""+phrase+"\"...");
+		log.trace("visiting tree "+tree);
+		log.trace("Phrase \""+phrase+"\"...");
 
 		CubeTemplateFragment detectedFragment = null;
 		CubeTemplateFragment undetectedFragment = null;
@@ -64,7 +64,6 @@ public class CubeTemplator
 			if(restriction.isPresent())
 			{
 				detectedFragment = new CubeTemplateFragment(cube, restriction.get().phrase);
-				System.err.println(restriction.get().phrase);
 				detectedFragment.restrictions.add(restriction.get());
 				break;
 			}
@@ -75,7 +74,7 @@ public class CubeTemplator
 			// whole phrase matched by detector, nothing else to do
 			if(detectedFragment.phrase.equals(phrase))
 			{
-				log.info("Whole phrase matched by detector, finished with this phrase.");
+				log.trace("Whole phrase matched by detector, finished with this phrase.");
 				return detectedFragment;
 			} else
 			{
@@ -84,7 +83,7 @@ public class CubeTemplator
 				log.debug("Detector matched part: '"+detectedFragment.phrase+"', left over phrase: "+phrase);
 				if(phrase.length()<3)
 				{
-					System.out.println("left over phrase less than 3 characters, skipped: "+phrase);
+					log.trace("left over phrase less than 3 characters, skipped: "+phrase);
 					return detectedFragment;
 				}
 			}
@@ -94,7 +93,7 @@ public class CubeTemplator
 		if(result.isEmpty())
 		{
 			// can't match the whole phrase, match subtrees separately
-			System.out.println("unmatched, looking at subtrees");
+			log.trace("unmatched, looking at subtrees");
 			List<CubeTemplateFragment> fragments = fragments(tree.getChildrenAsList(),x->true);
 			List<CubeTemplateFragment> matchedFragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
 			List<CubeTemplateFragment> unmatchedFragments = new LinkedList<>(fragments);
@@ -112,23 +111,23 @@ public class CubeTemplator
 				else
 				{
 					MatchResult unmatchedResult = identify(unmatchedFragmentPhrase);
-					System.out.print("unmatched fragments with phrase \""+unmatchedResult.phrase+"\"...");
+					log.trace("unmatched fragments with phrase \""+unmatchedResult.phrase+"\"...");
 					//				unmatchedFragments.stream().map(f->f.phrase).collect(Collectors.toList());
 					// can we match these leftover fragments together?
 
 					if(unmatchedResult.isEmpty())
 					{
-						System.out.println("unmatched");
+						log.trace("unmatched");
 					} else
 					{
-						System.out.println("matched to "+unmatchedResult);
+						log.trace("matched to "+unmatchedResult);
 						selectedFragments.add(unmatchedResult.toFragment(cube));
 					}
 				}
 			}
 			if(selectedFragments.isEmpty())
 			{
-				System.out.println("no match found for phrase \"" +phrase+"\"");
+				log.trace("no match found for phrase \"" +phrase+"\"");
 				undetectedFragment = new CubeTemplateFragment(cube,phrase);
 			} else
 			{
@@ -138,7 +137,7 @@ public class CubeTemplator
 		else
 		{
 			// whole phrase matched, subtrees skipped
-			System.out.println("matched to "+result);
+			log.trace("matched to "+result);
 			undetectedFragment = result.toFragment(cube);
 		}
 

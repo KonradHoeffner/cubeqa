@@ -11,11 +11,17 @@ import com.hp.hpl.jena.query.ResultSet;
 
 public class FinlandAidTest
 {
+
 	@Test
+	public void evaluate()
+	{
+		new FinlandAid().evaluate();
+	}
+//	@Test
 	public void testSingle()
 	{
 		Algorithm a = new Algorithm(FinlandAid.CUBE_NAME);
-		String query = a.answer(FinlandAid.questions.get(5));
+		String query = a.answer(FinlandAid.questions.get(5)).sparqlQuery();
 		System.out.println(query);
 	}
 
@@ -31,7 +37,7 @@ public class FinlandAidTest
 			int nr = 0;
 			for(String question: FinlandAid.questions)
 			{
-				String query = a.answer(question);
+				String query = a.answer(question).sparqlQuery();
 				String results = "no results";
 				try
 				{

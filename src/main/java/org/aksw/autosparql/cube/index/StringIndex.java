@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import org.aksw.autosparql.cube.property.ComponentProperty;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
@@ -45,7 +46,8 @@ public class StringIndex extends Index
 	@SneakyThrows
 	public Map<String,Double> getStringsWithScore(String s)
 	{
-		Query q = new FuzzyQuery(new Term("string",s));
+		String ns=normalize(s);
+		Query q = new FuzzyQuery(new Term("normalizedlabel",ns));
 //		System.out.println(q);
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
@@ -62,9 +64,11 @@ public class StringIndex extends Index
 			//			{
 			//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
 			//			}
-			double score = Arrays.stream(doc.getValues("string")).mapToDouble(l->(distance.getDistance(s, l))).max().getAsDouble();
+//TODO activate again and see why it works so badly
+			double score = Arrays.stream(doc.getValues("normalizedlabel")).filter(nl->nl.length()>3).mapToDouble(l->(distance.getDistance(ns, l)*0.0)).max().getAsDouble();
+
 			// Lucene returns document retrieval score instead of similarity score
-			stringsWithScore.put(doc.get("string"),score);
+			stringsWithScore.put(doc.get("label"),score);
 			//			urisWithScore.put(doc.get("uri"),(double) hit.score);
 		}
 		return stringsWithScore;
@@ -74,7 +78,8 @@ public class StringIndex extends Index
 	{
 		if(indexWriter==null) throw new IllegalStateException("indexWriter is null, call startWrites() first.");
 		Document doc = new Document();
-		doc.add(new TextField("string", s, Field.Store.YES));
+		doc.add(new StringField("label", s, Field.Store.YES));
+		doc.add(new TextField("normalizedlabel", normalize(s), Field.Store.YES));
 		indexWriter.addDocument(doc, analyzer);
 	}
 
