@@ -14,16 +14,16 @@ public abstract class Benchmark
 
 	 void evaluate()
 	 {
-		System.out.println(getBenchmark().size());
+//		System.out.println(getBenchmark().size());
 		System.out.println(getBenchmark().stream()/*.filter(be->be.doable)*/.count());
 		int count = 0;
 		List<Pair<Double,Double>> precisionRecalls = new ArrayList<>();
 		 for(BenchmarkElement be: getBenchmark())
 		 {
 			 System.out.println(++count+" Answering "+be.question);
-			 CubeTemplate standard = be.template;
+			 CubeTemplate correct = be.template;
 			 CubeTemplate candidate = getAlgorithm().answer(be.question);
-			 Pair<Double,Double> precRec = CubeTemplate.precisionRecallDimensions(standard, candidate);
+			 Pair<Double,Double> precRec = CubeTemplate.precisionRecallDimensions(correct, candidate);
 			 if(precRec!=null)
 			 {
 			 System.out.println(precRec);
@@ -32,6 +32,7 @@ public abstract class Benchmark
 			 {
 			  System.err.println("prec rec null");
 			 }
+			 break;
 		 }
 		 System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).filter(d->d==1).count()+" with precision 1");
 		 System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).filter(d->d==1).count()+" with recall 1");

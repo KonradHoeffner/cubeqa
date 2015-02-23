@@ -24,6 +24,14 @@ public class TemporalScorerTest
 
 	@Test public void testDateScorer()
 	{
+		Cube cube = Cube.getInstance("finland-aid");
+		// modified is a time but date scorer only uses the date substring
+		ComponentProperty property = cube.properties.get("http://linkedspending.aksw.org/ontology/refDate");
+		System.out.println(property.scorer);
+		assertTrue(property.scorer.score("2009").isPresent());
+		assertFalse(property.scorer.score("1999").isPresent());
+		assertTrue(property.scorer.score("2009-01-01").isPresent());
+		assertFalse(property.scorer.score("2009-06-07").isPresent());
 	}
 
 	@Test public void testParseAsYear()

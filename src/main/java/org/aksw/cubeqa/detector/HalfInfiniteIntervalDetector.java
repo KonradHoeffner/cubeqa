@@ -5,22 +5,14 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import lombok.Data;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
-import org.aksw.cubeqa.restriction.*;
-import org.aksw.cubeqa.restriction.TopRestriction.OrderModifier;
+import org.aksw.cubeqa.restriction.IntervalRestriction;
+import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
 
 /**Detects numerical intervals with one infinite endpoint.*/
-public class IntervalDetector extends Detector
+public class HalfInfiniteIntervalDetector extends Detector
 {
-	@Data public static class TopDetectorResult
-	{
-		final OrderModifier	modifier;
-		final int			n;
-		final String		ref;
-	}
-
 	final String[][]							keywords		= new String[][] { { ">", "more than", "larger than" },
 			{ ">=", "at least", "no less than" }, { "<", "less than", "smaller than" }, { "at most", "up to including" } };
 	final IntervalType[]						INTERVAL_TYPES	= { LEFT_OPEN, LEFT_CLOSED, RIGHT_OPEN, RIGHT_CLOSED };
@@ -28,7 +20,7 @@ public class IntervalDetector extends Detector
 	final Map<Pattern, IntervalType>			patternModifier	= new HashMap<>();
 	private static final Map<Pattern, Boolean>	numberFirst		= new HashMap<>();
 
-	public static final IntervalDetector		INSTANCE		= new IntervalDetector();
+	public static final HalfInfiniteIntervalDetector		INSTANCE		= new HalfInfiniteIntervalDetector();
 
 	private static Set<Pattern> pattern(String keyword)
 	{
@@ -50,14 +42,14 @@ public class IntervalDetector extends Detector
 		return patterns;
 	}
 
-	private IntervalDetector()
+	private HalfInfiniteIntervalDetector()
 	{
 		for (int i = 0; i < keywords.length; i++)
 		{
 			final int ii = i;
 			Arrays.stream(
 					keywords[ii]).map(
-					IntervalDetector::pattern).flatMap(
+					HalfInfiniteIntervalDetector::pattern).flatMap(
 					Set::stream).forEach(
 					p -> patternModifier.put(
 							p,

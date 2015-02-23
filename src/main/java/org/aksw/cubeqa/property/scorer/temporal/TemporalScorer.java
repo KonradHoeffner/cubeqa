@@ -53,19 +53,19 @@ public class TemporalScorer extends Scorer
 
 	@Override protected Optional<ScoreResult> unsafeScore(String value)
 	{
-		Interval t = null;
+		Interval questionInterval = null;
 		try
 		{
-			t = parseAsDate(value);
-		} catch(DateTimeParseException e)
+			questionInterval = parseAsDate(value);
+		} catch(Exception e)
 		{
-			t = parseAsYear(value);
+			questionInterval = parseAsYear(value);
 		}
 		for(Interval interval: intervals)
 		{
-			if(interval.contains(t))
+			if(interval.equals(questionInterval)||questionInterval.contains(interval))
 			{
-				Optional.of(new ScoreResult(property, value, 1));
+				return Optional.of(new ScoreResult(property, value, 1));
 			}
 		}
 		return Optional.empty();

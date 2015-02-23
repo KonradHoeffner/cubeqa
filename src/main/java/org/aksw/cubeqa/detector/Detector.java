@@ -17,7 +17,7 @@ public abstract class Detector
 {
 	public abstract Optional<RestrictionWithPhrase> detect(Cube cube, String phrase);
 
-	public static final List<Detector> DETECTORS = Arrays.asList(IntervalDetector.INSTANCE,TopDetector.INSTANCE);
+	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE);
 
 	static final protected String PHRASE_REGEX = "([\\w'-]+(\\s[\\w,'-]+)*)";
 
@@ -27,7 +27,8 @@ public abstract class Detector
 			      "for", "if", "in", "into", "is", "it",
 			      "no", "not", "of", "on", "or", "such",
 			      "that", "the", "their", "then", "there", "these",
-			      "they", "this", "to", "was", "will", "with"));
+			      "they", "this", "to", "was", "will", "with"
+			      ,"what","how many","how","is","why","will","where","when")); // TODO use question words in a detector
 
 	protected String removeStopwords(String s)
 	{
