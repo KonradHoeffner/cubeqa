@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**Streams from iterators.*/
 public class Streams
 {
 	static public <T> Stream<T> stream(Iterator<T> it)
