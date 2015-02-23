@@ -10,7 +10,8 @@ Apart from providing evaluation results, we discuss future challenges in this fi
 ##Benchmark##
 CubeQA contains a benchmark which runs on the LinkedSpending Finland-Aid Dataset ([Download](http://linkedspending.aksw.org/extensions/page/page/export/finland-aid.nt.zip) | [Browse on LinkedSpending](http://linkedspending.aksw.org/view/r/ls%3Afinland-aid)).
 The benchmark source package is [`org.aksw.cubeqa.benchmark`](https://github.com/AKSW/cubeqa/tree/master/src/main/java/org/aksw/autosparql/cube/benchmark).
-
+##Setup##
+CubeQA uses [Project Lombok](http://projectlombok.org/), which removes much boilerplate from Java. If you use Eclipse you need to download and execute lombok.jar (doubleclick it, or run java -jar lombok.jar). Follow instructions.
 ##Warning: Research Prototype##
 While CubeQA is implemented in Java using Maven so it theoretically should run everywhere, it is under development, using snapshots and generally
 of the status of a research prototype so I don't give any guarantee of it successfully running on your machine but I'm happy to help with your questions (best to open a new issue).
