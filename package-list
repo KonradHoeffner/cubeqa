@@ -1,0 +1,11 @@
+de.konradhoeffner.commons
+org.aksw.cubeqa
+org.aksw.cubeqa.benchmark
+org.aksw.cubeqa.detector
+org.aksw.cubeqa.index
+org.aksw.cubeqa.property
+org.aksw.cubeqa.property.scorer
+org.aksw.cubeqa.property.scorer.temporal
+org.aksw.cubeqa.restriction
+org.aksw.cubeqa.scripts
+org.aksw.cubeqa.template
