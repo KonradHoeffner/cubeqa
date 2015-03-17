@@ -6,10 +6,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import lombok.*;
 import org.aksw.cubeqa.property.ComponentProperty;
 
-/** A restriction on the values of a component property. */
+/** A restriction on the values of a component property.*/
+// subclasses must implement equals and hash code including those of this class (which compares the property)
 @RequiredArgsConstructor
 @Getter
-@EqualsAndHashCode(exclude={"uniqueVar"})
+@EqualsAndHashCode(of={"property"})
 public abstract class Restriction
 {
 	final ComponentProperty property;

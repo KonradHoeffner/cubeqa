@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Date;
 import org.aksw.cubeqa.Algorithm;
-import org.aksw.cubeqa.benchmark.FinlandAid;
+import org.aksw.cubeqa.benchmark.FinlandAidOld;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Test;
 import com.hp.hpl.jena.query.ResultSet;
@@ -17,27 +17,27 @@ public class FinlandAidTest
 	@Test
 	public void evaluate()
 	{
-		new FinlandAid().evaluate();
+		new FinlandAidOld().evaluate();
 	}
 //	@Test
 	public void testSingle()
 	{
-		Algorithm a = new Algorithm(FinlandAid.CUBE_NAME);
-		String query = a.answer(FinlandAid.questions.get(5)).sparqlQuery();
+		Algorithm a = new Algorithm(FinlandAidOld.CUBE_NAME);
+		String query = a.answer(FinlandAidOld.questions.get(5)).sparqlQuery();
 		System.out.println(query);
 	}
 
 //	@Test
 	public void testAll() throws FileNotFoundException
 	{
-		Algorithm a = new Algorithm(FinlandAid.CUBE_NAME);
+		Algorithm a = new Algorithm(FinlandAidOld.CUBE_NAME);
 		//		a.answer(FinlandAid.questions.get(25));
 		try(PrintWriter out = new PrintWriter("finland-aid-"+new Date()+".html"))
 		{
 			out.println("<html><body><table>");
 			out.println("<tr><th>nr</th><th>question</th><th>query</th><th> has results</th></tr>");
 			int nr = 0;
-			for(String question: FinlandAid.questions)
+			for(String question: FinlandAidOld.questions)
 			{
 				String query = a.answer(question).sparqlQuery();
 				String results = "no results";

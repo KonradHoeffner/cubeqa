@@ -47,7 +47,7 @@ public abstract class Index
 		analyzer = new PerFieldAnalyzerWrapper(new KeywordAnalyzer(), analyzerPerField);
 
 		this.property=property;
-		File folder = new File(new File("cache"),"lucene");
+		File folder = new File(new File(new File("cache"),"lucene"),property.cube.probablyUniqueAsciiId());
 		folder.mkdirs();
 		subFolder = new File(folder,property.shortName());
 

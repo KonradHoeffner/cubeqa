@@ -47,6 +47,11 @@ public class Cube implements Serializable
 		return uri.substring(uri.lastIndexOf("/")+1);
 	}
 
+	public String probablyUniqueAsciiId()
+	{
+		return uri.replaceAll("[^A-Za-z0-9]", "");
+	}
+
 	private static File cubeFile(String cubeName) {return new File(cacheFolder, cubeName+".ser");}
 
 	private static synchronized Optional<Cube> loadCube(String cubeName)

@@ -28,6 +28,7 @@ public abstract class Detector
 			      "no", "not", "of", "on", "or", "such",
 			      "that", "the", "their", "then", "there", "these",
 			      "they", "this", "to", "was", "will", "with"
+			      ,"does","do","did"
 			      ,"what","how many","how","is","why","will","where","when")); // TODO use question words in a detector
 
 	protected String removeStopwords(String s)

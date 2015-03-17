@@ -20,7 +20,7 @@ import org.aksw.cubeqa.template.CubeTemplate;
 // eclipse indent broken
 // most low-tech and bad style code in this project
 /**Benchmark using the LinkedSpending Finland-Aid dataset. Execute on the CubeQA algorithm via FinlandAidTest. */
-public class FinlandAid extends Benchmark {
+public class FinlandAidOld extends BenchmarkOld {
 	public static final Cube cube = Cube.FINLAND_AID;
 	public static final String CUBE_NAME = "finland-aid";
 	public static final List < String > questions = Arrays.asList(
@@ -89,15 +89,15 @@ public class FinlandAid extends Benchmark {
 	}
 
 
-	public static BenchmarkElement be(String question, boolean doable, CubeTemplate ct) {
-		return new BenchmarkElement(question, doable, ct);
+	public static BenchmarkElementOld be(String question, boolean doable, CubeTemplate ct) {
+		return new BenchmarkElementOld(question, doable, ct);
 	}
 
-	@Override List<BenchmarkElement> getBenchmark() {return benchmark;}
+	@Override List<BenchmarkElementOld> getBenchmark() {return benchmark;}
 	@Override Algorithm getAlgorithm() {return new Algorithm("finland-aid");}
 
 
-	public static final List < BenchmarkElement > benchmark = Arrays.asList(
+	public static final List < BenchmarkElementOld > benchmark = Arrays.asList(
 	//			 "per month" not doable with templates -> take into account that this doesnt work
 	be("What was the average aid to environment per month in year 2010?",
 	true,
@@ -265,6 +265,15 @@ public class FinlandAid extends Benchmark {
 	//finpropset("amounts"),
 	//finpropset("recipient-country"),
 	//Collections.emptySet(Aggregate.SUM))
+
+	be("Top ten aid receivers in America?",false,
+			// not possible? still countr properties...
+								new CubeTemplate(cube,
+							Collections.emptySet(),
+							set(finprop("recipient-country"),finprop("commitments")),
+							Collections.emptySet(),
+							Collections.emptySet())),
+
 
 	be("Which country has the highest amount of commitments?",false,
 	// not possible? still countr properties...

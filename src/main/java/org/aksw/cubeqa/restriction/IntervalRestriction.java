@@ -36,7 +36,6 @@ public class IntervalRestriction extends RestrictionWithPhrase
 		return terms;
 	}
 
-
 	public IntervalRestriction(ComponentProperty property, String phrase, double leftEndpoint, double rightEndpoint, boolean open)
 	{
 		super(property,phrase);
