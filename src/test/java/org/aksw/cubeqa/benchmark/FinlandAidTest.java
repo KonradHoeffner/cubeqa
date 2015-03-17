@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Date;
 import org.aksw.cubeqa.Algorithm;
-import org.aksw.cubeqa.benchmark.FinlandAidOld;
+import org.aksw.cubeqa.deprecated.FinlandAidOld;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Test;
 import com.hp.hpl.jena.query.ResultSet;

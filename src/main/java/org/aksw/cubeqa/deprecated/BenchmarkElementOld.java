@@ -1,4 +1,4 @@
-package org.aksw.cubeqa.benchmark;
+package org.aksw.cubeqa.deprecated;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

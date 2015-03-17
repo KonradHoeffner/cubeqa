@@ -1,4 +1,4 @@
-package org.aksw.cubeqa.benchmark;
+package org.aksw.cubeqa.deprecated;
 
 import java.util.ArrayList;
 import java.util.List;
