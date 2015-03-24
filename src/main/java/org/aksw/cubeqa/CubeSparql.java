@@ -54,11 +54,24 @@ public class CubeSparql implements Serializable
 
 	String cubeUrl(String datasetName) {return prefixInstance+datasetName;}
 
+	public boolean ask(String query)
+	{
+		try
+		{
+		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
+		defaultGraphs.forEach(qe::addDefaultGraph);
+		return qe.execAsk();
+		} catch(Exception e) {throw new RuntimeException("Error on SPARQL ASK on endpoint "+endpoint+" with query:\n"+query,e);}
+	}
+
 	public ResultSet select(String query)
 	{
+		try
+		{
 		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
 		defaultGraphs.forEach(qe::addDefaultGraph);
 		return qe.execSelect();
+		} catch(Exception e) {throw new RuntimeException("Error on sparql select on endpoint "+endpoint+" with query:\n"+query,e);}
 	}
 
 	public static String suffix(String uri)

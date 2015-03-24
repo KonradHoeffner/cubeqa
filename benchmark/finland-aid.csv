@@ -507,7 +507,7 @@ Which year had the highest total commitment for agricultural research?,"select ?
 }
 order by desc(sum(xsd:decimal(?commitment)))
 limit 1"
-When was the highest commitment for agricultural research and what was its amount?,"select ?date xsd:decimal(?commitment)
+When was the highest commitment for agricultural research and what was its amount?,"select ?date xsd:decimal(?commitment) as ?total_commitment
 {
 ?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
 
@@ -560,8 +560,8 @@ select ?country
 having (sum(xsd:decimal(?amount)) > 1000000)
 }
 }"
-How many sectors per recipient country?,select count(?sector) ?country {?obs lso:finland-aid-sector ?sector. ?obs lso:finland-aid-recipient-country ?country.} group by ?country
-How much money was given each country for Health education?,"select sum(xsd:decimal(?amount)) ?country
+How many sectors per recipient country?,select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?sector. ?obs lso:finland-aid-recipient-country ?country.} group by ?country
+How much money was given each country for Health education?,"select sum(xsd:decimal(?amount)) as ?sum_amount ?country
 {
  ?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12261>.
  ?obs lso:finland-aid-recipient-country ?country.
@@ -582,7 +582,7 @@ limit 10"
    ?obs lso:refYear ""2009""^^xsd:gYear.
    ?obs lso:finland-aid-recipient-country ?country
  }"
-Which country received aid for the most sectors?,"select ?country count(distinct(?sector))
+Which country received aid for the most sectors?,"select ?country
 {
    ?obs lso:finland-aid-sector ?sector.
    ?obs lso:finland-aid-recipient-country ?country

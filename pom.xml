@@ -15,7 +15,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit-dep</artifactId>
 			<version>4.8.2</version>
-			<scope>test</scope>
+			<!-- <scope>test</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -144,6 +144,11 @@
 			<id>maven.aksw.snapshots</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
 			<url>http://maven.aksw.org/repository/snapshots</url>
+		</repository>
+		<repository>
+			<id>UK</id>
+			<name>UK Central</name>
+			<url>http://uk.maven.org/maven2</url>
 		</repository>
 	</repositories>
 	<build>
