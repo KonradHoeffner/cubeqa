@@ -13,4 +13,5 @@ class Question
 	public final String string;
 	public final String query;
 	public final Set<Map<String,Object>> answers;
+	public final Map<String,AnswerType> tagTypes;
 }

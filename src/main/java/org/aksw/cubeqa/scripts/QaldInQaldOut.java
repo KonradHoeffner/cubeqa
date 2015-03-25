@@ -1,5 +1,6 @@
 package org.aksw.cubeqa.scripts;
 
+import java.io.File;
 import java.io.IOException;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.benchmark.Benchmark;
@@ -10,7 +11,7 @@ public class QaldInQaldOut
 
 	public static void main(String[] args) throws IOException
 	{
-		Benchmark.fromCsv("finland-aid").saveAsQald(Cube.FINLAND_AID.sparql);
+		Benchmark.fromQald("finland-aid").saveAsQald(null,new File(new File("benchmark"),"test.xml"));
 	}
 
 }

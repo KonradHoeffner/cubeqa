@@ -9,10 +9,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
 import lombok.*;
+import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Algorithm;
 import org.aksw.cubeqa.CubeSparql;
 import org.apache.commons.csv.*;
@@ -24,10 +22,76 @@ import de.konradhoeffner.commons.Pair;
 
 /** Abstract benchmark class with evaluate function.*/
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Log4j
 public class Benchmark
 {
 	private final String name;
 	private final List<Question> questions;
+
+	static Question completeQuestion(CubeSparql sparql, String string, String query)
+	{
+		Set<Map<String,Object>> answers = new TreeSet<>();
+		Map<String,AnswerType> tagTypes  = new TreeMap<>();
+
+		if(query.startsWith("ask"))
+		{
+			tagTypes.put("",AnswerType.BOOLEAN);
+			Map answer = new HashMap<String,Object>();
+			answer.put("",sparql.ask(query));
+			answers.add(answer);
+		}
+		else if(query.startsWith("select"))
+		{
+			ResultSet rs = sparql.select(query);
+			List<String> varNames = new ArrayList<String>();
+			while(rs.hasNext())
+			{
+				Map answer = new HashMap<String,Object>();
+				answers.add(answer);
+
+				QuerySolution qs = rs.nextSolution();
+				// TODO: how to deal with unions where one part does not exist?
+				varNames.addAll(stream(qs.varNames()).collect(Collectors.toList()));
+				if(varNames.size()==1)
+				{
+					RDFNode node = qs.get(varNames.get(0));
+					tagTypes.put("",AnswerType.typeOf(node));
+					answer.put("", nodeString(qs.get(varNames.get(0))));
+				} else
+				{
+					for(String var: varNames)
+					{
+						RDFNode node = qs.get(var);
+						tagTypes.put(var,AnswerType.typeOf(node));
+						answer.put(var, nodeString(qs.get(var)));
+					}
+				}
+			}
+		}
+		return new Question(string, query, answers, tagTypes);
+	}
+
+	public void evaluate(Algorithm algorithm)
+	{
+		System.out.println("Evaluating cube "+algorithm.cube.name+ " on benchmark "+name+" with "+questions.size()+" questions");
+		int count = 0;
+		//		List<Pair<Double,Double>> precisionRecalls = new ArrayList<>();
+		for(Question question: questions)
+		{
+			System.out.println(++count+" Answering "+question.string);
+
+			String query = algorithm.answer(question.string).sparqlQuery();
+
+
+			Performance p = Performance.performance(question.answers, found);
+			//				 Set<String> answers = algorithm.cube.sparql.select(query);
+			break;
+		}
+		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).filter(d->d==1).count()+" with precision 1");
+		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).filter(d->d==1).count()+" with recall 1");
+		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).average());
+		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).average());
+	}
 
 	/** CSV does not contain answers. file gets loaded from benchmark/name.csv. */
 	public static Benchmark fromCsv(String name) throws IOException
@@ -37,13 +101,13 @@ public class Benchmark
 		{
 			for(CSVRecord record: parser)
 			{
-				questions.add(new Question(record.get(0),record.get(1),Collections.emptySet()));
+				questions.add(new Question(record.get(0),record.get(1),null,null));
 			}
 		}
 		return new Benchmark(name,questions);
 	}
 
-	String nodeString(RDFNode node)
+	static String nodeString(RDFNode node)
 	{
 		if(node.isLiteral()) return node.asLiteral().getLexicalForm();
 		if(node.isResource()) return node.asResource().getURI();
@@ -65,50 +129,51 @@ public class Benchmark
 		Document doc = dBuilder.parse(file);
 		doc.getDocumentElement().normalize();
 		NodeList questionNodes = doc.getElementsByTagName("question");
-
+		List<Question> questions = new ArrayList<>();
 		for(int i=0; i<questionNodes.getLength();i++)
 		{
+			Map<String,AnswerType> tagTypes = new TreeMap<>();
 			Set<Map<String,Object>> answers = new HashSet<>();
 			Element questionElement = (Element) questionNodes.item(i);
-			String string = questionElement.getElementsByTagName("string").item(0).getTextContent();
-			String query = questionElement.getElementsByTagName("query").item(0).getTextContent();
+			String string = questionElement.getElementsByTagName("string").item(0).getTextContent().trim();
+			String query = Nodes.directTextContent(questionElement.getElementsByTagName("query").item(0)).trim();
+
 			Element answersElement = (Element) questionElement.getElementsByTagName("answers").item(0);
-			NodeList answerElements = answersElement.getChildNodes();
-			for(int j=0;j<answerElements.getLength();j++)
+			List<Element> answerElements = Nodes.childElements(answersElement, "answer");
+			for(Element answerElement: answerElements)
 			{
-				Map<String,Object> answer = new HashMap<>();
-				Element answerElement = (Element) answerElements.item(j);
-				NodeList childNodes = answerElement.getChildNodes();
-				if(childNodes.getLength()==0)
+				Map<String,Object> answer = new TreeMap<>();
+				answers.add(answer);
+				String direct = Nodes.directTextContent(answerElement).trim();
+				if(direct.isEmpty())
 				{
-					answer.put("result", answerElement.getTextContent());
+					for(Element var: Nodes.childElements(answerElement))
+					{
+						tagTypes.put(var.getTagName(), AnswerType.valueOf(var.getAttribute("answerType").toUpperCase()));
+						answer.put(var.getTagName(), var.getTextContent());
+					}
 				} else
 				{
-					for(int k=0;k<childNodes.getLength();k++)
-					{
-						Element cell = (Element)childNodes.item(k);
-						answer.put(cell.getNodeName(), cell.getTextContent());
-					}
+					tagTypes.put("", AnswerType.valueOf(answerElement.getAttribute("answerType").toUpperCase()));
+					answer.put("", direct);
 				}
-				answers.add(answer);
 			}
-			Question question = new Question(string, query, answers);
+			Question question = new Question(string, query, answers,tagTypes);
+			questions.add(question);
 		}
 
-
-		for (int temp = 0; temp < questionNodes.getLength(); temp++) {
-
-			Node nNode = questionNodes.item(temp);
-		}
-		return null;
+		return new Benchmark(name, questions);
 	}
 
+	/** {@link #} */
+	public void saveAsQald(CubeSparql sparql) {saveAsQald(sparql,new File (new File("benchmark"),name+".xml"));}
+
+	/**	 */
 	@SneakyThrows
-	/** file gets saved to benchmark/name.xml */
-	public void saveAsQald(CubeSparql sparql) throws IOException
+	public void saveAsQald(CubeSparql sparql, File file)
 	{
 		int id = 0;
-		try(FileWriter fw = new FileWriter(new File(new File("benchmark"),name+".xml")))
+		try(FileWriter fw = new FileWriter(file))
 		{
 			XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(fw);
 			writer.writeStartDocument();
@@ -130,41 +195,70 @@ public class Benchmark
 				writer.writeCharacters(question.query);
 				writer.writeStartElement("answers");
 				writer.writeCharacters("\n");
-				if(question.query.startsWith("ask"))
+				if(question.answers==null)
 				{
-					writer.writeStartElement("answer");
-					writer.writeAttribute("answerType","boolean");
-					writer.writeCharacters(String.valueOf(sparql.ask(question.query)));
-					writer.writeEndElement();
-
-				} else if(question.query.startsWith("select"))
-				{
-					ResultSet rs = sparql.select(question.query);
-					List<String> varNames = null;
-					while(rs.hasNext())
+					if(true) throw new IllegalArgumentException("answers are null");
+					log.warn("Benchmark contains no answers, querying SPARQL endpoint");
+					if(question.query.startsWith("ask"))
 					{
 						writer.writeStartElement("answer");
-						QuerySolution qs = rs.nextSolution();
-						//						if(varNames==null) // unions may have empty parts so recalculate
-						{varNames = stream(qs.varNames()).collect(Collectors.toList());}
-						if(varNames.size()==1)
+						writer.writeAttribute("answerType","boolean");
+						writer.writeCharacters(String.valueOf(sparql.ask(question.query)));
+						writer.writeEndElement();
+
+					} else if(question.query.startsWith("select"))
+					{
+						ResultSet rs = sparql.select(question.query);
+						List<String> varNames = null;
+						while(rs.hasNext())
 						{
-							writer.writeAttribute("answerType",AnswerType.typeOf(qs.get(varNames.get(0))).toString().toLowerCase());
-							writer.writeCharacters(nodeString(qs.get(varNames.get(0))));
+							writer.writeStartElement("answer");
+							QuerySolution qs = rs.nextSolution();
+							//						if(varNames==null) // unions may have empty parts so recalculate
+							{varNames = stream(qs.varNames()).collect(Collectors.toList());}
+							if(varNames.size()==1)
+							{
+								writer.writeAttribute("answerType",AnswerType.typeOf(qs.get(varNames.get(0))).toString().toLowerCase());
+								writer.writeCharacters(nodeString(qs.get(varNames.get(0))));
+							} else
+							{
+								for(String var: varNames)
+								{
+									writer.writeStartElement(var);
+									writer.writeAttribute("answerType",AnswerType.typeOf(qs.get(var)).toString().toLowerCase());
+									writer.writeCharacters(nodeString(qs.get(var)));
+									writer.writeEndElement();
+								}
+							}
+							writer.writeEndElement();
+							writer.writeCharacters("\n");
+						}
+					} else throw new IllegalArgumentException("unsupported SPARQL query type (neither ASK nor SELECT): "+question.query);
+				} else
+				{
+					for(Map<String,Object> answer: question.answers)
+					{
+						writer.writeStartElement("answer");
+						if(answer.containsKey(""))
+						{
+							writer.writeAttribute("answerType",question.tagTypes.get("").toString().toLowerCase());
+							writer.writeCharacters(answer.get("").toString());
+
 						} else
 						{
-							for(String var: varNames)
+							for(String tag: answer.keySet())
 							{
-								writer.writeStartElement(var);
-								writer.writeAttribute("answerType",AnswerType.typeOf(qs.get(var)).toString().toLowerCase());
-								writer.writeCharacters(nodeString(qs.get(var)));
+								writer.writeStartElement(tag);
+								writer.writeAttribute("answerType",question.tagTypes.get(tag).toString().toLowerCase());
+								writer.writeCharacters(answer.get(tag).toString());
 								writer.writeEndElement();
+								writer.writeCharacters("\n");
 							}
 						}
 						writer.writeEndElement();
 						writer.writeCharacters("\n");
 					}
-				} else throw new IllegalArgumentException("unsupported SPARQL query type (neither ASK nor SELECT): "+question.query);
+				}
 				writer.writeEndElement();
 				writer.writeCharacters("\n");
 				writer.writeEndElement();
@@ -178,22 +272,4 @@ public class Benchmark
 		}
 	}
 
-	void evaluate(Algorithm algorithm)
-	{
-		System.out.println("Evaluating cube "+algorithm.cube.name+ " on benchmark "+name+" with "+questions.size()+" questions");
-		int count = 0;
-		List<Pair<Double,Double>> precisionRecalls = new ArrayList<>();
-		for(Question question: questions)
-		{
-			System.out.println(++count+" Answering "+question.string);
-
-			String query = algorithm.answer(question.string).sparqlQuery();
-			//				 Set<String> answers = algorithm.cube.sparql.select(query);
-
-		}
-		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).filter(d->d==1).count()+" with precision 1");
-		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).filter(d->d==1).count()+" with recall 1");
-		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).average());
-		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).average());
-	}
 }
