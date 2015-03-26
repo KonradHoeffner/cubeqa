@@ -1,6 +1,6 @@
-What was the average aid to environment per month in year 2010?,"select (sum(xsd:decimal(?aid))/12) as ?result
+What was the average aid committed per month in year 2010?,"select (sum(xsd:decimal(?aid))/12) as ?result
 {
-?obs lso:finland-aid-aid-to-environment ?aid.
+?obs lso:finland-aid-commitments ?aid.
 ?obs lso:refYear ""2010""^^xsd:gYear.
 }"
 What is the average yearly aid over the Finnfund channel?,"select avg(?yearly) as ?result
