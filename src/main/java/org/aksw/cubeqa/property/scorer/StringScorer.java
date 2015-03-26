@@ -17,7 +17,6 @@ public class StringScorer extends DatatypePropertyScorer
 
 	transient StringIndex index;
 
-
 	private synchronized void loadOrCreateIndex()
 	{
 		if(index==null)
@@ -32,6 +31,7 @@ public class StringScorer extends DatatypePropertyScorer
 		super(property);
 	}
 
+	@Override
 	public Optional<ScoreResult> unsafeScore(String value)
 	{
 		loadOrCreateIndex();

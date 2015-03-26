@@ -21,28 +21,6 @@ public abstract class Detector
 
 	static final protected String PHRASE_REGEX = "([\\w'-]+(\\s[\\w,'-]+)*)";
 
-	static private final Set<String> stopwords =
-			new HashSet<>(Arrays.asList(
-			   "a", "an", "and", "are", "as", "at", "be", "but", "by",
-			      "for", "if", "in", "into", "is", "it",
-			      "no", "not", "of", "on", "or", "such",
-			      "that", "the", "their", "then", "there", "these",
-			      "they", "this", "to", "was", "will", "with"
-			      ,"does","do","did"
-			      ,"what","how many","how","is","why","will","where","when")); // TODO use question words in a detector
-
-	protected String removeStopwords(String s)
-	{
-		for(String stopword: stopwords)
-		{
-			s=s.replace(" "+stopword+" "," ");
-			s=s.replace("^"+stopword+" ","");
-			s=s.replace(" "+stopword+"$","");
-		}
-		return s;
-//		return s.replaceAll("\\s+"," ");
-	}
-
 	static public Set<ScoreResult> matchPart(Cube cube, String phrase)
 	{
 		Set<ScoreResult> partScores = new HashSet<>();

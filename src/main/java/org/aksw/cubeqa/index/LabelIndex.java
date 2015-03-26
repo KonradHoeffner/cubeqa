@@ -8,22 +8,28 @@ import java.util.Set;
 import java.util.function.Function;
 import lombok.SneakyThrows;
 import org.aksw.cubeqa.property.ComponentProperty;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.util.Version;
 
 /** Lucene index for labels, used by ObjectPropertyScorer.
  */
 public class LabelIndex extends Index
 {
 	private static final Map<String,LabelIndex> instances = new HashMap<>();
+	private static final int	FUZZY_MIN_LENGTH	= 5;
+	private StandardAnalyzer analyzer = new StandardAnalyzer();
+	private QueryParser parser = new QueryParser(Version.LUCENE_4_9_1,"normalizedlabel", analyzer);
 
 	private LabelIndex(ComponentProperty property)
 	{
@@ -51,12 +57,19 @@ public class LabelIndex extends Index
 	@SneakyThrows
 	public Map<String,Double> getUrisWithScore(String label)
 	{
-		String nlabel = normalize(label);
+		String ns = normalize(label);
 		//		PhraseQuery q = new PhraseQuery();
 		//		q.add(new Term("label",label));
 
 		//		Query q = new QueryParser("label", analyzer).parse(querystr);
-		Query q = new FuzzyQuery(new Term("normalizedlabel",nlabel));
+		Query q;
+		if(ns.length()>=FUZZY_MIN_LENGTH)
+		{
+			q = new FuzzyQuery(new Term("normalizedlabel",ns));
+		} else
+		{
+			q = parser.parse(ns);
+		}
 //		System.out.println(q);
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
@@ -73,7 +86,7 @@ public class LabelIndex extends Index
 			//			{
 			//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
 			//			}
-			double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(nlabel, l))).max().getAsDouble();
+			double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(ns, l))).max().getAsDouble();
 			// Lucene returns document retrieval score instead of similarity score
 			urisWithScore.put(doc.get("uri"),score);
 			//			urisWithScore.put(doc.get("uri"),(double) hit.score);

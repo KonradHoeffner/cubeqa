@@ -1,20 +1,14 @@
 package org.aksw.cubeqa.detector;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Data;
 import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.Stopwords;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
-import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
-import org.aksw.cubeqa.restriction.TopRestriction;
+import org.aksw.cubeqa.restriction.*;
 import org.aksw.cubeqa.restriction.TopRestriction.OrderModifier;
 
 /** Detects "highest n" or "lowest n" type phrases. */
@@ -51,7 +45,7 @@ public class TopDetector extends Detector
 
 	public Optional<RestrictionWithPhrase> detect(Cube cube, String phrase)
 	{
-		phrase = removeStopwords(phrase);
+		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);
 
 		for(Entry<Pattern,OrderModifier> e: patternModifier.entrySet())
 		{

@@ -25,38 +25,42 @@ import de.konradhoeffner.commons.Pair;
 @Log4j
 public class Benchmark
 {
-	private final String name;
-	private final List<Question> questions;
+	protected final String name;
+	protected final List<Question> questions;
+
+	public void completeQuestions(CubeSparql sparql)
+	{
+		questions.stream().forEach(q->completeQuestion(sparql, q.string, q.query));
+	}
+
 
 	static Question completeQuestion(CubeSparql sparql, String string, String query)
 	{
-		Set<Map<String,Object>> answers = new TreeSet<>();
-		Map<String,AnswerType> tagTypes  = new TreeMap<>();
+		Set<Map<String,String>> answers = new HashSet<>();
+		Map<String,AnswerType> tagTypes  = new HashMap<>();
 
 		if(query.startsWith("ask"))
 		{
 			tagTypes.put("",AnswerType.BOOLEAN);
-			Map answer = new HashMap<String,Object>();
-			answer.put("",sparql.ask(query));
-			answers.add(answer);
+			Map<String,String> answer = new HashMap<String,String>();
+			answer.put("",String.valueOf(sparql.ask(query)));
+			answers.add(Collections.unmodifiableMap(answer));
 		}
 		else if(query.startsWith("select"))
 		{
 			ResultSet rs = sparql.select(query);
-			List<String> varNames = new ArrayList<String>();
+			Set<String> varNames = new TreeSet<String>();
 			while(rs.hasNext())
 			{
 				Map answer = new HashMap<String,Object>();
-				answers.add(answer);
-
 				QuerySolution qs = rs.nextSolution();
 				// TODO: how to deal with unions where one part does not exist?
 				varNames.addAll(stream(qs.varNames()).collect(Collectors.toList()));
 				if(varNames.size()==1)
 				{
-					RDFNode node = qs.get(varNames.get(0));
+					RDFNode node = qs.get(varNames.iterator().next());
 					tagTypes.put("",AnswerType.typeOf(node));
-					answer.put("", nodeString(qs.get(varNames.get(0))));
+					answer.put("", nodeString(qs.get(varNames.iterator().next())));
 				} else
 				{
 					for(String var: varNames)
@@ -66,6 +70,7 @@ public class Benchmark
 						answer.put(var, nodeString(qs.get(var)));
 					}
 				}
+				answers.add(Collections.unmodifiableMap(answer));
 			}
 		}
 		return new Question(string, query, answers, tagTypes);
@@ -73,20 +78,24 @@ public class Benchmark
 
 	public void evaluate(Algorithm algorithm)
 	{
-		System.out.println("Evaluating cube "+algorithm.cube.name+ " on benchmark "+name+" with "+questions.size()+" questions");
-		int count = 0;
+		log.info("Evaluating cube "+algorithm.cube.name+ " on benchmark "+name+" with "+questions.size()+" questions");
+		for(int i=0;i<questions.size();i++) {evaluate(algorithm,i);}
+	}
+
+	public void evaluate(Algorithm algorithm, int questionNumber)
+	{
 		//		List<Pair<Double,Double>> precisionRecalls = new ArrayList<>();
-		for(Question question: questions)
-		{
-			System.out.println(++count+" Answering "+question.string);
-
-			String query = algorithm.answer(question.string).sparqlQuery();
-
-
-			Performance p = Performance.performance(question.answers, found);
-			//				 Set<String> answers = algorithm.cube.sparql.select(query);
-			break;
-		}
+		Question question = questions.get(questionNumber);
+		log.info(questionNumber+": Answering "+question.string);
+		log.info("correct query: "+question.query);
+		log.info("correct answer: "+question.answers);
+		String query = algorithm.answer(question.string).sparqlQuery();
+		Question found = completeQuestion(algorithm.cube.sparql, question.string, query);
+		log.info("found query: "+found.query);
+		log.info("found answer: "+found.answers);
+		Performance p = Performance.performance(question.answers, found.answers);
+		log.info(p);
+		//				 Set<String> answers = algorithm.cube.sparql.select(query);
 		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).filter(d->d==1).count()+" with precision 1");
 		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).filter(d->d==1).count()+" with recall 1");
 		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).average());
@@ -132,8 +141,8 @@ public class Benchmark
 		List<Question> questions = new ArrayList<>();
 		for(int i=0; i<questionNodes.getLength();i++)
 		{
-			Map<String,AnswerType> tagTypes = new TreeMap<>();
-			Set<Map<String,Object>> answers = new HashSet<>();
+			Map<String,AnswerType> tagTypes = new HashMap<>();
+			Set<Map<String,String>> answers = new HashSet<>();
 			Element questionElement = (Element) questionNodes.item(i);
 			String string = questionElement.getElementsByTagName("string").item(0).getTextContent().trim();
 			String query = Nodes.directTextContent(questionElement.getElementsByTagName("query").item(0)).trim();
@@ -142,8 +151,7 @@ public class Benchmark
 			List<Element> answerElements = Nodes.childElements(answersElement, "answer");
 			for(Element answerElement: answerElements)
 			{
-				Map<String,Object> answer = new TreeMap<>();
-				answers.add(answer);
+				Map<String,String> answer = new HashMap<>();
 				String direct = Nodes.directTextContent(answerElement).trim();
 				if(direct.isEmpty())
 				{
@@ -157,6 +165,7 @@ public class Benchmark
 					tagTypes.put("", AnswerType.valueOf(answerElement.getAttribute("answerType").toUpperCase()));
 					answer.put("", direct);
 				}
+				answers.add(Collections.unmodifiableMap(answer));
 			}
 			Question question = new Question(string, query, answers,tagTypes);
 			questions.add(question);
@@ -197,7 +206,7 @@ public class Benchmark
 				writer.writeCharacters("\n");
 				if(question.answers==null)
 				{
-					if(true) throw new IllegalArgumentException("answers are null");
+//					if(true) throw new IllegalArgumentException("answers are null");
 					log.warn("Benchmark contains no answers, querying SPARQL endpoint");
 					if(question.query.startsWith("ask"))
 					{
@@ -236,12 +245,12 @@ public class Benchmark
 					} else throw new IllegalArgumentException("unsupported SPARQL query type (neither ASK nor SELECT): "+question.query);
 				} else
 				{
-					for(Map<String,Object> answer: question.answers)
+					for(Map<String,String> answer: question.answers)
 					{
 						writer.writeStartElement("answer");
 						if(answer.containsKey(""))
 						{
-							writer.writeAttribute("answerType",question.tagTypes.get("").toString().toLowerCase());
+							writer.writeAttribute("answerType",question.answerTypes.get("").toString().toLowerCase());
 							writer.writeCharacters(answer.get("").toString());
 
 						} else
@@ -249,7 +258,7 @@ public class Benchmark
 							for(String tag: answer.keySet())
 							{
 								writer.writeStartElement(tag);
-								writer.writeAttribute("answerType",question.tagTypes.get(tag).toString().toLowerCase());
+								writer.writeAttribute("answerType",question.answerTypes.get(tag).toString().toLowerCase());
 								writer.writeCharacters(answer.get(tag).toString());
 								writer.writeEndElement();
 								writer.writeCharacters("\n");

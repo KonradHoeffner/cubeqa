@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.Stopwords;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
@@ -24,12 +25,18 @@ import edu.stanford.nlp.trees.Tree;
 @Log4j
 public class CubeTemplator
 {
+	private static final int	PHRASE_MIN_LENGTH	= 3;
+	private static final int	PHRASE_MAX_LENGTH	= 30;
+
 	private final Cube cube;
 	//	private final String question;
 
+
 	public CubeTemplate buildTemplate(String question)
 	{
-		Tree root = StanfordNlp.parse(question);
+		String noStop = Stopwords.remove(question, Stopwords.QUESTION_WORDS);
+		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
+		Tree root = StanfordNlp.parse(noStop);
 		return visitRecursive(root).toTemplate();
 	}
 
@@ -50,18 +57,18 @@ public class CubeTemplator
 			tree = tree.getChild(0);
 		}
 		String phrase = phrase(tree);
-		if(phrase.length()<3)
+		if(phrase.length()<PHRASE_MIN_LENGTH)
 		{
-			log.trace("phrase less than 3 characters, skipped: "+phrase);
+			log.trace("phrase less than "+PHRASE_MIN_LENGTH+" characters, skipped: "+phrase);
 			return new CubeTemplateFragment(cube, phrase);
 		}
 		MatchResult result = null;
 		CubeTemplateFragment detectedFragment = null;
 		CubeTemplateFragment undetectedFragment = null;
 
-		if(phrase.length()>30)
+		if(phrase.length()>PHRASE_MAX_LENGTH)
 		{
-			log.trace("phrase more than 30 characters, going deeper");
+			log.trace("phrase more than "+PHRASE_MAX_LENGTH+" characters, going deeper");
 		} else
 		{
 			log.trace("visiting tree "+tree);
@@ -81,9 +88,9 @@ public class CubeTemplator
 					}
 					phrase = phrase.replace(detectedFragment.phrase,"");
 					log.debug("Detector matched part: '"+detectedFragment.phrase+"', left over phrase: "+phrase);
-					if(phrase.length()<3)
+					if(phrase.length()<PHRASE_MIN_LENGTH)
 					{
-						log.trace("left over phrase less than 3 characters, skipped: "+phrase);
+						log.trace("left over phrase less than "+PHRASE_MIN_LENGTH+" characters, skipped: "+phrase);
 						return detectedFragment;
 					}
 					break;

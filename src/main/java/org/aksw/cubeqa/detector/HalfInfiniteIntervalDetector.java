@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.Stopwords;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.IntervalRestriction;
 import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
@@ -59,7 +60,7 @@ public class HalfInfiniteIntervalDetector extends Detector
 
 	public Optional<RestrictionWithPhrase> detect(Cube cube, String phrase)
 	{
-		phrase = removeStopwords(phrase);
+		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);
 
 		for (Entry<Pattern, IntervalType> e : patternModifier.entrySet())
 		{
