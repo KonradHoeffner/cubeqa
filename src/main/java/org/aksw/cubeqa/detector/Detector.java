@@ -1,25 +1,22 @@
 package org.aksw.cubeqa.detector;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
-import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
+import org.aksw.cubeqa.template.CubeTemplateFragment;
 
-/**Abstract class for a Dectector, which is called before scorers and transforms certain keyphrases into additional query modifiers, such as aggregates. */
+/**Abstract class for a Dectector, which is called before scorers and transforms certain keyphrases into additional query modifiers, such as aggregates.
+ * A detector can find several or no matches in a phrase.*/
 public abstract class Detector
 {
-	public abstract Optional<RestrictionWithPhrase> detect(Cube cube, String phrase);
+	public abstract Set<CubeTemplateFragment> detect(Cube cube, String phrase);
 
-	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE);
+	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,PerTimeDetector.INSTANCE);
 
-	static final protected String PHRASE_REGEX = "([\\w'-]+(\\s[\\w,'-]+)*)";
+	static final protected String PHRASE_REGEX = "([a-zA-Züöäéèô'-]+(\\s[a-zA-Züöäéèô,'-]+)*)";
+	static final protected String WORD_REGEX = "([a-zA-Züöäéèô'-]+)";
 
 	static public Set<ScoreResult> matchPart(Cube cube, String phrase)
 	{

@@ -5,82 +5,117 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.Stopwords;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
-import org.aksw.cubeqa.restriction.IntervalRestriction;
-import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
+import org.aksw.cubeqa.restriction.*;
+import org.aksw.cubeqa.template.CubeTemplateFragment;
 
 /**Detects numerical intervals with one infinite endpoint.*/
 public class HalfInfiniteIntervalDetector extends Detector
 {
-	final String[][]							keywords		= new String[][] { { ">", "more than", "larger than" },
+	private static final double	MIN_SIMILARITY	= 0.3;
+	final static String[][]							KEYWORDS		= new String[][] { { ">", "more than", "larger than" },
 			{ ">=", "at least", "no less than" }, { "<", "less than", "smaller than" }, { "at most", "up to including" } };
-	final IntervalType[]						INTERVAL_TYPES	= { LEFT_OPEN, LEFT_CLOSED, RIGHT_OPEN, RIGHT_CLOSED };
+	final static IntervalType[]						INTERVAL_TYPES	= { LEFT_OPEN, LEFT_CLOSED, RIGHT_OPEN, RIGHT_CLOSED };
 
-	final Map<Pattern, IntervalType>			patternModifier	= new HashMap<>();
-	private static final Map<Pattern, Boolean>	numberFirst		= new HashMap<>();
+	private static final Map<Pattern, Integer>	NUMBER_GROUP = new HashMap<>();
+	private static final Map<Pattern, Integer>	PHRASE_GROUP = new HashMap<>();
 
-	public static final HalfInfiniteIntervalDetector		INSTANCE		= new HalfInfiniteIntervalDetector();
+	final static Map<Pattern, IntervalType>			PATTERN_TO_TYPE;
 
-	private static Set<Pattern> pattern(String keyword)
+	static
 	{
-		Set<Pattern> patterns = new HashSet<Pattern>();
-		Pattern p1 = Pattern.compile(
-				keyword + "\\s+(\\d+)\\s+" + PHRASE_REGEX,
-				Pattern.CASE_INSENSITIVE);
-		patterns.add(p1);
-		numberFirst.put(
-				p1,
-				true);
-		Pattern p2 = Pattern.compile(
-				PHRASE_REGEX + "\\s+" + keyword + "\\s+(\\d+)",
-				Pattern.CASE_INSENSITIVE);
-		patterns.add(p2);
-		numberFirst.put(
-				p2,
-				false);
-		return patterns;
-	}
-
-	private HalfInfiniteIntervalDetector()
-	{
-		for (int i = 0; i < keywords.length; i++)
+		Map<Pattern, IntervalType> patternToType = new HashMap<>();
+		for (int i = 0; i < KEYWORDS.length; i++)
 		{
 			final int ii = i;
 			Arrays.stream(
-					keywords[ii]).map(
-					HalfInfiniteIntervalDetector::pattern).flatMap(
-					Set::stream).forEach(
-					p -> patternModifier.put(
-							p,
-							INTERVAL_TYPES[ii]));
+					KEYWORDS[ii]).map(
+							HalfInfiniteIntervalDetector::patterns).flatMap(
+									Set::stream).forEach(
+											p -> patternToType.put(
+													p,
+													INTERVAL_TYPES[ii]));
 		}
+		PATTERN_TO_TYPE = Collections.unmodifiableMap(patternToType);
 	}
 
-	public Optional<RestrictionWithPhrase> detect(Cube cube, String phrase)
+	private static Set<Pattern> patterns(String keyword)
+	{
+		Set<Pattern> patterns = new HashSet<Pattern>();
+		{
+		Pattern p = Pattern.compile(
+				keyword + "\\s+(\\d+)\\s+" + PHRASE_REGEX,
+				Pattern.CASE_INSENSITIVE);
+		patterns.add(p);
+		NUMBER_GROUP.put(p, 1);
+		PHRASE_GROUP.put(p, 2);
+		}
+		{
+		Pattern p = Pattern.compile(
+				PHRASE_REGEX + "\\s+" + keyword + "\\s+(\\d+)",
+				Pattern.CASE_INSENSITIVE);
+		patterns.add(p);
+		NUMBER_GROUP.put(p, 3);
+		PHRASE_GROUP.put(p, 1);
+		}
+		{
+		Pattern p = Pattern.compile(
+				keyword + "\\s+(\\d+)\\s+" + WORD_REGEX,
+				Pattern.CASE_INSENSITIVE);
+		patterns.add(p);
+		NUMBER_GROUP.put(p, 1);
+		PHRASE_GROUP.put(p, 2);
+		}
+		{
+		Pattern p = Pattern.compile(
+				WORD_REGEX + "\\s+" + keyword + "\\s+(\\d+)",
+				Pattern.CASE_INSENSITIVE);
+		patterns.add(p);
+		NUMBER_GROUP.put(p, 2);
+		PHRASE_GROUP.put(p, 1);
+		}
+
+		return patterns;
+	}
+
+	public static final HalfInfiniteIntervalDetector		INSTANCE		= new HalfInfiniteIntervalDetector();
+
+	@RequiredArgsConstructor
+	class ScoredRestriction
+	{
+		public final Restriction restriction;
+		public final double score;
+		public final String phrase;
+		public final int matchBegin;
+		public final int matchEnd;
+	}
+
+	public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
 	{
 		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);
+		Set<ScoredRestriction> srs = new HashSet<>();
 
-		for (Entry<Pattern, IntervalType> e : patternModifier.entrySet())
+		for (Entry<Pattern, IntervalType> e : PATTERN_TO_TYPE.entrySet())
 		{
 			Matcher matcher = e.getKey().matcher(
 					phrase);
-			if (matcher.matches())
+			while (matcher.find())
 			{
 				// TODO floats also
-				boolean nf = numberFirst.get(e.getKey());
-				int n = Integer.parseInt(matcher.group(nf ? 1 : 3));
-				String w = matcher.group(nf ? 3 : 1);
+				Pattern pattern = e.getKey();
+				int n = Integer.parseInt(matcher.group(NUMBER_GROUP.get(pattern)));
+				String w = matcher.group(PHRASE_GROUP.get(pattern));
 
 				Set<ScoreResult> results = matchPart(
 						cube,
-						w);
+						w).stream().filter(sr->sr.getScore()>=MIN_SIMILARITY).collect(Collectors.toSet());
 				if (!results.isEmpty())
 				{
-					// reward longer matches
-					ScoreResult max = results.stream().max(
-							Comparator.comparing(ScoreResult::getScore)).get();
+					ScoreResult max = results.stream().max(Comparator.comparing(ScoreResult::getScore)).get();
 					RestrictionWithPhrase restriction = null;
 
 					switch (e.getValue())
@@ -98,11 +133,16 @@ public class HalfInfiniteIntervalDetector extends Detector
 							restriction = new IntervalRestriction(max.property, max.value, Double.NEGATIVE_INFINITY, n, true);
 							break;
 					}
-					// patterns don't overlap so we can return here
-					return Optional.of(restriction);
+
+					srs.add(new ScoredRestriction(restriction, max.score, matcher.group(0),matcher.start(),matcher.end()));
+//					CubeTemplateFragment fragment = new CubeTemplateFragment(cube, matcher.group(0));
+//					fragment.getRestrictions().add(restriction);
+//					fragments.add(fragment);
 				}
 			}
 		}
-		return Optional.empty();
+		// TODO get overlap and throw out low score ones
+
+		return fragments;
 	}
 }

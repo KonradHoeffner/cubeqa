@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Aggregate;
 import org.aksw.cubeqa.Cube;
@@ -20,12 +18,12 @@ import org.aksw.cubeqa.restriction.Restriction;
 @EqualsAndHashCode
 @Getter
 @Log4j
+@ToString(exclude="cube")
 /** Unfinished template for a data cube query.
  * Gets combined with other fragments and finally converted to a template. */
 public class CubeTemplateFragment
 {
 	private static final double TO_TEMPLATE_VALUE_SCORE_THRESHOLD = 0.2;
-
 	private static final double	MIN_COMBINED_SCORE	= 0.1;
 
 	final Cube cube;
