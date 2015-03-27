@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?><dataset id="finland-aid"><question id="1" hybrid="false" statistical="true">
-<string>What was the average aid to environment per month in year 2010?</string>
+<string>What was the average aid committed per month in year 2010?</string>
 <query>
 select (sum(xsd:decimal(?aid))/12) as ?result
 {
-?obs lso:finland-aid-aid-to-environment ?aid.
+?obs lso:finland-aid-commitments ?aid.
 ?obs lso:refYear "2010"^^xsd:gYear.
 }<answers>
-<answer answerType="number">262.666666666666667</answer>
+<answer answerType="number">536580907.333333333333333</answer>
 </answers>
 </query>
 </question>
@@ -146,8 +146,8 @@ select sum(xsd:decimal(?aid)) as ?total_aid sum(xsd:decimal(?commitments)) as ?t
 group by ?country<answers>
 <answer><total_aid answerType="number">4661552</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gm</country><total_commitments answerType="number">5126944</total_commitments></answer>
 <answer><total_aid answerType="number">18749408</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tr</country><total_commitments answerType="number">20566200</total_commitments></answer>
-<answer><total_aid answerType="number">8958720</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country><total_commitments answerType="number">11556584</total_commitments></answer>
 <answer><total_aid answerType="number">1667592</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country><total_commitments answerType="number">2123328</total_commitments></answer>
+<answer><total_aid answerType="number">8958720</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country><total_commitments answerType="number">11556584</total_commitments></answer>
 <answer><total_aid answerType="number">33076664</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tl</country><total_commitments answerType="number">38416856</total_commitments></answer>
 <answer><total_aid answerType="number">7614384</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sv</country><total_commitments answerType="number">8272704</total_commitments></answer>
 <answer><total_aid answerType="number">32749240</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ec</country><total_commitments answerType="number">39122872</total_commitments></answer>
@@ -181,15 +181,15 @@ group by ?country<answers>
 <answer><total_aid answerType="number">22054856</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rw</country><total_commitments answerType="number">24915192</total_commitments></answer>
 <answer><total_aid answerType="number">36971920</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gt</country><total_commitments answerType="number">50137608</total_commitments></answer>
 <answer><total_aid answerType="number">42697160</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tj</country><total_commitments answerType="number">51157160</total_commitments></answer>
-<answer><total_aid answerType="number">181641448</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/na</country><total_commitments answerType="number">374731608</total_commitments></answer>
 <answer><total_aid answerType="number">610294552</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/np</country><total_commitments answerType="number">1011177168</total_commitments></answer>
+<answer><total_aid answerType="number">181641448</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/na</country><total_commitments answerType="number">374731608</total_commitments></answer>
 <answer><total_aid answerType="number">112157088</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</country><total_commitments answerType="number">94551768</total_commitments></answer>
 <answer><total_aid answerType="number">937192</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bz</country><total_commitments answerType="number">1049256</total_commitments></answer>
 <answer><total_aid answerType="number">9991520</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/az</country><total_commitments answerType="number">15489208</total_commitments></answer>
 <answer><total_aid answerType="number">8293096</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/by</country><total_commitments answerType="number">10853016</total_commitments></answer>
 <answer><total_aid answerType="number">236000</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ag</country><total_commitments answerType="number">304000</total_commitments></answer>
-<answer><total_aid answerType="number">109261208</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/zw</country><total_commitments answerType="number">109159208</total_commitments></answer>
 <answer><total_aid answerType="number">92807264</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country><total_commitments answerType="number">112798048</total_commitments></answer>
+<answer><total_aid answerType="number">109261208</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/zw</country><total_commitments answerType="number">109159208</total_commitments></answer>
 <answer><total_aid answerType="number">1555391288</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country><total_commitments answerType="number">2360887248</total_commitments></answer>
 <answer><total_aid answerType="number">2968424</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</country><total_commitments answerType="number">4827400</total_commitments></answer>
 <answer><total_aid answerType="number">184316744</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ug</country><total_commitments answerType="number">210451832</total_commitments></answer>
@@ -199,8 +199,8 @@ group by ?country<answers>
 <answer><total_aid answerType="number">51105264</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ye</country><total_commitments answerType="number">55036840</total_commitments></answer>
 <answer><total_aid answerType="number">56879432</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lb</country><total_commitments answerType="number">75972272</total_commitments></answer>
 <answer><total_aid answerType="number">849479424</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/af</country><total_commitments answerType="number">1078393128</total_commitments></answer>
-<answer><total_aid answerType="number">65597288</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country><total_commitments answerType="number">97515056</total_commitments></answer>
 <answer><total_aid answerType="number">9577272</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cm</country><total_commitments answerType="number">16269608</total_commitments></answer>
+<answer><total_aid answerType="number">65597288</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country><total_commitments answerType="number">97515056</total_commitments></answer>
 <answer><total_aid answerType="number">36991064</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cr</country><total_commitments answerType="number">2335744</total_commitments></answer>
 <answer><total_aid answerType="number">1319265944</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mz</country><total_commitments answerType="number">1717617056</total_commitments></answer>
 <answer><total_aid answerType="number">33453824</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/xk</country><total_commitments answerType="number">69067616</total_commitments></answer>
@@ -221,8 +221,8 @@ group by ?country<answers>
 <answer><total_aid answerType="number">8770872</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ar</country><total_commitments answerType="number">11419480</total_commitments></answer>
 <answer><total_aid answerType="number">8568896</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/am</country><total_commitments answerType="number">10581456</total_commitments></answer>
 <answer><total_aid answerType="number">240730616</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cd</country><total_commitments answerType="number">244896304</total_commitments></answer>
-<answer><total_aid answerType="number">4687640</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bt</country><total_commitments answerType="number">11183048</total_commitments></answer>
 <answer><total_aid answerType="number">1723568</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pg</country><total_commitments answerType="number">2735648</total_commitments></answer>
+<answer><total_aid answerType="number">4687640</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bt</country><total_commitments answerType="number">11183048</total_commitments></answer>
 <answer><total_aid answerType="number">6991960</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mk</country><total_commitments answerType="number">6500304</total_commitments></answer>
 <answer><total_aid answerType="number">155073960</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lk</country><total_commitments answerType="number">61952376</total_commitments></answer>
 <answer><total_aid answerType="number">17545840</total_aid><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dz</country><total_commitments answerType="number">18417144</total_commitments></answer>
@@ -433,8 +433,8 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/31162</sector><average answerType="number">32491.764705882352941</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/32265</sector><average answerType="number">0</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/11330</sector><average answerType="number">44553.630952380952381</average></answer>
-<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/33120</sector><average answerType="number">916062.5</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15230</sector><average answerType="number">362081.718446601941748</average></answer>
+<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/33120</sector><average answerType="number">916062.5</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/32210</sector><average answerType="number">162841.583333333333333</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/32164</sector><average answerType="number">6826.4</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/11220</sector><average answerType="number">110034.33695652173913</average></answer>
@@ -487,8 +487,8 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/23068</sector><average answerType="number">15161</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15152</sector><average answerType="number">50362.166666666666667</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/41050</sector><average answerType="number">127731.3</average></answer>
-<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/14081</sector><average answerType="number">29604.692307692307692</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/31310</sector><average answerType="number">4671.8</average></answer>
+<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/14081</sector><average answerType="number">29604.692307692307692</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15220</sector><average answerType="number">316844.116207951070336</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/22030</sector><average answerType="number">65437.318181818181818</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/12220</sector><average answerType="number">83952.742268041237113</average></answer>
@@ -505,8 +505,8 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/31193</sector><average answerType="number">27311.75</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/92020</sector><average answerType="number">207049.2</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/16020</sector><average answerType="number">49255.579310344827586</average></answer>
-<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/53040</sector><average answerType="number">1967.666666666666667</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/23065</sector><average answerType="number">535945.214285714285714</average></answer>
+<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/53040</sector><average answerType="number">1967.666666666666667</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/11430</sector><average answerType="number">8196.625</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/21030</sector><average answerType="number">72568</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15140</sector><average answerType="number">660630.181818181818182</average></answer>
@@ -556,14 +556,14 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15170</sector><average answerType="number">51662.232758620689655</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15110</sector><average answerType="number">619310.299145299145299</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/12261</sector><average answerType="number">87020.343137254901961</average></answer>
-<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15113</sector><average answerType="number">88650.3</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15151</sector><average answerType="number">179952.291666666666667</average></answer>
+<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15113</sector><average answerType="number">88650.3</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/23010</sector><average answerType="number">252437.440677966101695</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/15150</sector><average answerType="number">81218.931398416886544</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/12181</sector><average answerType="number">89093.916666666666667</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/41030</sector><average answerType="number">122390.580645161290323</average></answer>
-<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/24010</sector><average answerType="number">477714.882352941176471</average></answer>
 <answer><sector answerType="uri">https://openspending.org/finland-aid/sector/14015</sector><average answerType="number">105414.818181818181818</average></answer>
+<answer><sector answerType="uri">https://openspending.org/finland-aid/sector/24010</sector><average answerType="number">477714.882352941176471</average></answer>
 </answers>
 </query>
 </question>
@@ -2261,132 +2261,132 @@ having (sum(xsd:decimal(?amount)) > 1000000)
 <string>How many sectors per recipient country?</string>
 <query>
 select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?sector. ?obs lso:finland-aid-recipient-country ?country.} group by ?country<answers>
-<answer><count_sector answerType="number">2228</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cn</country></answer>
-<answer><count_sector answerType="number">264</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/md</country></answer>
 <answer><count_sector answerType="number">952</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/so</country></answer>
-<answer><count_sector answerType="number">436</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bd</country></answer>
-<answer><count_sector answerType="number">136</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bi</country></answer>
-<answer><count_sector answerType="number">472</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/id</country></answer>
+<answer><count_sector answerType="number">2228</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cn</country></answer>
+<answer><count_sector answerType="number">1812</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/np</country></answer>
+<answer><count_sector answerType="number">608</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ug</country></answer>
+<answer><count_sector answerType="number">276</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ph</country></answer>
 <answer><count_sector answerType="number">528</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/br</country></answer>
-<answer><count_sector answerType="number">16</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gn</country></answer>
-<answer><count_sector answerType="number">1860</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/in</country></answer>
-<answer><count_sector answerType="number">232</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ma</country></answer>
 <answer><count_sector answerType="number">744</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country></answer>
 <answer><count_sector answerType="number">176</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sn</country></answer>
-<answer><count_sector answerType="number">140</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ye</country></answer>
-<answer><count_sector answerType="number">2164</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country></answer>
-<answer><count_sector answerType="number">1812</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/np</country></answer>
-<answer><count_sector answerType="number">244</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ec</country></answer>
-<answer><count_sector answerType="number">380</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mx</country></answer>
-<answer><count_sector answerType="number">68</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bt</country></answer>
-<answer><count_sector answerType="number">608</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ug</country></answer>
-<answer><count_sector answerType="number">296</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tl</country></answer>
-<answer><count_sector answerType="number">276</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ph</country></answer>
-<answer><count_sector answerType="number">324</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cd</country></answer>
+<answer><count_sector answerType="number">1860</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/in</country></answer>
 <answer><count_sector answerType="number">124</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/iq</country></answer>
-<answer><count_sector answerType="number">192</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gt</country></answer>
-<answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tg</country></answer>
-<answer><count_sector answerType="number">124</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tn</country></answer>
-<answer><count_sector answerType="number">52</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mr</country></answer>
+<answer><count_sector answerType="number">380</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mx</country></answer>
 <answer><count_sector answerType="number">224</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ar</country></answer>
-<answer><count_sector answerType="number">156</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mm</country></answer>
-<answer><count_sector answerType="number">160</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/al</country></answer>
-<answer><count_sector answerType="number">100</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country></answer>
 <answer><count_sector answerType="number">56</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mv</country></answer>
-<answer><count_sector answerType="number">28</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sr</country></answer>
-<answer><count_sector answerType="number">12</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ne</country></answer>
-<answer><count_sector answerType="number">28</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</country></answer>
-<answer><count_sector answerType="number">52</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/jo</country></answer>
+<answer><count_sector answerType="number">2164</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country></answer>
+<answer><count_sector answerType="number">264</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/md</country></answer>
+<answer><count_sector answerType="number">324</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cd</country></answer>
+<answer><count_sector answerType="number">124</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tn</country></answer>
+<answer><count_sector answerType="number">156</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mm</country></answer>
+<answer><count_sector answerType="number">296</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tl</country></answer>
+<answer><count_sector answerType="number">160</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/al</country></answer>
+<answer><count_sector answerType="number">244</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ec</country></answer>
+<answer><count_sector answerType="number">436</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bd</country></answer>
+<answer><count_sector answerType="number">192</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gt</country></answer>
 <answer><count_sector answerType="number">16</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/fj</country></answer>
-<answer><count_sector answerType="number">36</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cr</country></answer>
+<answer><count_sector answerType="number">232</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ma</country></answer>
 <answer><count_sector answerType="number">96</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kz</country></answer>
+<answer><count_sector answerType="number">68</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bt</country></answer>
+<answer><count_sector answerType="number">140</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ye</country></answer>
+<answer><count_sector answerType="number">472</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/id</country></answer>
+<answer><count_sector answerType="number">28</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</country></answer>
+<answer><count_sector answerType="number">136</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bi</country></answer>
+<answer><count_sector answerType="number">52</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/jo</country></answer>
+<answer><count_sector answerType="number">100</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country></answer>
+<answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tg</country></answer>
+<answer><count_sector answerType="number">36</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cr</country></answer>
+<answer><count_sector answerType="number">16</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gn</country></answer>
+<answer><count_sector answerType="number">28</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sr</country></answer>
+<answer><count_sector answerType="number">52</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mr</country></answer>
 <answer><count_sector answerType="number">4</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mu</country></answer>
-<answer><count_sector answerType="number">14216</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/0</country></answer>
-<answer><count_sector answerType="number">196</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cl</country></answer>
-<answer><count_sector answerType="number">324</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/la</country></answer>
-<answer><count_sector answerType="number">780</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ni</country></answer>
-<answer><count_sector answerType="number">1132</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/za</country></answer>
-<answer><count_sector answerType="number">116</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/er</country></answer>
-<answer><count_sector answerType="number">844</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rs</country></answer>
-<answer><count_sector answerType="number">1020</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/zm</country></answer>
-<answer><count_sector answerType="number">312</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tr</country></answer>
-<answer><count_sector answerType="number">664</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country></answer>
-<answer><count_sector answerType="number">260</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kg</country></answer>
-<answer><count_sector answerType="number">452</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ua</country></answer>
-<answer><count_sector answerType="number">224</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/my</country></answer>
-<answer><count_sector answerType="number">292</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ht</country></answer>
-<answer><count_sector answerType="number">920</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ps</country></answer>
-<answer><count_sector answerType="number">344</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/th</country></answer>
-<answer><count_sector answerType="number">12</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vc</country></answer>
+<answer><count_sector answerType="number">12</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ne</country></answer>
 <answer><count_sector answerType="number">1000</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/na</country></answer>
+<answer><count_sector answerType="number">292</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ht</country></answer>
+<answer><count_sector answerType="number">14216</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/0</country></answer>
+<answer><count_sector answerType="number">664</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country></answer>
+<answer><count_sector answerType="number">1020</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/zm</country></answer>
+<answer><count_sector answerType="number">168</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ng</country></answer>
+<answer><count_sector answerType="number">844</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rs</country></answer>
+<answer><count_sector answerType="number">780</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ni</country></answer>
+<answer><count_sector answerType="number">260</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kg</country></answer>
 <answer><count_sector answerType="number">1148</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mz</country></answer>
+<answer><count_sector answerType="number">224</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country></answer>
+<answer><count_sector answerType="number">1132</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/za</country></answer>
+<answer><count_sector answerType="number">452</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ua</country></answer>
+<answer><count_sector answerType="number">920</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ps</country></answer>
+<answer><count_sector answerType="number">324</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/la</country></answer>
+<answer><count_sector answerType="number">116</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/er</country></answer>
+<answer><count_sector answerType="number">196</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cl</country></answer>
 <answer><count_sector answerType="number">264</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lk</country></answer>
 <answer><count_sector answerType="number">36</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</country></answer>
-<answer><count_sector answerType="number">132</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sz</country></answer>
+<answer><count_sector answerType="number">16</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ga</country></answer>
+<answer><count_sector answerType="number">224</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/my</country></answer>
+<answer><count_sector answerType="number">72</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gm</country></answer>
 <answer><count_sector answerType="number">116</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rw</country></answer>
 <answer><count_sector answerType="number">104</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</country></answer>
-<answer><count_sector answerType="number">168</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/am</country></answer>
 <answer><count_sector answerType="number">260</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bo</country></answer>
+<answer><count_sector answerType="number">132</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sz</country></answer>
 <answer><count_sector answerType="number">144</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country></answer>
-<answer><count_sector answerType="number">168</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ng</country></answer>
-<answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bf</country></answer>
-<answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dz</country></answer>
-<answer><count_sector answerType="number">180</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ve</country></answer>
-<answer><count_sector answerType="number">224</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country></answer>
-<answer><count_sector answerType="number">72</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gm</country></answer>
-<answer><count_sector answerType="number">112</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/td</country></answer>
+<answer><count_sector answerType="number">312</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tr</country></answer>
+<answer><count_sector answerType="number">92</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cf</country></answer>
 <answer><count_sector answerType="number">56</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/me</country></answer>
-<answer><count_sector answerType="number">12</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ag</country></answer>
+<answer><count_sector answerType="number">168</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/am</country></answer>
+<answer><count_sector answerType="number">180</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ve</country></answer>
+<answer><count_sector answerType="number">344</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/th</country></answer>
+<answer><count_sector answerType="number">112</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/td</country></answer>
+<answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mg</country></answer>
+<answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dz</country></answer>
 <answer><count_sector answerType="number">80</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ml</country></answer>
+<answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bf</country></answer>
 <answer><count_sector answerType="number">68</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cm</country></answer>
 <answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ir</country></answer>
-<answer><count_sector answerType="number">92</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cf</country></answer>
-<answer><count_sector answerType="number">40</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sv</country></answer>
-<answer><count_sector answerType="number">16</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ga</country></answer>
-<answer><count_sector answerType="number">8</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dm</country></answer>
-<answer><count_sector answerType="number">64</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mg</country></answer>
 <answer><count_sector answerType="number">8</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kn</country></answer>
+<answer><count_sector answerType="number">40</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sv</country></answer>
+<answer><count_sector answerType="number">8</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dm</country></answer>
 <answer><count_sector answerType="number">24</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pa</country></answer>
+<answer><count_sector answerType="number">12</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ag</country></answer>
+<answer><count_sector answerType="number">12</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vc</country></answer>
 <answer><count_sector answerType="number">328</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/co</country></answer>
-<answer><count_sector answerType="number">1672</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/et</country></answer>
-<answer><count_sector answerType="number">1556</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vn</country></answer>
-<answer><count_sector answerType="number">596</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pk</country></answer>
-<answer><count_sector answerType="number">164</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gh</country></answer>
-<answer><count_sector answerType="number">480</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</country></answer>
 <answer><count_sector answerType="number">292</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/zw</country></answer>
-<answer><count_sector answerType="number">244</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lb</country></answer>
 <answer><count_sector answerType="number">356</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ao</country></answer>
-<answer><count_sector answerType="number">836</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/af</country></answer>
-<answer><count_sector answerType="number">116</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/az</country></answer>
 <answer><count_sector answerType="number">1912</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ke</country></answer>
-<answer><count_sector answerType="number">252</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tj</country></answer>
-<answer><count_sector answerType="number">296</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mw</country></answer>
-<answer><count_sector answerType="number">236</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mn</country></answer>
-<answer><count_sector answerType="number">144</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bw</country></answer>
-<answer><count_sector answerType="number">352</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</country></answer>
-<answer><count_sector answerType="number">96</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mk</country></answer>
-<answer><count_sector answerType="number">252</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sl</country></answer>
-<answer><count_sector answerType="number">72</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bz</country></answer>
-<answer><count_sector answerType="number">24</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/jm</country></answer>
-<answer><count_sector answerType="number">84</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bj</country></answer>
+<answer><count_sector answerType="number">1556</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vn</country></answer>
 <answer><count_sector answerType="number">32</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gw</country></answer>
-<answer><count_sector answerType="number">244</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ge</country></answer>
-<answer><count_sector answerType="number">484</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sd</country></answer>
-<answer><count_sector answerType="number">108</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uz</country></answer>
-<answer><count_sector answerType="number">140</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/xk</country></answer>
-<answer><count_sector answerType="number">56</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ci</country></answer>
 <answer><count_sector answerType="number">196</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/hn</country></answer>
-<answer><count_sector answerType="number">76</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country></answer>
-<answer><count_sector answerType="number">76</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/py</country></answer>
-<answer><count_sector answerType="number">144</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/by</country></answer>
-<answer><count_sector answerType="number">28</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gy</country></answer>
-<answer><count_sector answerType="number">112</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sy</country></answer>
+<answer><count_sector answerType="number">1672</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/et</country></answer>
+<answer><count_sector answerType="number">836</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/af</country></answer>
+<answer><count_sector answerType="number">596</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pk</country></answer>
+<answer><count_sector answerType="number">352</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</country></answer>
+<answer><count_sector answerType="number">56</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ci</country></answer>
+<answer><count_sector answerType="number">84</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bj</country></answer>
+<answer><count_sector answerType="number">296</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mw</country></answer>
 <answer><count_sector answerType="number">40</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pg</country></answer>
+<answer><count_sector answerType="number">244</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lb</country></answer>
+<answer><count_sector answerType="number">140</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/xk</country></answer>
+<answer><count_sector answerType="number">484</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sd</country></answer>
+<answer><count_sector answerType="number">236</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mn</country></answer>
+<answer><count_sector answerType="number">164</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gh</country></answer>
+<answer><count_sector answerType="number">144</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bw</country></answer>
+<answer><count_sector answerType="number">116</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/az</country></answer>
+<answer><count_sector answerType="number">244</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ge</country></answer>
+<answer><count_sector answerType="number">480</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</country></answer>
+<answer><count_sector answerType="number">252</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tj</country></answer>
+<answer><count_sector answerType="number">252</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sl</country></answer>
 <answer><count_sector answerType="number">28</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ly</country></answer>
+<answer><count_sector answerType="number">72</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bz</country></answer>
+<answer><count_sector answerType="number">108</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uz</country></answer>
 <answer><count_sector answerType="number">4</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cv</country></answer>
+<answer><count_sector answerType="number">76</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country></answer>
+<answer><count_sector answerType="number">28</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gy</country></answer>
+<answer><count_sector answerType="number">96</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mk</country></answer>
+<answer><count_sector answerType="number">144</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/by</country></answer>
+<answer><count_sector answerType="number">76</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/py</country></answer>
 <answer><count_sector answerType="number">12</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ss</country></answer>
+<answer><count_sector answerType="number">112</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sy</country></answer>
 <answer><count_sector answerType="number">12</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sb</country></answer>
 <answer><count_sector answerType="number">16</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tm</country></answer>
+<answer><count_sector answerType="number">24</count_sector><country answerType="uri">https://openspending.org/finland-aid/recipient-country/jm</country></answer>
 </answers>
 </query>
 </question>
