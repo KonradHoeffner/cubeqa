@@ -11,9 +11,11 @@ import org.aksw.cubeqa.template.CubeTemplateFragment;
  * A detector can find several or no matches in a phrase.*/
 public abstract class Detector
 {
+	/** Detection is supposed to not overlap in phrases.*/
 	public abstract Set<CubeTemplateFragment> detect(Cube cube, String phrase);
 
-	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,PerTimeDetector.INSTANCE);
+	// TODO: generalize this,as per time detector always uses finland aid as of now
+	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,new PerTimeDetector(Cube.FINLAND_AID));
 
 	static final protected String PHRASE_REGEX = "([a-zA-Züöäéèô'-]+(\\s[a-zA-Züöäéèô,'-]+)*)";
 	static final protected String WORD_REGEX = "([a-zA-Züöäéèô'-]+)";

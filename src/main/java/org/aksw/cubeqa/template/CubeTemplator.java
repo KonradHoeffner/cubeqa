@@ -1,12 +1,7 @@
 package org.aksw.cubeqa.template;
 
 import static org.aksw.cubeqa.Trees.phrase;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +13,7 @@ import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
 import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
+import de.konradhoeffner.commons.Pair;
 import edu.stanford.nlp.trees.Tree;
 
 /** Generates the Cube Template. */
@@ -29,23 +25,53 @@ public class CubeTemplator
 	private static final int	PHRASE_MAX_LENGTH	= 30;
 
 	private final Cube cube;
-	//	private final String question;
 
-
-	public CubeTemplate buildTemplate(String question)
-	{
-		String noStop = Stopwords.remove(question, Stopwords.QUESTION_WORDS);
-		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
-		Tree root = StanfordNlp.parse(noStop);
-		return visitRecursive(root).toTemplate();
-	}
-
+	/** Sublist of trees that satisfiy the given predicate
+	 */
 	List<CubeTemplateFragment> fragments(List<Tree> trees, Predicate<CubeTemplateFragment> predicate)
 	{
 		return trees.stream()
 				.map(this::visitRecursive)
 				.filter(predicate)
 				.collect(Collectors.toList());
+	}
+
+	public CubeTemplate buildTemplate(String question)
+	{
+		String noStop = Stopwords.remove(question, Stopwords.QUESTION_WORDS);
+		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
+		Pair<CubeTemplateFragment,String> detectResult = detect(noStop);
+		Tree root = StanfordNlp.parse(detectResult.b);
+		CubeTemplateFragment rootFragment = visitRecursive(root);
+		return CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate();
+	}
+
+	/** @param question
+	 * @return the combined detected fragment and the leftover phrase
+	 */
+	Pair<CubeTemplateFragment,String> detect(String question)
+	{
+		CubeTemplateFragment allDetectorFragment = null;
+
+		for(Detector detector: Detector.DETECTORS)
+		{
+			Set<CubeTemplateFragment> detectorResults = detector.detect(cube,question);
+			if(!detectorResults.isEmpty())
+			{
+				for(CubeTemplateFragment fragment: detectorResults)
+				{
+					String reducedPhrase = question.replace(fragment.phrase,"").replace("  ", " ");
+					if(reducedPhrase.equals(question)) throw new IllegalArgumentException("fragment phrase '"+fragment.phrase+"' not found in whole phrase "+question);
+					log.debug("Detector "+detector.getClass().getSimpleName()+" matched part: '"+fragment.phrase+"', left over phrase: "+question);
+					question = reducedPhrase;
+				}
+				// keep results from earlier used detectors
+				if(allDetectorFragment!=null) {detectorResults.add(allDetectorFragment);}
+				allDetectorFragment = CubeTemplateFragment.combine(new ArrayList<>(detectorResults));
+			}
+		}
+		if(allDetectorFragment==null) {return new Pair<>(new CubeTemplateFragment(cube, ""),"");}
+		return new Pair<>(allDetectorFragment,question);
 	}
 
 	/** The recursive algorithm. */
@@ -62,102 +88,66 @@ public class CubeTemplator
 			log.trace("phrase less than "+PHRASE_MIN_LENGTH+" characters, skipped: "+phrase);
 			return new CubeTemplateFragment(cube, phrase);
 		}
-		MatchResult result = null;
-		CubeTemplateFragment detectedFragment = null;
-		CubeTemplateFragment undetectedFragment = null;
 
 		if(phrase.length()>PHRASE_MAX_LENGTH)
 		{
-			log.trace("phrase more than "+PHRASE_MAX_LENGTH+" characters, going deeper");
-		} else
-		{
-			log.trace("visiting tree "+tree);
-			log.trace("Phrase \""+phrase+"\"...");
-
-			for(Detector detector: Detector.DETECTORS)
-			{
-				Optional<RestrictionWithPhrase> restriction = detector.detect(cube,phrase);
-				if(restriction.isPresent())
-				{
-					detectedFragment = new CubeTemplateFragment(cube, restriction.get().phrase);
-					detectedFragment.restrictions.add(restriction.get());
-					if(restriction.get().phrase.equals(phrase))
-					{
-						log.trace("Whole phrase matched by detector, finished with this phrase.");
-						return detectedFragment;
-					}
-					phrase = phrase.replace(detectedFragment.phrase,"");
-					log.debug("Detector matched part: '"+detectedFragment.phrase+"', left over phrase: "+phrase);
-					if(phrase.length()<PHRASE_MIN_LENGTH)
-					{
-						log.trace("left over phrase less than "+PHRASE_MIN_LENGTH+" characters, skipped: "+phrase);
-						return detectedFragment;
-					}
-					break;
-				}
-			}
-			// either we detected nothing or only part of the phrase
-			result = identify(phrase);
-		}
-		if(result!=null&&!result.isEmpty())
-		{
-			// whole phrase matched, subtrees skipped
-			log.trace("matched to "+result);
-			undetectedFragment = result.toFragment(cube);
+			log.trace("phrase more than "+PHRASE_MAX_LENGTH+" characters, skipping matching try");
 		}
 		else
 		{
-			// can't match the whole phrase, match subtrees separately
-			log.trace("unmatched, looking at subtrees");
-			List<CubeTemplateFragment> childFragments = fragments(tree.getChildrenAsList(),x->true);
-			List<CubeTemplateFragment> childFragmentsWithRefs = childFragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
-			List<CubeTemplateFragment> childFragmentsWithoutRefs = new LinkedList<>(childFragments);
-			childFragmentsWithoutRefs.removeAll(childFragmentsWithRefs);
-
-			List<CubeTemplateFragment> usefulChildFragments = new ArrayList<>(childFragmentsWithRefs);
-			// we could throw unmatched fragments away but we try to combine them into something useful first
-			if(!childFragmentsWithoutRefs.isEmpty())
+			log.trace("visiting tree "+tree);
+			log.trace("Phrase \""+phrase+"\"...");
+			// either we detected nothing or only part of the phrase
+			MatchResult matchResult = identify(phrase);
+			// whole phrase matched, subtrees skipped
+			if(!matchResult.isEmpty())
 			{
-				String childFragmentsWithoutRefsPhrase = CubeTemplateFragment.combine(childFragmentsWithoutRefs).phrase;
-				// too small, throw away
-				if(childFragmentsWithoutRefsPhrase.length()<3)
-				{
-										log.trace("unmatched fragment \""+childFragmentsWithoutRefsPhrase+"\" length < 3, skipped");
-				}
-				// it's not small, but is it useful? do all the unmatched fragments match something?
-				else
-				{
-					// TODO check partial combinations too
-					MatchResult unmatchedResult = identify(childFragmentsWithoutRefsPhrase);
-					log.trace("unmatched fragments with phrase \""+unmatchedResult.phrase+"\"");
-					//				unmatchedFragments.stream().map(f->f.phrase).collect(Collectors.toList());
-
-					if(unmatchedResult.isEmpty())
-					{
-						log.trace("unmatched fragment combination do not match anything, thrown away");
-					} else
-					{
-						log.trace("unmatched fragment combination matched to "+unmatchedResult);
-						usefulChildFragments.add(unmatchedResult.toFragment(cube));
-					}
-				}
-			}
-			if(usefulChildFragments.isEmpty())
-			{
-				log.trace("no match found for phrase \"" +phrase+"\"");
-				undetectedFragment = new CubeTemplateFragment(cube,phrase);
-			} else
-			{
-				undetectedFragment = CubeTemplateFragment.combine(usefulChildFragments);
+				log.trace("matched to "+matchResult);
+				return matchResult.toFragment(cube);
 			}
 		}
+		// either we didn't match because the phrase is too long or matching didn't find anything, so match subtrees separately
+		log.trace("unmatched, looking at subtrees");
+		List<CubeTemplateFragment> childFragments = fragments(tree.getChildrenAsList(),x->true);
+		List<CubeTemplateFragment> childFragmentsWithRefs = childFragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
+		List<CubeTemplateFragment> childFragmentsWithoutRefs = new LinkedList<>(childFragments);
+		childFragmentsWithoutRefs.removeAll(childFragmentsWithRefs);
 
-		if(detectedFragment==null)
+		List<CubeTemplateFragment> usefulChildFragments = new ArrayList<>(childFragmentsWithRefs);
+		// we could throw unmatched fragments away but we try to combine them into something useful first
+		if(!childFragmentsWithoutRefs.isEmpty())
 		{
-			return undetectedFragment;
+			String childFragmentsWithoutRefsPhrase = CubeTemplateFragment.combine(childFragmentsWithoutRefs).phrase;
+			// too small, throw away
+			if(childFragmentsWithoutRefsPhrase.length()<3)
+			{
+				log.trace("unmatched fragment \""+childFragmentsWithoutRefsPhrase+"\" length < 3, skipped");
+			}
+			// it's not small, but is it useful? do all the unmatched fragments match something?
+			else
+			{
+				// TODO check partial combinations too
+				MatchResult unmatchedResult = identify(childFragmentsWithoutRefsPhrase);
+				log.trace("unmatched fragments with phrase \""+unmatchedResult.phrase+"\"");
+				//				unmatchedFragments.stream().map(f->f.phrase).collect(Collectors.toList());
+
+				if(unmatchedResult.isEmpty())
+				{
+					log.trace("unmatched fragment combination do not match anything, thrown away");
+				} else
+				{
+					log.trace("unmatched fragment combination matched to "+unmatchedResult);
+					usefulChildFragments.add(unmatchedResult.toFragment(cube));
+				}
+			}
+		}
+		if(usefulChildFragments.isEmpty())
+		{
+			log.trace("no match found for phrase \"" +phrase+"\"");
+			return new CubeTemplateFragment(cube,phrase);
 		} else
 		{
-			return CubeTemplateFragment.combine(Arrays.asList(detectedFragment,undetectedFragment));
+			return CubeTemplateFragment.combine(usefulChildFragments);
 		}
 	}
 

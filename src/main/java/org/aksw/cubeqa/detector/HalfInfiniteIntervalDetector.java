@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.Stopwords;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
@@ -14,6 +15,7 @@ import org.aksw.cubeqa.restriction.*;
 import org.aksw.cubeqa.template.CubeTemplateFragment;
 
 /**Detects numerical intervals with one infinite endpoint.*/
+@Log4j
 public class HalfInfiniteIntervalDetector extends Detector
 {
 	private static final double	MIN_SIMILARITY	= 0.3;
@@ -96,6 +98,7 @@ public class HalfInfiniteIntervalDetector extends Detector
 
 	public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
 	{
+		Set<CubeTemplateFragment> fragments = new HashSet<>();
 		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);
 		Set<ScoredRestriction> srs = new HashSet<>();
 
@@ -133,11 +136,13 @@ public class HalfInfiniteIntervalDetector extends Detector
 							restriction = new IntervalRestriction(max.property, max.value, Double.NEGATIVE_INFINITY, n, true);
 							break;
 					}
-
+// TODO what are scored restrictions good for?
 					srs.add(new ScoredRestriction(restriction, max.score, matcher.group(0),matcher.start(),matcher.end()));
-//					CubeTemplateFragment fragment = new CubeTemplateFragment(cube, matcher.group(0));
-//					fragment.getRestrictions().add(restriction);
-//					fragments.add(fragment);
+					CubeTemplateFragment fragment = new CubeTemplateFragment(cube, matcher.group(0));
+					fragment.getRestrictions().add(restriction);
+					fragments.add(fragment);
+					phrase = phrase.replace(matcher.group(0), "").replace("  "," ");
+					log.debug("detected restriction "+restriction+" in phrase "+matcher.group(0));
 				}
 			}
 		}

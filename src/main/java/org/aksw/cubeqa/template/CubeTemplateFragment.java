@@ -51,9 +51,12 @@ public class CubeTemplateFragment
 
 	public static CubeTemplateFragment combine(List<CubeTemplateFragment> fragments)
 	{
-		if(fragments.isEmpty()) {throw new IllegalArgumentException("empty fragment set, can't combine");}
+		fragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
+		if(fragments.isEmpty())
+//		{throw new IllegalArgumentException("empty fragment set, can't combine");}
+		{log.warn("empty fragment set, combination empty");}
 
-		// return new CubeTemplateFragment(cube);
+		// *** new sets are unions over all fragment sets **********************************************************
 		if(fragments.stream().map(f->f.cube.uri).collect(Collectors.toSet()).size()>1) throw new IllegalArgumentException("different cube uris, can't combine");
 		// TODO join restrictions if possible (e.g. intervals for numericals, detect impossibilities)
 		Set<Restriction> restrictions = new HashSet<>();
@@ -68,11 +71,12 @@ public class CubeTemplateFragment
 			perProperties.addAll(f.perProperties);
 			aggregates.addAll(f.aggregates);
 		});
+		// *** phrases are added in list order with space in between ***********************************************
 		String combinedPhrase = fragments.stream().map(CubeTemplateFragment::getPhrase).reduce("", (a,b)->a+" "+b).trim();
 		CubeTemplateFragment fragment = new CubeTemplateFragment(fragments.iterator().next().cube,combinedPhrase,
 				restrictions, answerProperties, perProperties, aggregates,matchResults);
 
-		// *** combining match results
+		// *** combining match results *****************************************************************************
 		// **** get all properties that are not yet assigned but somewhere referenced both as name and as value
 		// strictly, they should be referenced in different matchresult objects but that calculation would be too complicated, sort that out later
 		Set<ComponentProperty> properties = fragment.unreferredProperties();
@@ -107,6 +111,7 @@ public class CubeTemplateFragment
 		}
 		// add back all non used match results
 		matchResults.addAll(fragmentsMatchResults);
+		// **** end combining match resuls *************************************************************************
 
 		//		Set<ComponentProperty> nameValue = this.nameRefs.keySet();
 		//		nameValue.retainAll(otherResult.valueRefs.keySet());

@@ -1,14 +1,16 @@
 package org.aksw.cubeqa.detector;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.log4j.Level;
-import org.apache.lucene.search.spell.*;
+import org.aksw.cubeqa.template.CubeTemplateFragment;
+import org.apache.lucene.search.spell.NGramDistance;
+import org.apache.lucene.search.spell.StringDistance;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.XSD;
 
 /**  manages phrases like "per month" or "per year", "a year".
@@ -19,46 +21,66 @@ import com.hp.hpl.jena.vocabulary.XSD;
 @Log4j
 public class PerTimeDetector extends Detector
 {
-	static final String[][] dataTypes =
+	Cube cube;
+	public PerTimeDetector(Cube cube)
+	{
+		this.cube = cube;
+	}
+
+	class TimeUnit
+	{
+		public final Pattern pattern;
+		public final Optional<ComponentProperty> property;
+
+		public TimeUnit(String name, Resource dataType)
 		{
-		{"per day",XSD.gDay.getURI()},
-		{"per month",XSD.gMonth.getURI()},
-		{"per year",XSD.gYear.getURI()},
-		};
+			pattern = Pattern.compile("(?i)per "+name);
+			Set<ComponentProperty> candidates = cube.properties.values().stream().filter(p->p.range.equals(dataType.getURI())).collect(Collectors.toSet());
+			if(candidates.isEmpty())
+			{
+				property = Optional.empty();
+				return;
+			}
+			ComponentProperty bestCandidate;
+			if(candidates.size()==1)
+			{
+				bestCandidate = candidates.iterator().next();
+			} else
+			{
+				//			 multiple properties with the right data type, which one has the highest string similarity?
+				bestCandidate = candidates.stream().max(Comparator.comparing(
+						p->p.labels.stream().max(Comparator.comparing(l->similarity.getDistance(name, l))).get())).get();
+			}
+			property = Optional.of(bestCandidate);
+		}
+	}
+
+	final List<TimeUnit> timeUnits = Arrays.asList(
+			new TimeUnit("day",XSD.gDay),
+			new TimeUnit("month",XSD.gMonth),
+			new TimeUnit("year",XSD.gYear)
+			);
+
+	final List<TimeUnit> mappedTimeUnits = timeUnits.stream().filter(tu->tu.property.isPresent()).collect(Collectors.toList());
 
 	protected static transient StringDistance similarity = new NGramDistance();
 
-	static public final PerTimeDetector INSTANCE = new PerTimeDetector();
-
-	@Override public Optional<RestrictionWithPhrase> detect(Cube cube, String phrase)
+	@Override public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
 	{
-		for(String[] dataType: dataTypes)
+		if(cube!=Cube.FINLAND_AID) throw new IllegalArgumentException("change Detector.DETECTORS first to use non finland aid cube");
+		Set<CubeTemplateFragment> fragments = new HashSet<>();
+		for(TimeUnit timeUnit: mappedTimeUnits)
 		{
-			if(phrase.equalsIgnoreCase(dataType[0]))
+			Matcher matcher = timeUnit.pattern.matcher(phrase);
+			while(matcher.find())
 			{
-				// does a property with this time interval exist directly?
-				Set<ComponentProperty> candidates = cube.properties.values().stream().filter(p->p.range.equals(dataType[1])).collect(Collectors.toSet());
-				if(candidates.isEmpty())
-				{
-					// TODO try to calculate time interval out of others with conversion
-					return Optional.empty();
-				}
-				ComponentProperty bestCandidate;
-				if(candidates.size()==1)
-				{
-					bestCandidate = candidates.iterator().next();
-				} else
-				{
-//					 multiple properties with the right data type, which one has the highest string similarity?
-					bestCandidate = candidates.stream().max(Comparator.comparing(
-							p->p.labels.stream().max(Comparator.comparing(l->similarity.getDistance(dataType[1], l))).get())).get();
-				}
-				log.setLevel(Level.ALL);
-				log.debug("best candidate for phrase "+phrase+": "+bestCandidate);
-				return Optional.of(bestCandidate);
+				CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
+				fragment.getPerProperties().add(timeUnit.property.get());
+				fragments.add(fragment);
+				phrase = phrase.replace(matcher.group(0), "").replace("  "," ");
+				log.debug("detected property "+timeUnit.property.get()+" with data type "+timeUnit.property.get().range);
 			}
 		}
-		return Optional.empty();
+		return fragments;
 	}
-
 }
