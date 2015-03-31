@@ -84,7 +84,7 @@ public class PerTimeDetector extends Detector
 		List<TimeUnit> timeUnits = cubeToTimeUnits.get(cube);
 		if(timeUnits==null)
 		{
-			Arrays.asList(
+			timeUnits = Arrays.asList(
 					new TimeUnit(cube,"day",XSD.gDay),
 					new TimeUnit(cube,"month",XSD.gMonth),
 					new TimeUnit(cube,"year",XSD.gYear)
