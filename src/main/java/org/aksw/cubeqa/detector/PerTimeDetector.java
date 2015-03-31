@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -19,21 +21,42 @@ import com.hp.hpl.jena.vocabulary.XSD;
  * Or detectors should apply only once with find of regexes on whole phrase for faster runtime and easier program flow?
  **/
 @Log4j
+@AllArgsConstructor(access=AccessLevel.PRIVATE)
 public class PerTimeDetector extends Detector
 {
-	Cube cube;
-	public PerTimeDetector(Cube cube)
+	public static PerTimeDetector INSTANCE = new PerTimeDetector();
+	protected static transient StringDistance similarity = new NGramDistance();
+
+	@Override public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
 	{
-		this.cube = cube;
+		List<TimeUnit> timeUnits = getTimeUnits(cube);
+
+
+		Set<CubeTemplateFragment> fragments = new HashSet<>();
+		for(TimeUnit timeUnit: timeUnits)
+		{
+			Matcher matcher = timeUnit.pattern.matcher(phrase);
+			while(matcher.find())
+			{
+				CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
+				fragment.getPerProperties().add(timeUnit.property.get());
+				fragments.add(fragment);
+				phrase = phrase.replace(matcher.group(0), "").replace("  "," ");
+				log.debug("detected property "+timeUnit.property.get()+" with data type "+timeUnit.property.get().range);
+			}
+		}
+		return fragments;
 	}
 
-	class TimeUnit
+	static class TimeUnit
 	{
+		public final Cube cube;
 		public final Pattern pattern;
 		public final Optional<ComponentProperty> property;
 
-		public TimeUnit(String name, Resource dataType)
+		public TimeUnit(Cube cube, String name, Resource dataType)
 		{
+			this.cube=cube;
 			pattern = Pattern.compile("(?i)per "+name);
 			Set<ComponentProperty> candidates = cube.properties.values().stream().filter(p->p.range.equals(dataType.getURI())).collect(Collectors.toSet());
 			if(candidates.isEmpty())
@@ -55,32 +78,20 @@ public class PerTimeDetector extends Detector
 		}
 	}
 
-	final List<TimeUnit> timeUnits = Arrays.asList(
-			new TimeUnit("day",XSD.gDay),
-			new TimeUnit("month",XSD.gMonth),
-			new TimeUnit("year",XSD.gYear)
-			);
+	static Map<Cube,List<TimeUnit>> cubeToTimeUnits = new HashMap<>();
 
-	final List<TimeUnit> mappedTimeUnits = timeUnits.stream().filter(tu->tu.property.isPresent()).collect(Collectors.toList());
-
-	protected static transient StringDistance similarity = new NGramDistance();
-
-	@Override public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
+	static private List<TimeUnit> getTimeUnits(Cube cube)
 	{
-		if(cube!=Cube.FINLAND_AID) throw new IllegalArgumentException("change Detector.DETECTORS first to use non finland aid cube");
-		Set<CubeTemplateFragment> fragments = new HashSet<>();
-		for(TimeUnit timeUnit: mappedTimeUnits)
+		List<TimeUnit> timeUnits = cubeToTimeUnits.get(cube);
+		if(timeUnits==null)
 		{
-			Matcher matcher = timeUnit.pattern.matcher(phrase);
-			while(matcher.find())
-			{
-				CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
-				fragment.getPerProperties().add(timeUnit.property.get());
-				fragments.add(fragment);
-				phrase = phrase.replace(matcher.group(0), "").replace("  "," ");
-				log.debug("detected property "+timeUnit.property.get()+" with data type "+timeUnit.property.get().range);
-			}
+			Arrays.asList(
+					new TimeUnit(cube,"day",XSD.gDay),
+					new TimeUnit(cube,"month",XSD.gMonth),
+					new TimeUnit(cube,"year",XSD.gYear)
+					).stream().filter(tu->tu.property.isPresent()).collect(Collectors.toList());
+			cubeToTimeUnits.put(cube, timeUnits);
 		}
-		return fragments;
+		return timeUnits;
 	}
 }

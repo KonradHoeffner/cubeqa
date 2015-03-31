@@ -15,7 +15,7 @@ public abstract class Detector
 	public abstract Set<CubeTemplateFragment> detect(Cube cube, String phrase);
 
 	// TODO: generalize this,as per time detector always uses finland aid as of now
-	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,new PerTimeDetector(Cube.FINLAND_AID));
+	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,PerTimeDetector.INSTANCE);
 
 	static final protected String PHRASE_REGEX = "([a-zA-Züöäéèô'-]+(\\s[a-zA-Züöäéèô,'-]+)*)";
 	static final protected String WORD_REGEX = "([a-zA-Züöäéèô'-]+)";

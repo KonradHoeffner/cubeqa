@@ -9,8 +9,7 @@ public class PerTimeDetectorTest
 
 	@Test public void testDetect()
 	{
-		 PerTimeDetector detector = new PerTimeDetector(Cube.FINLAND_AID);
-		 System.out.println(detector.detect(Cube.FINLAND_AID, "per year"));
+		 System.out.println(PerTimeDetector.INSTANCE.detect(Cube.FINLAND_AID, "per year"));
 	}
 
 }
