@@ -10,6 +10,7 @@ import org.aksw.cubeqa.Stopwords;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.*;
 import org.aksw.cubeqa.restriction.TopRestriction.OrderModifier;
+import org.aksw.cubeqa.template.CubeTemplateFragment;
 
 /** Detects "highest n" or "lowest n" type phrases. */
 public class TopDetector extends Detector
@@ -43,14 +44,13 @@ public class TopDetector extends Detector
 		Arrays.stream(keywords[1]).map(TopDetector::pattern).flatMap(Set::stream).forEach(p->patternModifier.put(p,OrderModifier.ASC));
 	}
 
-	public Optional<RestrictionWithPhrase> detect(Cube cube, String phrase)
+	public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
 	{
-		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);
-
+		Set<CubeTemplateFragment> fragments = new HashSet<>();
 		for(Entry<Pattern,OrderModifier> e: patternModifier.entrySet())
 		{
 			Matcher matcher = e.getKey().matcher(phrase);
-			if(matcher.find())
+			while(matcher.find())
 			{
 				int n = Integer.parseInt(matcher.group(1));
 				String w = matcher.group(2);
@@ -60,11 +60,13 @@ public class TopDetector extends Detector
 					ScoreResult max = results.stream().max(Comparator.comparing(ScoreResult::getScore)).get();
 					RestrictionWithPhrase restriction = null;
 					// patterns don't overlap so we can return here
-					return Optional.of(new TopRestriction(max.property, max.value, n,e.getValue()));
+					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
+					fragment.getRestrictions().add(new TopRestriction(max.property, max.value, n,e.getValue()));
+					fragments.add(fragment);
 				}
 			}
 		}
-		return Optional.empty();
+		return fragments;
 	}
 
 }

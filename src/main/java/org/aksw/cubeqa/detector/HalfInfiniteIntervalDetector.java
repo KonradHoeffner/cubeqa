@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.Stopwords;
@@ -16,6 +16,7 @@ import org.aksw.cubeqa.template.CubeTemplateFragment;
 
 /**Detects numerical intervals with one infinite endpoint.*/
 @Log4j
+@AllArgsConstructor(access=AccessLevel.PRIVATE)
 public class HalfInfiniteIntervalDetector extends Detector
 {
 	private static final double	MIN_SIMILARITY	= 0.3;

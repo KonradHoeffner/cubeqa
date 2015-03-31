@@ -31,7 +31,6 @@ public class PerTimeDetector extends Detector
 	{
 		List<TimeUnit> timeUnits = getTimeUnits(cube);
 
-
 		Set<CubeTemplateFragment> fragments = new HashSet<>();
 		for(TimeUnit timeUnit: timeUnits)
 		{
