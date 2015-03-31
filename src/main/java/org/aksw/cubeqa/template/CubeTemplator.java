@@ -6,13 +6,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.aksw.cubeqa.Cube;
-import org.aksw.cubeqa.Stopwords;
+import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
 import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
+import org.apache.log4j.Level;
 import de.konradhoeffner.commons.Pair;
 import edu.stanford.nlp.trees.Tree;
 
@@ -38,12 +38,16 @@ public class CubeTemplator
 
 	public CubeTemplate buildTemplate(String question)
 	{
-		String noStop = Stopwords.remove(question, Stopwords.QUESTION_WORDS);
+		log.setLevel(Level.ALL);
+		String noStop = question;
+//		String noStop = Stopwords.remove(question, Stopwords.QUESTION_WORDS);
 		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
 		Pair<CubeTemplateFragment,String> detectResult = detect(noStop);
 		Tree root = StanfordNlp.parse(detectResult.b);
 		CubeTemplateFragment rootFragment = visitRecursive(root);
-		return CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate();
+		CubeTemplate finalTemplate = CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate();
+		if(finalTemplate.aggregates.isEmpty()) {finalTemplate.aggregates.add(Aggregate.SUM);}
+		return finalTemplate;
 	}
 
 	/** @param question
@@ -70,7 +74,7 @@ public class CubeTemplator
 				allDetectorFragment = CubeTemplateFragment.combine(new ArrayList<>(detectorResults));
 			}
 		}
-		if(allDetectorFragment==null) {return new Pair<>(new CubeTemplateFragment(cube, ""),"");}
+		if(allDetectorFragment==null) {return new Pair<>(new CubeTemplateFragment(cube, ""),question);}
 		return new Pair<>(allDetectorFragment,question);
 	}
 
@@ -91,7 +95,7 @@ public class CubeTemplator
 
 		if(phrase.length()>PHRASE_MAX_LENGTH)
 		{
-			log.trace("phrase more than "+PHRASE_MAX_LENGTH+" characters, skipping matching try");
+			log.trace("phrase '"+phrase+"' more than "+PHRASE_MAX_LENGTH+" characters, skipping matching try");
 		}
 		else
 		{
@@ -109,6 +113,7 @@ public class CubeTemplator
 		// either we didn't match because the phrase is too long or matching didn't find anything, so match subtrees separately
 		log.trace("unmatched, looking at subtrees");
 		List<CubeTemplateFragment> childFragments = fragments(tree.getChildrenAsList(),x->true);
+		if(childFragments.isEmpty()) return new CubeTemplateFragment(cube, phrase);
 		List<CubeTemplateFragment> childFragmentsWithRefs = childFragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
 		List<CubeTemplateFragment> childFragmentsWithoutRefs = new LinkedList<>(childFragments);
 		childFragmentsWithoutRefs.removeAll(childFragmentsWithRefs);
@@ -133,7 +138,7 @@ public class CubeTemplator
 
 				if(unmatchedResult.isEmpty())
 				{
-					log.trace("unmatched fragment combination do not match anything, thrown away");
+					log.trace("unmatched fragment combination does not match anything.");
 				} else
 				{
 					log.trace("unmatched fragment combination matched to "+unmatchedResult);

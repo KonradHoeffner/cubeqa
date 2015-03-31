@@ -51,10 +51,10 @@ public class CubeTemplateFragment
 
 	public static CubeTemplateFragment combine(List<CubeTemplateFragment> fragments)
 	{
-		fragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
+//		fragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
 		if(fragments.isEmpty())
-//		{throw new IllegalArgumentException("empty fragment set, can't combine");}
-		{log.warn("empty fragment set, combination empty");}
+		{throw new IllegalArgumentException("empty fragment set, can't combine");}
+//		{log.warn("empty fragment set, combination empty");}
 
 		// *** new sets are unions over all fragment sets **********************************************************
 		if(fragments.stream().map(f->f.cube.uri).collect(Collectors.toSet()).size()>1) throw new IllegalArgumentException("different cube uris, can't combine");

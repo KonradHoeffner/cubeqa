@@ -1,34 +1,29 @@
 package org.aksw.cubeqa.index;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import lombok.SneakyThrows;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.FuzzyQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.*;
 import org.apache.lucene.util.Version;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 /** Lucene index for labels, used by ObjectPropertyScorer.
  */
 public class LabelIndex extends Index
 {
+	PorterStemmer stemmer = new PorterStemmer();
 	private static final Map<String,LabelIndex> instances = new HashMap<>();
 	private static final int	FUZZY_MIN_LENGTH	= 5;
-	private StandardAnalyzer analyzer = new StandardAnalyzer();
+//	private StandardAnalyzer analyzer = new StandardAnalyzer();
+	private Analyzer analyzer = new SnowballAnalyzer(Version.LUCENE_4_9_1, "English");
 	private QueryParser parser = new QueryParser(Version.LUCENE_4_9_1,"normalizedlabel", analyzer);
 
 	private LabelIndex(ComponentProperty property)
@@ -105,8 +100,10 @@ public class LabelIndex extends Index
 		labels.forEach(l->
 		{
 //			doc.add(new TextField("normalizedlabel", l, Field.Store.YES));
-			doc.add(new StringField("normalizedlabel", normalize(l), Field.Store.YES));
-			doc.add(new StringField("label", l, Field.Store.YES));
+
+			doc.add(new TextField("test", "running", Field.Store.YES));
+			doc.add(new TextField("normalizedlabel", normalize(l), Field.Store.YES));
+			doc.add(new TextField("label", l, Field.Store.YES));
 		});
 		indexWriter.addDocument(doc, analyzer);
 	}

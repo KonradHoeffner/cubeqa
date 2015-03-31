@@ -79,13 +79,13 @@ public class Benchmark
 	public void evaluate(Algorithm algorithm)
 	{
 		log.info("Evaluating cube "+algorithm.cube.name+ " on benchmark "+name+" with "+questions.size()+" questions");
-		for(int i=0;i<questions.size();i++) {evaluate(algorithm,i);}
+		for(int i=1;i<=questions.size();i++) {evaluate(algorithm,i);}
 	}
 
 	public void evaluate(Algorithm algorithm, int questionNumber)
 	{
 		//		List<Pair<Double,Double>> precisionRecalls = new ArrayList<>();
-		Question question = questions.get(questionNumber);
+		Question question = questions.get(questionNumber-1);
 		log.info(questionNumber+": Answering "+question.string);
 		log.info("correct query: "+question.query);
 		log.info("correct answer: "+question.answers);

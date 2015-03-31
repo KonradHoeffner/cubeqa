@@ -34,14 +34,17 @@ public class PerTimeDetector extends Detector
 		Set<CubeTemplateFragment> fragments = new HashSet<>();
 		for(TimeUnit timeUnit: timeUnits)
 		{
-			Matcher matcher = timeUnit.pattern.matcher(phrase);
-			while(matcher.find())
+			for(Pattern pattern: timeUnit.patterns)
 			{
-				CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
-				fragment.getPerProperties().add(timeUnit.property.get());
-				fragments.add(fragment);
-				phrase = phrase.replace(matcher.group(0), "").replace("  "," ");
-				log.debug("detected property "+timeUnit.property.get()+" with data type "+timeUnit.property.get().range);
+				Matcher matcher = pattern.matcher(phrase);
+				while(matcher.find())
+				{
+					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
+					fragment.getPerProperties().add(timeUnit.property.get());
+					fragments.add(fragment);
+					phrase = phrase.replace(matcher.group(0), "").replace("  "," ");
+					log.debug("detected property "+timeUnit.property.get()+" with data type "+timeUnit.property.get().range);
+				}
 			}
 		}
 		return fragments;
@@ -50,13 +53,18 @@ public class PerTimeDetector extends Detector
 	static class TimeUnit
 	{
 		public final Cube cube;
-		public final Pattern pattern;
+		public final Set<Pattern> patterns = new HashSet<>();
 		public final Optional<ComponentProperty> property;
 
 		public TimeUnit(Cube cube, String name, Resource dataType)
 		{
 			this.cube=cube;
-			pattern = Pattern.compile("(?i)per "+name);
+			List<String> prePatterns = Arrays.asList("per "+name,name+"ly");
+			for(String prePattern: prePatterns)
+			{
+				patterns.add(Pattern.compile("(?i)(^|[\\s,])"+prePattern+"($|[\\s.])"));
+//				patterns.add(Pattern.compile("(?i)[^\\s,]"+prePattern+"[\\s,.$]"));
+			}
 			Set<ComponentProperty> candidates = cube.properties.values().stream().filter(p->p.range.equals(dataType.getURI())).collect(Collectors.toSet());
 			if(candidates.isEmpty())
 			{
