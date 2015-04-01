@@ -31,7 +31,7 @@ public class Cube implements Serializable
 	//	public final Set<String> labels = new TreeSet<String>();
 	public final Map<String,ComponentProperty> properties;
 
-	public final CubeSparql sparql = CubeSparql.LINKED_SPENDING;
+	public final CubeSparql sparql = CubeSparql.FINLAND_AID;
 
 	static Map<String,Cube> instances = new HashMap<>();
 
@@ -106,7 +106,7 @@ public class Cube implements Serializable
 					//					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
 			//			System.out.println(query);
-			ResultSet rs = CubeSparql.LINKED_SPENDING.select(query);
+			ResultSet rs = CubeSparql.FINLAND_AID.select(query);
 			String uri = "http://linkedspending.aksw.org/instance/"+cubeName;
 			c = new Cube(cubeName,uri, properties);
 			instances.put(cubeName, c);

@@ -2,11 +2,14 @@ package org.aksw.cubeqa.benchmark;
 
 import java.util.HashSet;
 import java.util.Set;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 /** Represents and calculates precision, recall and f-score. */
 @RequiredArgsConstructor
 @EqualsAndHashCode
+@Log4j
 public class Performance
 {
 	final double precision;
@@ -21,7 +24,12 @@ public class Performance
 
 	public static final Performance performance(int correct, int found, int correctFound)
 	{
-		if(correct==0) throw new IllegalArgumentException("correct==0");
+		if(correct==0)
+			{
+//			throw new IllegalArgumentException("correct==0");
+			log.fatal("no correct answer");
+			return new Performance(0, 0);
+			}
 		if(found==0) return new Performance(0,0);
 		return new Performance((double)correctFound/found,(double)correctFound/correct);
 	}

@@ -13,7 +13,7 @@ public class CubeSparqlTest
 		String query = "select count(distinct(?cp)) as ?count {?cp a qb:DimensionProperty}";
 
 		int countBlackBudget = sparql.select(query).nextSolution().get("count").asLiteral().getInt();
-		int countAll = CubeSparql.LINKED_SPENDING.select(query).nextSolution().get("count").asLiteral().getInt();
+		int countAll = CubeSparql.FINLAND_AID.select(query).nextSolution().get("count").asLiteral().getInt();
 
 		assertTrue(countBlackBudget==5);
 		assertTrue(countAll>10);

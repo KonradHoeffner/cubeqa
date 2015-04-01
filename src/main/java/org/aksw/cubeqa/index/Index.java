@@ -23,8 +23,6 @@ public abstract class Index
 	// TODO: make sure instances for multiple cubes are not conflicting, property uris may not be unique
 	protected final ComponentProperty property;
 
-	protected final Analyzer analyzer;
-
 	protected IndexWriter indexWriter;
 	protected final Directory dir;
 	protected IndexReader reader;
@@ -44,7 +42,7 @@ public abstract class Index
 		Map<String,Analyzer> analyzerPerField = new HashMap<String,Analyzer>();
 //		analyzerPerField.put("normalizedlabel", new EnglishAnalyzer());
 
-		analyzer = new PerFieldAnalyzerWrapper(new KeywordAnalyzer(), analyzerPerField);
+//		analyzer = new PerFieldAnalyzerWrapper(new KeywordAnalyzer(), analyzerPerField);
 
 		this.property=property;
 		File folder = new File(new File(new File("cache"),"lucene"),property.cube.probablyUniqueAsciiId());
@@ -67,7 +65,7 @@ public abstract class Index
 	}
 
 	@SneakyThrows protected
-	final synchronized void startWrites()
+	final synchronized void startWrites(Analyzer analyzer)
 	{
 		if(indexWriter==null)
 		{

@@ -6,25 +6,23 @@ import java.util.function.Function;
 import lombok.SneakyThrows;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.snowball.SnowballAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.util.Version;
-import org.tartarus.snowball.ext.PorterStemmer;
 
 /** Lucene index for labels, used by ObjectPropertyScorer.
  */
 public class LabelIndex extends Index
 {
-	PorterStemmer stemmer = new PorterStemmer();
 	private static final Map<String,LabelIndex> instances = new HashMap<>();
 	private static final int	FUZZY_MIN_LENGTH	= 5;
-//	private StandardAnalyzer analyzer = new StandardAnalyzer();
-	private Analyzer analyzer = new SnowballAnalyzer(Version.LUCENE_4_9_1, "English");
-	private QueryParser parser = new QueryParser(Version.LUCENE_4_9_1,"normalizedlabel", analyzer);
+	//	private StandardAnalyzer analyzer = new StandardAnalyzer();
+	private Analyzer analyzer = new EnglishAnalyzer();
+	private QueryParser parser = new QueryParser(Version.LUCENE_4_9_1,"label", analyzer);
 
 	private LabelIndex(ComponentProperty property)
 	{
@@ -36,7 +34,7 @@ public class LabelIndex extends Index
 	{
 		if(!subFolder.exists())
 		{
-			startWrites();
+			startWrites(analyzer);
 			for(String uri: uris)
 			{
 				//				Set<String> labels = labelFunction.apply(uri);
@@ -57,34 +55,38 @@ public class LabelIndex extends Index
 		//		q.add(new Term("label",label));
 
 		//		Query q = new QueryParser("label", analyzer).parse(querystr);
-		Query q;
+
+		List<Query> queries;
 		if(ns.length()>=FUZZY_MIN_LENGTH)
 		{
-			q = new FuzzyQuery(new Term("normalizedlabel",ns));
+			queries = Arrays.asList(new FuzzyQuery(new Term("stringlabel",ns)),parser.parse(ns));
 		} else
 		{
-			q = parser.parse(ns);
+			queries = Collections.singletonList(parser.parse(ns));
 		}
-//		System.out.println(q);
+
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
 		TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
-		searcher.search(q, collector);
-		ScoreDoc[] hits = collector.topDocs().scoreDocs;
-
 		Map<String,Double> urisWithScore = new HashMap<>();
-		for(ScoreDoc hit: hits)
+		for(Query q: queries)
 		{
-			// TODO score with fuzzy matches too high
-			Document doc = searcher.doc(hit.doc);
-			//			for(String l: doc.getValues("label"))
-			//			{
-			//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
-			//			}
-			double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(ns, l))).max().getAsDouble();
-			// Lucene returns document retrieval score instead of similarity score
-			urisWithScore.put(doc.get("uri"),score);
-			//			urisWithScore.put(doc.get("uri"),(double) hit.score);
+			searcher.search(q, collector);
+			ScoreDoc[] hits = collector.topDocs().scoreDocs;
+
+			for(ScoreDoc hit: hits)
+			{
+				// TODO score with fuzzy matches too high
+				Document doc = searcher.doc(hit.doc);
+				//			for(String l: doc.getValues("label"))
+				//			{
+				//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
+				//			}
+				double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(ns, l))).max().getAsDouble();
+				// Lucene returns document retrieval score instead of similarity score
+				urisWithScore.put(doc.get("uri"),score);
+				//			urisWithScore.put(doc.get("uri"),(double) hit.score);
+			}
 		}
 		return urisWithScore;
 	}
@@ -99,11 +101,8 @@ public class LabelIndex extends Index
 
 		labels.forEach(l->
 		{
-//			doc.add(new TextField("normalizedlabel", l, Field.Store.YES));
-
-			doc.add(new TextField("test", "running", Field.Store.YES));
-			doc.add(new TextField("normalizedlabel", normalize(l), Field.Store.YES));
-			doc.add(new TextField("label", l, Field.Store.YES));
+			doc.add(new Field("stringlabel", normalize(l), StringField.TYPE_STORED));
+			doc.add(new Field("textlabel", normalize(l), TextField.TYPE_STORED));
 		});
 		indexWriter.addDocument(doc, analyzer);
 	}

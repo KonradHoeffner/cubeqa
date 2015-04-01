@@ -12,7 +12,7 @@ public class BenchmarkTest
 {
 	@Test public void testCompleteQuestion()
 	{
-		Question q = Benchmark.completeQuestion(CubeSparql.LINKED_SPENDING, "some string","ask {?s ?p ?o.}");
+		Question q = Benchmark.completeQuestion(CubeSparql.FINLAND_AID, "some string","ask {?s ?p ?o.}");
 		assertTrue(q.answers.size()==1);
 		assertTrue(q.answerTypes.get("")==AnswerType.BOOLEAN);
 		assertTrue(q.answers.iterator().next().get("").equals("true"));
@@ -45,7 +45,7 @@ public class BenchmarkTest
 	@Test public void testSaveAndLoadQald() throws IOException
 	{
 		Benchmark b = Benchmark.fromQald("finland-aid");
-		b.saveAsQald(CubeSparql.LINKED_SPENDING, new File(new File("benchmark"),"test.xml"));
+		b.saveAsQald(CubeSparql.FINLAND_AID, new File(new File("benchmark"),"test.xml"));
 		Benchmark c = Benchmark.fromQald("test");
 		for(int i=0;i<100;i++)
 		{
