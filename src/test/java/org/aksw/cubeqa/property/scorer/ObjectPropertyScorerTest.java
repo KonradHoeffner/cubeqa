@@ -12,7 +12,6 @@ public class ObjectPropertyScorerTest
 	@Test public void testRecipientCountry()
 	{
 		Cube cube = Cube.getInstance("finland-aid");
-
 		Scorer scorer = cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-recipient-country").scorer;
 		assertTrue(scorer.getClass().equals(ObjectPropertyScorer.class));
 		ScoreResult score = scorer.score("Tajikistan").get();

@@ -1,10 +1,6 @@
 package org.aksw.cubeqa.template;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
@@ -49,7 +45,7 @@ public class CubeTemplateFragment
 		this(cube, phrase, new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>());
 	}
 
-	public static CubeTemplateFragment combine(List<CubeTemplateFragment> fragments)
+	public static CubeTemplateFragment combine(Collection<CubeTemplateFragment> fragments)
 	{
 //		fragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
 		if(fragments.isEmpty())

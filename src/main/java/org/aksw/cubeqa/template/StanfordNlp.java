@@ -34,7 +34,7 @@ public class StanfordNlp
 
 	public static Tree parse(String sentence)
 	{
-		log.info("parsing sentence: "+sentence);
+		log.trace("parsing sentence: "+sentence);
 		Annotation document = new Annotation(sentence);
 		pipeline.annotate(document);
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);

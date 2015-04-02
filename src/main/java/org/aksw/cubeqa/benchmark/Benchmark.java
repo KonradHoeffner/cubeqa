@@ -14,11 +14,11 @@ import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Algorithm;
 import org.aksw.cubeqa.CubeSparql;
 import org.apache.commons.csv.*;
+import org.apache.log4j.Level;
 import org.w3c.dom.*;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import de.konradhoeffner.commons.Pair;
 
 /** Abstract benchmark class with evaluate function.*/
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,7 +32,6 @@ public class Benchmark
 	{
 		questions.stream().forEach(q->completeQuestion(sparql, q.string, q.query));
 	}
-
 
 	static Question completeQuestion(CubeSparql sparql, String string, String query)
 	{
@@ -79,22 +78,28 @@ public class Benchmark
 	public void evaluate(Algorithm algorithm)
 	{
 		log.info("Evaluating cube "+algorithm.cube.name+ " on benchmark "+name+" with "+questions.size()+" questions");
-		for(int i=1;i<=questions.size();i++) {evaluate(algorithm,i);}
+		List<Performance> performances = new ArrayList<>();
+		for(int i=1;i<=questions.size();i++) {performances.add(evaluate(algorithm,i));}
+		log.info("Average precision "+ performances.stream().mapToDouble(Performance::getPrecision).average());
+		log.info("Average recall "+ performances.stream().mapToDouble(Performance::getRecall).average());
+		log.info("Average f score "+ performances.stream().mapToDouble(Performance::fscore).average());
 	}
 
-	public void evaluate(Algorithm algorithm, int questionNumber)
+	public Performance evaluate(Algorithm algorithm, int questionNumber)
 	{
 		//		List<Pair<Double,Double>> precisionRecalls = new ArrayList<>();
+		log.setLevel(Level.ALL);
 		Question question = questions.get(questionNumber-1);
 		log.info(questionNumber+": Answering "+question.string);
-		log.info("correct query: "+question.query);
-		log.info("correct answer: "+question.answers);
+		log.debug("correct query: "+question.query);
+		log.debug("correct answer: "+question.answers);
 		String query = algorithm.answer(question.string).sparqlQuery();
 		Question found = completeQuestion(algorithm.cube.sparql, question.string, query);
-		log.info("found query: "+found.query);
-		log.info("found answer: "+found.answers);
+		log.debug("found query: "+found.query);
+		log.debug("found answer: "+found.answers);
 		Performance p = Performance.performance(question.answers, found.answers);
 		log.info(p);
+		return p;
 		//				 Set<String> answers = algorithm.cube.sparql.select(query);
 		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).filter(d->d==1).count()+" with precision 1");
 		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).filter(d->d==1).count()+" with recall 1");

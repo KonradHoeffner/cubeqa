@@ -44,8 +44,11 @@ public class StringIndex extends Index
 	@SneakyThrows
 	public Map<String,Double> getStringsWithScore(String s)
 	{
-		String ns=normalize(s);
-
+		String ns=s;//normalize(s);
+		if(s.equals("Finnish Red Cross"))
+		{
+			System.out.println("frc");
+		}
 		List<Query> queries;
 		if(ns.length()>=FUZZY_MIN_LENGTH)
 		{

@@ -59,10 +59,10 @@ public class HalfInfiniteIntervalDetector extends Detector
 		}
 		{
 		Pattern p = Pattern.compile(
-				PHRASE_REGEX + "\\s+" + keyword + "\\s+(\\d+)",
+				PHRASE_REGEX + "\\s+(of )?" + keyword + "\\s+(\\d+)",
 				Pattern.CASE_INSENSITIVE);
 		patterns.add(p);
-		NUMBER_GROUP.put(p, 3);
+		NUMBER_GROUP.put(p, 4);
 		PHRASE_GROUP.put(p, 1);
 		}
 		{
@@ -75,13 +75,13 @@ public class HalfInfiniteIntervalDetector extends Detector
 		}
 		{
 		Pattern p = Pattern.compile(
-				WORD_REGEX + "\\s+" + keyword + "\\s+(\\d+)",
+				WORD_REGEX + "\\s+(of )?" + keyword + "\\s+(\\d+)",
 				Pattern.CASE_INSENSITIVE);
 		patterns.add(p);
-		NUMBER_GROUP.put(p, 2);
+		NUMBER_GROUP.put(p, 3);
 		PHRASE_GROUP.put(p, 1);
 		}
-
+//		System.out.println(patterns);
 		return patterns;
 	}
 
@@ -100,7 +100,7 @@ public class HalfInfiniteIntervalDetector extends Detector
 	public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
 	{
 		Set<CubeTemplateFragment> fragments = new HashSet<>();
-		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);
+//		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);
 		Set<ScoredRestriction> srs = new HashSet<>();
 
 		for (Entry<Pattern, IntervalType> e : PATTERN_TO_TYPE.entrySet())
