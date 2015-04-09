@@ -2,36 +2,37 @@ package org.aksw.cubeqa.index;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
-import org.apache.lucene.util.Version;
 
 /** Index for String scorer. */
 public class StringIndex extends Index
 {
 	private static final Map<String,StringIndex> instances = new HashMap<>();
-	private static final int	FUZZY_MIN_LENGTH	= 5;
-	private Analyzer analyzer = new EnglishAnalyzer();
-	private QueryParser parser = new QueryParser(Version.LUCENE_4_9_1,"textlabel", analyzer);
-
-	private StringIndex(ComponentProperty property)
+	private StringIndex(ComponentProperty property) {super(property);}
+	public static synchronized StringIndex getInstance(ComponentProperty property)
 	{
-		super(property);
+		StringIndex index = instances.get(property.uri);
+		if(index==null)
+		{
+			index = new StringIndex(property);
+			instances.put(property.uri,index);
+		}
+		return index;
 	}
+
 
 	@SneakyThrows
 	public void fill(Set<String> strings)
 	{
-		if(!subFolder.exists())
+		if(!DirectoryReader.indexExists(dir))
 		{
-			startWrites(analyzer);
+			startWrites();
 			for(String s: strings)
 			{
 				add(s);
@@ -44,29 +45,27 @@ public class StringIndex extends Index
 	@SneakyThrows
 	public Map<String,Double> getStringsWithScore(String s)
 	{
-		String ns=s;//normalize(s);
-		if(s.equals("Finnish Red Cross"))
-		{
-			System.out.println("frc");
-		}
-		List<Query> queries;
+		String ns=normalize(s);
+//		if(s.equals("Finnish Red Cross"))
+//		{
+//			System.out.println("frc");
+//		}
+		Map<Query,String> queryFields = new HashMap<>();
+		queryFields.put(parser.parse(ns),"textlabel");
+
 		if(ns.length()>=FUZZY_MIN_LENGTH)
 		{
-			queries = Arrays.asList(new FuzzyQuery(new Term("stringlabel",ns)),parser.parse(ns));
-		} else
-		{
-			queries = Collections.singletonList(parser.parse(ns));
+			queryFields.put(new FuzzyQuery(new Term("stringlabel",ns)), "stringlabel");
 		}
-
 		//		System.out.println(q);
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
-		TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
 
 		Map<String,Double> stringsWithScore = new HashMap<>();
 
-		for(Query q: queries)
+		for(Query q: queryFields.keySet())
 		{
+			TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
 			searcher.search(q, collector);
 			ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
@@ -79,10 +78,21 @@ public class StringIndex extends Index
 				//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
 				//			}
 				//TODO activate again and see why it works so badly
-				double score = Arrays.stream(doc.getValues("normalizedlabel")).filter(nl->nl.length()>3).mapToDouble(l->(distance.getDistance(ns, l)*0.0)).max().getAsDouble();
+//				System.out.println(Arrays.toString(doc.getValues("stringlabel")));
+//				System.out.println(Arrays.toString(doc.getValues("textlabel")));
+//				System.out.println(Arrays.toString(doc.getValues("originallabel")));
+//				Set<String> values = new HashSet<>(Arrays.asList(doc.getValues("stringlabel")));
+//				values.addAll(doc.getValues("textlabel"));
+
+
+				Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3).forEach(
+							l->stringsWithScore.put(l, (double)distance.getDistance(ns, normalize(l))));
+//				System.out.println(stringsWithScore);
+//				mapToDouble(l->(distance.getDistance(ns, l))).max().getAsDouble();
+
 
 				// Lucene returns document retrieval score instead of similarity score
-				stringsWithScore.put(doc.get("label"),score);
+//				stringsWithScore.put(doc.get("label"),score);
 				//			urisWithScore.put(doc.get("uri"),(double) hit.score);
 			}
 		}
@@ -95,18 +105,8 @@ public class StringIndex extends Index
 		Document doc = new Document();
 		doc.add(new Field("stringlabel", normalize(s), StringField.TYPE_STORED));
 		doc.add(new Field("textlabel", normalize(s), TextField.TYPE_STORED));
-		indexWriter.addDocument(doc, analyzer);
-	}
-
-	public static synchronized StringIndex getInstance(ComponentProperty property)
-	{
-		StringIndex index = instances.get(property.uri);
-		if(index==null)
-		{
-			index = new StringIndex(property);
-			instances.put(property.uri,index);
-		}
-		return index;
+		doc.add(new Field("originallabel", s, StringField.TYPE_STORED));
+		indexWriter.addDocument(doc);
 	}
 
 }

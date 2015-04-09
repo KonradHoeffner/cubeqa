@@ -5,28 +5,26 @@ import java.util.*;
 import java.util.function.Function;
 import lombok.SneakyThrows;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.*;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
-import org.apache.lucene.util.Version;
 
 /** Lucene index for labels, used by ObjectPropertyScorer.
  */
 public class LabelIndex extends Index
 {
 	private static final Map<String,LabelIndex> instances = new HashMap<>();
-	private static final int	FUZZY_MIN_LENGTH	= 5;
-	//	private StandardAnalyzer analyzer = new StandardAnalyzer();
-	private Analyzer analyzer = new EnglishAnalyzer();
-	private QueryParser parser = new QueryParser(Version.LUCENE_4_9_1,"label", analyzer);
+	private LabelIndex(ComponentProperty property) {super(property);}
 
-	private LabelIndex(ComponentProperty property)
+	public static synchronized LabelIndex getInstance(ComponentProperty property)
 	{
-		super(property);
+		LabelIndex index = instances.get(property.uri);
+		if(index==null)
+		{
+			index = new LabelIndex(property);
+			instances.put(property.uri,index);
+		}
+		return index;
 	}
 
 	@SneakyThrows
@@ -34,7 +32,7 @@ public class LabelIndex extends Index
 	{
 		if(!subFolder.exists())
 		{
-			startWrites(analyzer);
+			startWrites();
 			for(String uri: uris)
 			{
 				//				Set<String> labels = labelFunction.apply(uri);
@@ -67,7 +65,7 @@ public class LabelIndex extends Index
 
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
-		TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
+		TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
 		Map<String,Double> urisWithScore = new HashMap<>();
 		for(Query q: queries)
 		{
@@ -104,18 +102,8 @@ public class LabelIndex extends Index
 			doc.add(new Field("stringlabel", normalize(l), StringField.TYPE_STORED));
 			doc.add(new Field("textlabel", normalize(l), TextField.TYPE_STORED));
 		});
-		indexWriter.addDocument(doc, analyzer);
-	}
 
-	public static synchronized LabelIndex getInstance(ComponentProperty property)
-	{
-		LabelIndex index = instances.get(property.uri);
-		if(index==null)
-		{
-			index = new LabelIndex(property);
-			instances.put(property.uri,index);
-		}
-		return index;
+		indexWriter.addDocument(doc);
 	}
 
 }

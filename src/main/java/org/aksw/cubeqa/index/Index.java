@@ -7,10 +7,12 @@ import lombok.SneakyThrows;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import org.apache.lucene.store.Directory;
@@ -20,6 +22,9 @@ import org.apache.lucene.util.Version;
 /** Lucene index reading and writing abstract superclass. */
 public abstract class Index
 {
+	protected static final int	FUZZY_MIN_LENGTH	= 5;
+	protected static final Analyzer analyzer = new EnglishAnalyzer();
+	protected static final QueryParser parser = new QueryParser("textlabel", analyzer);
 	// TODO: make sure instances for multiple cubes are not conflicting, property uris may not be unique
 	protected final ComponentProperty property;
 
@@ -39,17 +44,11 @@ public abstract class Index
 	@SneakyThrows
 	protected Index(ComponentProperty property)
 	{
-		Map<String,Analyzer> analyzerPerField = new HashMap<String,Analyzer>();
-//		analyzerPerField.put("normalizedlabel", new EnglishAnalyzer());
-
-//		analyzer = new PerFieldAnalyzerWrapper(new KeywordAnalyzer(), analyzerPerField);
-
 		this.property=property;
 		File folder = new File(new File(new File("cache"),"lucene"),property.cube.probablyUniqueAsciiId());
 		folder.mkdirs();
 		subFolder = new File(folder,property.shortName());
-
-		dir = FSDirectory.open(subFolder);
+		dir = FSDirectory.open(subFolder.toPath());
 	}
 
 	static protected String normalize(String s)
@@ -65,11 +64,11 @@ public abstract class Index
 	}
 
 	@SneakyThrows protected
-	final synchronized void startWrites(Analyzer analyzer)
+	final synchronized void startWrites()
 	{
 		if(indexWriter==null)
 		{
-			IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_4_10_3, analyzer);
+			IndexWriterConfig config = new IndexWriterConfig(analyzer);
 			indexWriter = new IndexWriter(dir, config);
 		}
 	}

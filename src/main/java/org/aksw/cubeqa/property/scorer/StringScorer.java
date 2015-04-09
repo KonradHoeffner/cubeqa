@@ -15,15 +15,16 @@ public class StringScorer extends DatatypePropertyScorer
 	private static final long	serialVersionUID	= 1L;
 	protected static transient StringDistance similarity = new NGramDistance();
 
-	transient StringIndex index;
+	transient private StringIndex index;
 
-	private synchronized void loadOrCreateIndex()
+	public synchronized StringIndex loadOrCreateIndex()
 	{
 		if(index==null)
 		{
 			index = StringIndex.getInstance(property);
 			index.fill(valueStream().map(node->node.asLiteral().getLexicalForm()).collect(Collectors.toSet()));
 		}
+		return index;
 	}
 
 	public StringScorer(ComponentProperty property)
