@@ -22,7 +22,7 @@ public class StringScorerTest
 
 //			System.out.println(scorer.valueStream().filter(n->n.asLiteral().getLexicalForm().contains("Red Cross")).collect(Collectors.toSet()));
 //			System.out.println(scorer.loadOrCreateIndex().getStringsWithScore("Finnish Red Cross"));
-			assertTrue(scorer.unsafeScore("Finnish Red Cross").get().score==1);
+			assertTrue(scorer.score("Finnish Red Cross").get().score==1);
 //			System.out.println(scorer.unsafeScore("Finnfund"));
 //			System.out.println(scorer.unsafeScore("Fida International"));
 //			System.out.println(scorer.unsafeScore("Fida"));

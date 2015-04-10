@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Aggregate;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -13,6 +14,7 @@ import de.konradhoeffner.commons.Pair;
 
 /** Template for a data cube query. */
 @RequiredArgsConstructor
+@Log4j
 public class CubeTemplate
 {
 	final Cube cube;
@@ -61,52 +63,49 @@ public class CubeTemplate
 		return properties;
 	}
 
-	public static Pair<Double,Double> precisionRecallProperties(CubeTemplate standard, CubeTemplate candidate)
-	{
-		System.out.println(candidate.allProperties().iterator().next().propertyType);
-		Set<ComponentProperty> found = candidate.allProperties();
-
-		//.stream().filter(p->p.propertyType==PropertyType.DIMENSION).collect(Collectors.toSet());
-		Set<ComponentProperty> foundCorrect = new HashSet<>(found);
-		Set<ComponentProperty> correct = standard.allProperties();
-		//.stream().filter(p->p.propertyType==PropertyType.DIMENSION).collect(Collectors.toSet());
-		foundCorrect.retainAll(correct);
-		if(found.size()==0||correct.size()==0) return null;
-		System.out.println(found);
-		System.out.println(correct);
-		return new Pair<Double, Double>((double)foundCorrect.size()/found.size(),(double)foundCorrect.size()/correct.size());
-	}
-
-	public static Pair<Double,Double> precisionRecallDimensions(CubeTemplate standard, CubeTemplate candidate)
-	{
-		System.out.println(candidate.allProperties().iterator().next().propertyType);
-		Set<ComponentProperty> found = candidate.allProperties()
-// TODO how can p be null??
-		.stream().filter(p->p!=null&&p.propertyType==PropertyType.ATTRIBUTE).collect(Collectors.toSet());
-		Set<ComponentProperty> foundCorrect = new HashSet<>(found);
-		Set<ComponentProperty> correct = standard.allProperties()
-		.stream().filter(p->p!=null&&p.propertyType==PropertyType.ATTRIBUTE).collect(Collectors.toSet());
-		foundCorrect.retainAll(correct);
-		if(found.size()==0||correct.size()==0) return null;
-		System.out.println(found);
-		System.out.println(correct);
-		return new Pair((double)foundCorrect.size()/found.size(),(double)foundCorrect.size()/correct.size());
-	}
-
-	public static Pair<Double,Double> precisionRecallRestrictions(CubeTemplate standard, CubeTemplate candidate)
-	{
-		System.out.println(candidate.allProperties().iterator().next().propertyType);
-		Set<Restriction> found = candidate.restrictions;
-
-		//.stream().filter(p->p.propertyType==PropertyType.DIMENSION).collect(Collectors.toSet());
-		Set<Restriction> foundCorrect = new HashSet<>(found);
-		Set<Restriction> correct = standard.restrictions;
-		//.stream().filter(p->p.propertyType==PropertyType.DIMENSION).collect(Collectors.toSet());
-		foundCorrect.retainAll(correct);
-		if(found.size()==0||correct.size()==0) return null;
-//		System.out.println(found);
-//		System.out.println(correct);
-		return new Pair((double)foundCorrect.size()/found.size(),(double)foundCorrect.size()/correct.size());
-	}
+//	public static Pair<Double,Double> precisionRecallProperties(CubeTemplate standard, CubeTemplate candidate)
+//	{
+//		log.debug("property type: "+candidate.allProperties().iterator().next().propertyType);
+//		Set<ComponentProperty> found = candidate.allProperties();
+//
+//		//.stream().filter(p->p.propertyType==PropertyType.DIMENSION).collect(Collectors.toSet());
+//		Set<ComponentProperty> foundCorrect = new HashSet<>(found);
+//		Set<ComponentProperty> correct = standard.allProperties();
+//		//.stream().filter(p->p.propertyType==PropertyType.DIMENSION).collect(Collectors.toSet());
+//		foundCorrect.retainAll(correct);
+//		if(found.size()==0||correct.size()==0) return null;
+//		log.debug("found: "+found);
+//		log.debug("correct: "+correct);
+//		return new Pair<Double, Double>((double)foundCorrect.size()/found.size(),(double)foundCorrect.size()/correct.size());
+//	}
+//
+//	public static Pair<Double,Double> precisionRecallDimensions(CubeTemplate standard, CubeTemplate candidate)
+//	{
+//		log.debug("property type: "+candidate.allProperties().iterator().next().propertyType);
+//		Set<ComponentProperty> found = candidate.allProperties()
+//// TODO how can p be null??
+//		.stream().filter(p->p!=null&&p.propertyType==PropertyType.ATTRIBUTE).collect(Collectors.toSet());
+//		Set<ComponentProperty> foundCorrect = new HashSet<>(found);
+//		Set<ComponentProperty> correct = standard.allProperties()
+//		.stream().filter(p->p!=null&&p.propertyType==PropertyType.ATTRIBUTE).collect(Collectors.toSet());
+//		foundCorrect.retainAll(correct);
+//		if(found.size()==0||correct.size()==0) return null;
+//		log.debug("found: "+found);
+//		log.debug("correct: "+correct);
+//		return new Pair((double)foundCorrect.size()/found.size(),(double)foundCorrect.size()/correct.size());
+//	}
+//
+//	public static Pair<Double,Double> precisionRecallRestrictions(CubeTemplate standard, CubeTemplate candidate)
+//	{
+//		Set<Restriction> found = candidate.restrictions;
+//
+//		//.stream().filter(p->p.propertyType==PropertyType.DIMENSION).collect(Collectors.toSet());
+//		Set<Restriction> foundCorrect = new HashSet<>(found);
+//		Set<Restriction> correct = standard.restrictions;
+//		//.stream().filter(p->p.propertyType==PropertyType.DIMENSION).collect(Collectors.toSet());
+//		foundCorrect.retainAll(correct);
+//		if(found.size()==0||correct.size()==0) return null;
+//		return new Pair((double)foundCorrect.size()/found.size(),(double)foundCorrect.size()/correct.size());
+//	}
 
 }

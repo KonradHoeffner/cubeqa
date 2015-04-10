@@ -13,6 +13,7 @@ import org.apache.lucene.search.spell.StringDistance;
 public class StringScorer extends DatatypePropertyScorer
 {
 	private static final long	serialVersionUID	= 1L;
+	private static final double	THRESHOLD	= 0.4;
 	protected static transient StringDistance similarity = new NGramDistance();
 
 	transient private StringIndex index;
@@ -32,14 +33,13 @@ public class StringScorer extends DatatypePropertyScorer
 		super(property);
 	}
 
-	@Override
-	public Optional<ScoreResult> unsafeScore(String value)
+	@Override public Optional<ScoreResult> score(String value)
 	{
 		loadOrCreateIndex();
 
 		Map<String,Double> stringsWithScore = index.getStringsWithScore(value);
-
 		return stringsWithScore.keySet().stream()
+				.filter(s->stringsWithScore.get(s)>THRESHOLD)
 				.max(Comparator.comparing(stringsWithScore::get))
 				.map(s->new ScoreResult(property, s, stringsWithScore.get(s)));
 	}

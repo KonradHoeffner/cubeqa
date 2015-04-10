@@ -42,7 +42,7 @@ public class ParseScorer<T> extends DatatypePropertyScorer
 //		values.clear(); // from now on we only touch the integer years
 	}
 
-	@Override public Optional<ScoreResult> unsafeScore(String value)
+	@Override public Optional<ScoreResult> score(String value)
 	{
 		Year year = Year.parse(value.replaceAll("\\+[0-9][0-9]:[0-9][0-9]",""));
 //		double cs = countScore(parsed.count(year));

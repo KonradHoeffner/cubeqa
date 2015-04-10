@@ -4,15 +4,19 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.property.ComponentProperty;
+import org.apache.log4j.Level;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
 
 /** Lucene index for labels, used by ObjectPropertyScorer.
  */
+@Log4j
 public class LabelIndex extends Index
 {
+	static {log.setLevel(Level.ALL);}
 	private static final Map<String,LabelIndex> instances = new HashMap<>();
 	private LabelIndex(ComponentProperty property) {super(property);}
 
@@ -30,15 +34,13 @@ public class LabelIndex extends Index
 	@SneakyThrows
 	public void fill(Set<String> uris, Function<String,Set<String>> labelFunction)
 	{
-		if(!subFolder.exists())
+		if(!DirectoryReader.indexExists(dir))
 		{
 			startWrites();
 			for(String uri: uris)
 			{
-				//				Set<String> labels = labelFunction.apply(uri);
-				//				System.out.println(labels);
-				//				add(uri, labels);
-				add(uri, labelFunction.apply(uri));
+								Set<String> labels = labelFunction.apply(uri);
+				add(uri, labels);
 			}
 			stopWrites();
 		}
@@ -48,7 +50,9 @@ public class LabelIndex extends Index
 	@SneakyThrows
 	public Map<String,Double> getUrisWithScore(String label)
 	{
+		Map<String,Double> urisWithScore = new HashMap<>();
 		String ns = normalize(label);
+		if(ns.isEmpty()) {return urisWithScore;}
 		//		PhraseQuery q = new PhraseQuery();
 		//		q.add(new Term("label",label));
 
@@ -65,25 +69,22 @@ public class LabelIndex extends Index
 
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
-		TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
-		Map<String,Double> urisWithScore = new HashMap<>();
+
 		for(Query q: queries)
 		{
+			log.trace("lucene query "+q);
+			TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
 			searcher.search(q, collector);
 			ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
 			for(ScoreDoc hit: hits)
 			{
-				// TODO score with fuzzy matches too high
 				Document doc = searcher.doc(hit.doc);
-				//			for(String l: doc.getValues("label"))
-				//			{
-				//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
-				//			}
-				double score = Arrays.stream(doc.getValues("label")).mapToDouble(l->(distance.getDistance(ns, l))).max().getAsDouble();
-				// Lucene returns document retrieval score instead of similarity score
+
+				log.trace("label index lookup on property "+property+" "+Arrays.toString(doc.getValues("originallabel")));
+				// Lucene returns document retrieval score but similarity distance is better
+				double score = Arrays.stream(doc.getValues("originallabel")).mapToDouble(l->(distance.getDistance(ns, normalize(l)))).max().getAsDouble();
 				urisWithScore.put(doc.get("uri"),score);
-				//			urisWithScore.put(doc.get("uri"),(double) hit.score);
 			}
 		}
 		return urisWithScore;
@@ -101,6 +102,7 @@ public class LabelIndex extends Index
 		{
 			doc.add(new Field("stringlabel", normalize(l), StringField.TYPE_STORED));
 			doc.add(new Field("textlabel", normalize(l), TextField.TYPE_STORED));
+			doc.add(new Field("originallabel", l, StringField.TYPE_STORED));
 		});
 
 		indexWriter.addDocument(doc);

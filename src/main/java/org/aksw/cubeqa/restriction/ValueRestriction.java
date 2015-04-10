@@ -20,9 +20,13 @@ public class ValueRestriction extends Restriction
 		{
 			pattern = OBS_VAR+" <"+property+"> "+uniqueVar+". filter(str("+uniqueVar+")=\""+value+"\")";
 		} else
-		{
-			pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+property.range+">.";
-		}
+			if(property.range.equals(XSD.xstring.getURI()))
+			{
+				pattern = OBS_VAR+" <"+property+"> \""+value+"\".";
+			} else
+			{
+				pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+property.range+">.";
+			}
 
 		return Collections.singleton(pattern);
 		//		String literal = "\""+value+"\"";

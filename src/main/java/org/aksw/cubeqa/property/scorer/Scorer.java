@@ -26,22 +26,9 @@ public abstract class Scorer implements Serializable
 		this.property=property;
 	}
 
-	abstract protected Optional<ScoreResult> unsafeScore(String value);
-
 	/** @param phrase a word or phrase
-	 * @return 	a pair similarity score in [0,1]*/
-	public Optional<ScoreResult> score(String phrase)
-	{
-		try
-		{
-			return unsafeScore(phrase);
-		}
-		catch(Exception e)
-		{
-//			log.warn(e.getClass().getName()+": "+e.getMessage());
-			return Optional.empty();
-		}
-	}
+	 * @return 	the score result of that phrase */
+	abstract public Optional<ScoreResult> score(String value);
 
 	protected ResultSet queryValues()
 	{
@@ -66,7 +53,7 @@ public abstract class Scorer implements Serializable
 		// we didn't find an exact match, now we have two candidates: insertion point and insertion point-1 (we excluded the trivial case before)
 		// pos = -ip-1 | +ip -pos => ip = -pos-1
 		int ip = -pos-1;
-		//		if(ip>3) System.out.println(Arrays.toString(Arrays.copyOfRange(sorted,ip-2,ip+3)));
+
 		float closest;
 		if(sorted[ip]-key<key-sorted[ip-1])	{closest=sorted[ip];} // < can be <= if smaller value is preferred
 		else							{closest=sorted[ip-1];}

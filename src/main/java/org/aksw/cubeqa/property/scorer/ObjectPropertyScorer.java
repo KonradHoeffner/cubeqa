@@ -1,10 +1,6 @@
 package org.aksw.cubeqa.property.scorer;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.aksw.cubeqa.index.LabelIndex;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -14,6 +10,7 @@ import de.konradhoeffner.commons.Streams;
 public class ObjectPropertyScorer extends MultiSetScorer
 {
 	transient LabelIndex index;
+	private static final double	THRESHOLD	= 0.4;
 
 
 	private synchronized void loadOrCreateIndex()
@@ -30,13 +27,14 @@ public class ObjectPropertyScorer extends MultiSetScorer
 		super(property,node->Collections.singleton(node.asResource().getURI()));
 	}
 
-	public Optional<ScoreResult> unsafeScore(String value)
+	@Override public Optional<ScoreResult> score(String value)
 	{
 		loadOrCreateIndex();
 
 		Map<String,Double> urisWithScore = index.getUrisWithScore(value);
 
 		return urisWithScore.keySet().stream()
+				.filter(u->urisWithScore.get(u)>THRESHOLD)
 				.max(Comparator.comparing(urisWithScore::get))
 				.map(uri->new ScoreResult(property, uri, urisWithScore.get(uri)));
 	}

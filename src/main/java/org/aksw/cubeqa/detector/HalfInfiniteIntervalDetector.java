@@ -81,7 +81,6 @@ public class HalfInfiniteIntervalDetector extends Detector
 		NUMBER_GROUP.put(p, 3);
 		PHRASE_GROUP.put(p, 1);
 		}
-//		System.out.println(patterns);
 		return patterns;
 	}
 

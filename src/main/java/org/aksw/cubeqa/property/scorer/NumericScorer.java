@@ -19,9 +19,13 @@ public class NumericScorer extends Scorer
 		range = Range.closed(qs.get("min").asLiteral().getDouble(), qs.get("max").asLiteral().getDouble());
 	}
 
-	@Override public Optional<ScoreResult> unsafeScore(String value)
+	@Override public Optional<ScoreResult> score(String value)
 	{
-		double d = Double.valueOf(value);
-		return Optional.of(new ScoreResult(property, value, range.contains(d)?1.0:0.0));
+		try
+		{
+			double d = Double.valueOf(value);
+			return Optional.of(new ScoreResult(property, value, range.contains(d)?1.0:0.0));
+		}
+		catch(NumberFormatException e) {return Optional.empty();}
 	}
 }

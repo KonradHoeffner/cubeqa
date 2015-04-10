@@ -50,16 +50,20 @@ public class TemporalScorer extends Scorer
 		if(!unparseable.isEmpty()) {log.warn("could not parse years "+unparseable);}
 	}
 
-
-	@Override protected Optional<ScoreResult> unsafeScore(String value)
+	@Override public Optional<ScoreResult> score(String value)
 	{
 		Interval questionInterval = null;
 		try
 		{
 			questionInterval = parseAsDate(value);
-		} catch(Exception e)
+		}
+		catch(IllegalArgumentException | IllegalStateException | StringIndexOutOfBoundsException | DateTimeParseException e)
 		{
-			questionInterval = parseAsYear(value);
+			try
+			{
+				questionInterval = parseAsYear(value);
+			}
+			catch (IllegalArgumentException | IllegalStateException | StringIndexOutOfBoundsException | DateTimeParseException f) {return Optional.empty();}
 		}
 		for(Interval interval: intervals)
 		{
@@ -71,7 +75,7 @@ public class TemporalScorer extends Scorer
 		return Optional.empty();
 	}
 
-	static protected Interval parseAsYear(String s)
+	static protected Interval parseAsYear(String s) throws IllegalArgumentException, IllegalStateException, StringIndexOutOfBoundsException, DateTimeParseException
 	{
 		Matcher m = yearPattern.matcher(s.trim());
 		m.find();
@@ -80,7 +84,7 @@ public class TemporalScorer extends Scorer
 		return new Interval(Instant.parse(y.getValue()+"-01-01").getMillis(), Instant.parse((y.getValue()+1)+"-01-01").getMillis());
 	}
 
-	static protected Interval parseAsDate(String s)
+	static protected Interval parseAsDate(String s) throws IllegalArgumentException, IllegalStateException, StringIndexOutOfBoundsException, DateTimeParseException
 	{
 		s = s.trim().substring(0, "1999-01-23".length()); // only date, no time
 		return new Interval(Instant.parse(s).getMillis(),Instant.parse(s).getMillis()+MS_PER_DAY);

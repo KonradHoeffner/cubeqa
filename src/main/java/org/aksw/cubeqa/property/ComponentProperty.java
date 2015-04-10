@@ -66,12 +66,6 @@ public class ComponentProperty implements Serializable
 
 	public double match(String label)
 	{
-		//		System.out.println(labels);
-		//		for(AbstractStringMetric sim: similarities)
-		//		for(String l: labels) {System.out.println(l+" "+sim+" "+sim.getSimilarity(l, label));}
-		//		OptionalDouble d = similarities.stream().flatMapToDouble(
-		//		System.out.println("matching "+label+" to "+labels);
-
 		OptionalDouble dlo = labels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
 		double dl = dlo.isPresent()?dlo.getAsDouble():0;
 		OptionalDouble dro = MATCH_RANGE? rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,label)).max():OptionalDouble.of(0);
@@ -98,7 +92,7 @@ public class ComponentProperty implements Serializable
 		}
 
 		String propertyTypeQuery = "select ?p {?spec ?p <"+uri+">. filter(contains(str(?p),\"http://purl.org/linked-data/cube#\"))} limit 1";
-//		System.out.println(propertyTypeQuery);
+
 		String pt = cube.sparql.select(propertyTypeQuery).next().get("?p").asResource().getURI();
 		switch(pt)
 		{
@@ -126,6 +120,7 @@ public class ComponentProperty implements Serializable
 
 			});
 			this.range=ranges.isEmpty()?null:ranges.iterator().next();
+//			if(range.equals(XSD.xstring.getURI())) {range=null;}
 			//			else {range = guessRange();}
 			this.scorer = scorer(types);
 		}

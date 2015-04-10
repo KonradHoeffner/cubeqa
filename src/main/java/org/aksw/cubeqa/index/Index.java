@@ -53,7 +53,8 @@ public abstract class Index
 
 	static protected String normalize(String s)
 	{
-		return s.replace("&", "and").toLowerCase();
+		// parser crashes on some special characters such as ? as they are interpreted as wild cards
+		return s.replace("&", "and").replaceAll("[^A-Za-z0-9 ]", "").toLowerCase().trim();
 	}
 
 	@SneakyThrows

@@ -1,7 +1,7 @@
 package org.aksw.cubeqa.property.scorer;
 
+import static org.junit.Assert.*;
 import org.aksw.cubeqa.Cube;
-import org.aksw.cubeqa.property.scorer.NumericScorer;
 import org.junit.Test;
 
 public class NumericScorerTest
@@ -11,9 +11,11 @@ public class NumericScorerTest
 	{
 		Cube cube = Cube.getInstance("finland-aid");
 		NumericScorer scorer = new NumericScorer(cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount"));
-		System.out.println(scorer.unsafeScore("0"));
-		System.out.println(scorer.unsafeScore("180000"));
-		System.out.println(scorer.unsafeScore("4312"));
+		assertEquals(scorer.score("0").get().score,1,0);
+		assertEquals(scorer.score("180000").get().score,1,0);
+		assertEquals(scorer.score("4312").get().score,1,0);
+		assertEquals(scorer.score("123456789").get().score,0,0);
+
 //		assertTrue(scorer.score("https://openspending.org/finland-aid/recipient-country/et")>0.6);
 	}
 

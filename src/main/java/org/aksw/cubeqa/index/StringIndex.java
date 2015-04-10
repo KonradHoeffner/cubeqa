@@ -45,11 +45,10 @@ public class StringIndex extends Index
 	@SneakyThrows
 	public Map<String,Double> getStringsWithScore(String s)
 	{
+		Map<String,Double> stringsWithScore = new HashMap<>();
 		String ns=normalize(s);
-//		if(s.equals("Finnish Red Cross"))
-//		{
-//			System.out.println("frc");
-//		}
+		if(ns.isEmpty()) {return stringsWithScore;}
+
 		Map<Query,String> queryFields = new HashMap<>();
 		queryFields.put(parser.parse(ns),"textlabel");
 
@@ -57,11 +56,10 @@ public class StringIndex extends Index
 		{
 			queryFields.put(new FuzzyQuery(new Term("stringlabel",ns)), "stringlabel");
 		}
-		//		System.out.println(q);
+
 		int hitsPerPage = 10;
 		IndexSearcher searcher = new IndexSearcher(reader);
 
-		Map<String,Double> stringsWithScore = new HashMap<>();
 
 		for(Query q: queryFields.keySet())
 		{
@@ -71,29 +69,10 @@ public class StringIndex extends Index
 
 			for(ScoreDoc hit: hits)
 			{
-				// TODO score with fuzzy matches too high
 				Document doc = searcher.doc(hit.doc);
-				//			for(String l: doc.getValues("label"))
-				//			{
-				//				System.out.println(l+" "+label+" distance: "+distance.getDistance(label, l));
-				//			}
-				//TODO activate again and see why it works so badly
-//				System.out.println(Arrays.toString(doc.getValues("stringlabel")));
-//				System.out.println(Arrays.toString(doc.getValues("textlabel")));
-//				System.out.println(Arrays.toString(doc.getValues("originallabel")));
-//				Set<String> values = new HashSet<>(Arrays.asList(doc.getValues("stringlabel")));
-//				values.addAll(doc.getValues("textlabel"));
-
 
 				Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3).forEach(
 							l->stringsWithScore.put(l, (double)distance.getDistance(ns, normalize(l))));
-//				System.out.println(stringsWithScore);
-//				mapToDouble(l->(distance.getDistance(ns, l))).max().getAsDouble();
-
-
-				// Lucene returns document retrieval score instead of similarity score
-//				stringsWithScore.put(doc.get("label"),score);
-				//			urisWithScore.put(doc.get("uri"),(double) hit.score);
 			}
 		}
 		return stringsWithScore;

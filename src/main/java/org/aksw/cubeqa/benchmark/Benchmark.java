@@ -90,7 +90,7 @@ public class Benchmark
 		//		List<Pair<Double,Double>> precisionRecalls = new ArrayList<>();
 		log.setLevel(Level.ALL);
 		Question question = questions.get(questionNumber-1);
-		log.info(questionNumber+": Answering "+question.string);
+		log.info("Question Number "+questionNumber+": Answering "+question.string);
 		log.debug("correct query: "+question.query);
 		log.debug("correct answer: "+question.answers);
 		String query = algorithm.answer(question.string).sparqlQuery();
@@ -98,13 +98,8 @@ public class Benchmark
 		log.debug("found query: "+found.query);
 		log.debug("found answer: "+found.answers);
 		Performance p = Performance.performance(question.answers, found.answers);
-		log.info(p);
+		log.info("Performance "+p);
 		return p;
-		//				 Set<String> answers = algorithm.cube.sparql.select(query);
-		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).filter(d->d==1).count()+" with precision 1");
-		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).filter(d->d==1).count()+" with recall 1");
-		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getA).average());
-		//		System.out.println(precisionRecalls.stream().mapToDouble(Pair::getB).average());
 	}
 
 	/** CSV does not contain answers. file gets loaded from benchmark/name.csv. */

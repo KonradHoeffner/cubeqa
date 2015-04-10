@@ -6,13 +6,11 @@ import org.tartarus.snowball.ext.PorterStemmer;
 
 public class StemmerTest
 {
-
 	@Test public void stemmerTest()
 	{
 		 PorterStemmer stemmer = new PorterStemmer();
 		 stemmer.setCurrent("strengthening civil society");
 		 stemmer.stem();
-		 System.out.println(stemmer.getCurrent());
+		 assertEquals(stemmer.getCurrent(),"strengthening civil societi");
 	}
-
 }
