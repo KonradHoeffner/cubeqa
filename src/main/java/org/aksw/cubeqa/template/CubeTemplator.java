@@ -38,7 +38,6 @@ public class CubeTemplator
 
 	public CubeTemplate buildTemplate(String question)
 	{
-		log.setLevel(Level.ALL);
 		String noStop = question;
 //		String noStop = Stopwords.remove(question, Stopwords.QUESTION_WORDS);
 		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}

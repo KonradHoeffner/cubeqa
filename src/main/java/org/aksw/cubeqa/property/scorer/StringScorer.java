@@ -12,6 +12,8 @@ import org.apache.lucene.search.spell.StringDistance;
 /** Scorer for data type properties. */
 public class StringScorer extends DatatypePropertyScorer
 {
+	// labels get precedence to strings
+	private static final double BOOST = 0.95;
 	private static final long	serialVersionUID	= 1L;
 	private static final double	THRESHOLD	= 0.4;
 	protected static transient StringDistance similarity = new NGramDistance();
@@ -41,7 +43,7 @@ public class StringScorer extends DatatypePropertyScorer
 		return stringsWithScore.keySet().stream()
 				.filter(s->stringsWithScore.get(s)>THRESHOLD)
 				.max(Comparator.comparing(stringsWithScore::get))
-				.map(s->new ScoreResult(property, s, stringsWithScore.get(s)));
+				.map(s->new ScoreResult(property, s, BOOST*stringsWithScore.get(s)));
 	}
 
 //	@Override public Optional<ScoreResult> unsafeScore(String value)

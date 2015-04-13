@@ -18,7 +18,6 @@ public class Algorithm
 	public CubeTemplate answer(String question)
 	{
 		CubeTemplate template = new CubeTemplator(cube).buildTemplate(question);
-//		System.out.println(template.sparqlQuery());
 		return template;
 	}
 }

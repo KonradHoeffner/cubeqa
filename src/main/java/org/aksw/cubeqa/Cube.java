@@ -105,7 +105,6 @@ public class Cube implements Serializable
 					//					" ?p a ?type. FILTER (?type != <"+RDF.Property.getURI()+"> && ?type != <"+DataModel.DataCube.ComponentProperty.getURI()+">)"+
 					//					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
-			//			System.out.println(query);
 			ResultSet rs = CubeSparql.FINLAND_AID.select(query);
 			String uri = "http://linkedspending.aksw.org/instance/"+cubeName;
 			c = new Cube(cubeName,uri, properties);

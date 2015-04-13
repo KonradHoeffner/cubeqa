@@ -6,9 +6,9 @@ import java.util.function.Function;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.apache.log4j.Level;
 import org.apache.lucene.document.*;
-import org.apache.lucene.index.*;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.*;
 
 /** Lucene index for labels, used by ObjectPropertyScorer.
@@ -16,7 +16,6 @@ import org.apache.lucene.search.*;
 @Log4j
 public class LabelIndex extends Index
 {
-	static {log.setLevel(Level.ALL);}
 	private static final Map<String,LabelIndex> instances = new HashMap<>();
 	private LabelIndex(ComponentProperty property) {super(property);}
 
@@ -39,7 +38,7 @@ public class LabelIndex extends Index
 			startWrites();
 			for(String uri: uris)
 			{
-								Set<String> labels = labelFunction.apply(uri);
+				Set<String> labels = labelFunction.apply(uri);
 				add(uri, labels);
 			}
 			stopWrites();
@@ -48,46 +47,9 @@ public class LabelIndex extends Index
 	}
 
 	@SneakyThrows
-	public Map<String,Double> getUrisWithScore(String label)
+	public Map<String,Double> getUrisWithScore(String s)
 	{
-		Map<String,Double> urisWithScore = new HashMap<>();
-		String ns = normalize(label);
-		if(ns.isEmpty()) {return urisWithScore;}
-		//		PhraseQuery q = new PhraseQuery();
-		//		q.add(new Term("label",label));
-
-		//		Query q = new QueryParser("label", analyzer).parse(querystr);
-
-		List<Query> queries;
-		if(ns.length()>=FUZZY_MIN_LENGTH)
-		{
-			queries = Arrays.asList(new FuzzyQuery(new Term("stringlabel",ns)),parser.parse(ns));
-		} else
-		{
-			queries = Collections.singletonList(parser.parse(ns));
-		}
-
-		int hitsPerPage = 10;
-		IndexSearcher searcher = new IndexSearcher(reader);
-
-		for(Query q: queries)
-		{
-			log.trace("lucene query "+q);
-			TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
-			searcher.search(q, collector);
-			ScoreDoc[] hits = collector.topDocs().scoreDocs;
-
-			for(ScoreDoc hit: hits)
-			{
-				Document doc = searcher.doc(hit.doc);
-
-				log.trace("label index lookup on property "+property+" "+Arrays.toString(doc.getValues("originallabel")));
-				// Lucene returns document retrieval score but similarity distance is better
-				double score = Arrays.stream(doc.getValues("originallabel")).mapToDouble(l->(distance.getDistance(ns, normalize(l)))).max().getAsDouble();
-				urisWithScore.put(doc.get("uri"),score);
-			}
-		}
-		return urisWithScore;
+		return getIdWithScore(s, "uri");
 	}
 
 	public void add(String uri, Set<String> labels) throws IOException
@@ -107,5 +69,4 @@ public class LabelIndex extends Index
 
 		indexWriter.addDocument(doc);
 	}
-
 }
