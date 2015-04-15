@@ -8,8 +8,6 @@ import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.*;
 
 /** Lucene index for labels, used by ObjectPropertyScorer.
  */

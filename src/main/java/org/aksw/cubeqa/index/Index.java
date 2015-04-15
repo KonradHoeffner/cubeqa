@@ -20,7 +20,7 @@ import org.apache.lucene.store.FSDirectory;
 @Log4j
 public abstract class Index
 {
-	protected static final int	FUZZY_MIN_LENGTH	= 5;
+	protected static final int	FUZZY_MIN_LENGTH	= 6;
 	protected static final Analyzer analyzer = new EnglishAnalyzer();
 	protected static final QueryParser parser = new QueryParser("textlabel", analyzer);
 	private static final int	NUMBER_OF_HITS	= 5;
@@ -108,7 +108,12 @@ public abstract class Index
 				}
 				else
 				{
-					Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3).forEach(
+					Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3)
+					// even if transposed should have some minimal string distance
+					.filter(l->distance.getDistance(ns, normalize(l))>0.5)
+					// original label is the document from lucene which can be much longer than our string so we make sure they are not too dissimilar in length
+					.filter(l->ns.length()*2>normalize(l).length())
+					.forEach(
 							l->idWithUnnormalizedScore.put(doc.get(fieldName), (double) hit.score));
 				}
 //				log.debug("label index result labels "+Arrays.toString(doc.getValues("originallabel"))+", uri "+doc.get("uri")+" score "+score);

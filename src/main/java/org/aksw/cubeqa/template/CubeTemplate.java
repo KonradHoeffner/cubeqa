@@ -33,7 +33,7 @@ public class CubeTemplate
 	{
 		if(!isComplete())  throw new IllegalStateException("not complete");
 		Set<String> wherePatterns = restrictions.stream().flatMap(r->r.wherePatterns().stream()).collect(Collectors.toSet());
-		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">. ?obs a qb:Observation.");
+		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">. ?obs a qb:Observation.\n");
 
 		Set<String> orderLimitPatterns = restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
 		if(orderLimitPatterns.size()>1) throw new IllegalArgumentException("more than one orderlimit pattern");
@@ -45,11 +45,11 @@ public class CubeTemplate
 		sb.append("select "+resultDef+" ");
 		perProperties.removeAll(answerProperties);
 		for(ComponentProperty p: perProperties) {sb.append(" ?"+p.var);}
-		sb.append("{");
+		sb.append("\n{\n");
 		for(String pattern: wherePatterns) {sb.append(pattern);sb.append(" ");}
 		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
 		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p+"> ?"+p.var);}
-		sb.append("}");
+		sb.append("\n}");
 		if(!orderLimitPatterns.isEmpty()) sb.append(orderLimitPatterns.iterator().next());
 		return sb.toString();
 	}

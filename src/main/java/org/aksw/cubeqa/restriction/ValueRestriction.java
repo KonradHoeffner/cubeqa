@@ -16,16 +16,23 @@ public class ValueRestriction extends Restriction
 	{
 		// TODO: add datatypes from range or somewhere else
 		String pattern;
-		if(property.range==null||!(property.range.startsWith(XSD.getURI())))
+		String range = property.range;
+		if(range==null||!(range.startsWith(XSD.getURI())))
 		{
-			pattern = OBS_VAR+" <"+property+"> "+uniqueVar+". filter(str("+uniqueVar+")=\""+value+"\")";
+			pattern = OBS_VAR+" <"+property+"> "+uniqueVar+".\nfilter(str("+uniqueVar+")=\""+value+"\").";
 		} else
-			if(property.range.equals(XSD.xstring.getURI()))
+			if(range.equals(XSD.gYear.getURI()))
+			{
+				if(!value.matches("[0-9]+")) throw new RuntimeException(value+" is not a valid year");
+				pattern = OBS_VAR+" <"+property+"> "+uniqueVar+".\nfilter(year("+uniqueVar+")="+value+").";
+			}
+			else
+			if(range.equals(XSD.xstring.getURI()))
 			{
 				pattern = OBS_VAR+" <"+property+"> \""+value+"\".";
 			} else
 			{
-				pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+property.range+">.";
+				pattern = OBS_VAR+" <"+property+"> \""+value+"\"^^<"+range+">.";
 			}
 
 		return Collections.singleton(pattern);
