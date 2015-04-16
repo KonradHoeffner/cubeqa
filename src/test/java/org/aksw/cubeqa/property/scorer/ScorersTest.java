@@ -11,7 +11,8 @@ public class ScorersTest
 {
 	void test(String s)
 	{
-		System.out.println(Scorers.scorePhraseValues(Cube.FINLAND_AID,s));
+		System.out.println(Scorers.scorePhraseProperties(Cube.FINLAND_AID,s));
+//		System.out.println(Scorers.scorePhraseValues(Cube.FINLAND_AID,s));
 	}
 
 	/** @param shouldBe either a uri (objectproperty) or a label lexical form (datatypeproperty) */
@@ -23,6 +24,7 @@ public class ScorersTest
 
 	@Test public void testScorePhraseValues()
 	{
+//		test("How many countries have extended");
 		test("on health education","https://openspending.org/finland-aid/sector/12261");
 		test("Finnish Red Cross","Finnish Red Cross");
 		test("Malaria Control","https://openspending.org/finland-aid/sector/12262");

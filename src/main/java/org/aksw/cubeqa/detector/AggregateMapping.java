@@ -1,4 +1,4 @@
-package org.aksw.cubeqa;
+package org.aksw.cubeqa.detector;
 
 import java.util.Collections;
 import java.util.HashMap;

@@ -17,6 +17,7 @@ public class Performance
 
 	public static final Performance performance(Set correct, Set found)
 	{
+		if(correct.isEmpty()) throw new IllegalArgumentException("correct answer is empty");
 		Set correctFound = new HashSet(found);
 		correctFound.retainAll(correct);
 		return performance(correct.size(),found.size(),correctFound.size());

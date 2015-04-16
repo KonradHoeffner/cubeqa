@@ -1,4 +1,4 @@
-package org.aksw.cubeqa;
+package org.aksw.cubeqa.detector;
 /**  SPARQL aggregates*/
 public enum Aggregate
 {

@@ -59,17 +59,23 @@ public class Benchmark
 				{
 					RDFNode node = qs.get(varNames.iterator().next());
 					tagTypes.put("",AnswerType.typeOf(node));
-					answer.put("", nodeString(qs.get(varNames.iterator().next())));
+					String ns = nodeString(qs.get(varNames.iterator().next()));
+					if(!ns.isEmpty()) {answer.put("", ns);}
 				} else
 				{
 					for(String var: varNames)
 					{
 						RDFNode node = qs.get(var);
-						tagTypes.put(var,AnswerType.typeOf(node));
-						answer.put(var, nodeString(qs.get(var)));
+						if(node!=null)
+						{
+							tagTypes.put(var,AnswerType.typeOf(node));
+							String ns = nodeString(qs.get(var));
+							if(!ns.isEmpty()) {answer.put(var, ns);}
+						}
 					}
 				}
-				answers.add(Collections.unmodifiableMap(answer));
+				if(!answer.isEmpty()) {answers.add(Collections.unmodifiableMap(answer));}
+
 			}
 		}
 		return new Question(string, query, answers, tagTypes);
@@ -93,6 +99,7 @@ public class Benchmark
 		log.info("Question Number "+questionNumber+": Answering "+question.string);
 		log.debug("correct query: "+question.query);
 		log.debug("correct answer: "+question.answers);
+
 		String query = algorithm.answer(question.string).sparqlQuery();
 		Question found = completeQuestion(algorithm.cube.sparql, question.string, query);
 		log.debug("found query: "+found.query);
@@ -110,7 +117,7 @@ public class Benchmark
 		{
 			for(CSVRecord record: parser)
 			{
-				questions.add(new Question(record.get(0),record.get(1),null,null));
+				questions.add(new Question(record.get(0),record.get(1)));
 			}
 		}
 		return new Benchmark(name,questions);
@@ -206,44 +213,46 @@ public class Benchmark
 				writer.writeCharacters("\n");
 				if(question.answers==null)
 				{
-//					if(true) throw new IllegalArgumentException("answers are null");
-					log.warn("Benchmark contains no answers, querying SPARQL endpoint");
-					if(question.query.startsWith("ask"))
-					{
-						writer.writeStartElement("answer");
-						writer.writeAttribute("answerType","boolean");
-						writer.writeCharacters(String.valueOf(sparql.ask(question.query)));
-						writer.writeEndElement();
-
-					} else if(question.query.startsWith("select"))
-					{
-						ResultSet rs = sparql.select(question.query);
-						List<String> varNames = null;
-						while(rs.hasNext())
-						{
-							writer.writeStartElement("answer");
-							QuerySolution qs = rs.nextSolution();
-							//						if(varNames==null) // unions may have empty parts so recalculate
-							{varNames = stream(qs.varNames()).collect(Collectors.toList());}
-							if(varNames.size()==1)
-							{
-								writer.writeAttribute("answerType",AnswerType.typeOf(qs.get(varNames.get(0))).toString().toLowerCase());
-								writer.writeCharacters(nodeString(qs.get(varNames.get(0))));
-							} else
-							{
-								for(String var: varNames)
-								{
-									writer.writeStartElement(var);
-									writer.writeAttribute("answerType",AnswerType.typeOf(qs.get(var)).toString().toLowerCase());
-									writer.writeCharacters(nodeString(qs.get(var)));
-									writer.writeEndElement();
-								}
-							}
-							writer.writeEndElement();
-							writer.writeCharacters("\n");
-						}
-					} else throw new IllegalArgumentException("unsupported SPARQL query type (neither ASK nor SELECT): "+question.query);
-				} else
+					question = completeQuestion(sparql, question.string, question.query);
+					////					if(true) throw new IllegalArgumentException("answers are null");
+					//					log.warn("Benchmark contains no answers, querying SPARQL endpoint");
+					//					if(question.query.startsWith("ask"))
+					//					{
+					//						writer.writeStartElement("answer");
+					//						writer.writeAttribute("answerType","boolean");
+					//						writer.writeCharacters(String.valueOf(sparql.ask(question.query)));
+					//						writer.writeEndElement();
+					//
+					//					} else if(question.query.startsWith("select"))
+					//					{
+					//						ResultSet rs = sparql.select(question.query);
+					//						List<String> varNames = null;
+					//						while(rs.hasNext())
+					//						{
+					//							writer.writeStartElement("answer");
+					//							QuerySolution qs = rs.nextSolution();
+					//							//						if(varNames==null) // unions may have empty parts so recalculate
+					//							{varNames = stream(qs.varNames()).collect(Collectors.toList());}
+					//							if(varNames.size()==1)
+					//							{
+					//								writer.writeAttribute("answerType",AnswerType.typeOf(qs.get(varNames.get(0))).toString().toLowerCase());
+					//								writer.writeCharacters(nodeString(qs.get(varNames.get(0))));
+					//							} else
+					//							{
+					//								for(String var: varNames)
+					//								{
+					//									writer.writeStartElement(var);
+					//									writer.writeAttribute("answerType",AnswerType.typeOf(qs.get(var)).toString().toLowerCase());
+					//									writer.writeCharacters(nodeString(qs.get(var)));
+					//									writer.writeEndElement();
+					//								}
+					//							}
+					//							writer.writeEndElement();
+					//							writer.writeCharacters("\n");
+					//						}
+					//					} else throw new IllegalArgumentException("unsupported SPARQL query type (neither ASK nor SELECT): "+question.query);
+					//				} else
+				}
 				{
 					for(Map<String,String> answer: question.answers)
 					{

@@ -6,12 +6,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.aksw.cubeqa.*;
+import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
-import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
 import org.apache.log4j.Level;
 import de.konradhoeffner.commons.Pair;
 import edu.stanford.nlp.trees.Tree;
@@ -21,7 +21,7 @@ import edu.stanford.nlp.trees.Tree;
 @Log4j
 public class CubeTemplator
 {
-//	{log.setLevel(Level.ALL);}
+	{log.setLevel(Level.ALL);}
 	private static final int	PHRASE_MIN_LENGTH	= 3;
 	private static final int	PHRASE_MAX_LENGTH	= 30;
 
@@ -66,8 +66,8 @@ public class CubeTemplator
 				{
 					String reducedPhrase = question.replace(fragment.phrase,"").replace("  ", " ");
 					if(reducedPhrase.equals(question)) throw new IllegalArgumentException("fragment phrase '"+fragment.phrase+"' not found in whole phrase "+question);
-					log.debug("Detector "+detector.getClass().getSimpleName()+" matched part: '"+fragment.phrase+"', left over phrase: "+question);
 					question = reducedPhrase;
+					log.debug("Detector "+detector.getClass().getSimpleName()+" matched part: '"+fragment.phrase+"', left over phrase: "+question);
 				}
 				// keep results from earlier used detectors
 				if(allDetectorFragment!=null) {detectorResults.add(allDetectorFragment);}

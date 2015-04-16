@@ -19,12 +19,16 @@ import org.aksw.cubeqa.template.CubeTemplateFragment;
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 public class HalfInfiniteIntervalDetector extends Detector
 {
+	public static final HalfInfiniteIntervalDetector		INSTANCE		= new HalfInfiniteIntervalDetector();
+
 	private static final double	MIN_SIMILARITY	= 0.3;
 	final static String[][]							KEYWORDS		= new String[][] { { ">", "more than", "larger than" },
 			{ ">=", "at least", "no less than" }, { "<", "less than", "smaller than" }, { "at most", "up to including" } };
 	final static IntervalType[]						INTERVAL_TYPES	= { LEFT_OPEN, LEFT_CLOSED, RIGHT_OPEN, RIGHT_CLOSED };
 
+	/** The matching group of a regular expression which contains the number (endpoint) of the interval.**/
 	private static final Map<Pattern, Integer>	NUMBER_GROUP = new HashMap<>();
+	/** The matching group of a regular expression which contains the phrase (unit) of the interval.**/
 	private static final Map<Pattern, Integer>	PHRASE_GROUP = new HashMap<>();
 
 	final static Map<Pattern, IntervalType>			PATTERN_TO_TYPE;
@@ -84,8 +88,6 @@ public class HalfInfiniteIntervalDetector extends Detector
 		return patterns;
 	}
 
-	public static final HalfInfiniteIntervalDetector		INSTANCE		= new HalfInfiniteIntervalDetector();
-
 	@RequiredArgsConstructor
 	class ScoredRestriction
 	{
@@ -108,8 +110,8 @@ public class HalfInfiniteIntervalDetector extends Detector
 					phrase);
 			while (matcher.find())
 			{
-				// TODO floats also
 				Pattern pattern = e.getKey();
+				// TODO floats also
 				int n = Integer.parseInt(matcher.group(NUMBER_GROUP.get(pattern)));
 				String w = matcher.group(PHRASE_GROUP.get(pattern));
 

@@ -219,7 +219,7 @@ Which type of sector is receiving the most in India?,"select ?result
 {
 ?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/in>.
 ?obs lso:finland-aid-amount ?amount.
-?obs lso:finland-aid-sector ?sector.
+?obs lso:finland-aid-sector ?result.
 }
 order by desc(sum(xsd:decimal(?amount)))
 limit 1"

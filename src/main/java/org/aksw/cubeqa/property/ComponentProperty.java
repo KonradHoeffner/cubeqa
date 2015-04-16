@@ -64,15 +64,17 @@ public class ComponentProperty implements Serializable
 		return null;
 	}
 
+	/** How probably is the label is referring to this property? */
 	public double match(String label)
 	{
-		OptionalDouble dlo = labels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
-		double dl = dlo.isPresent()?dlo.getAsDouble():0;
-		OptionalDouble dro = MATCH_RANGE? rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,label)).max():OptionalDouble.of(0);
+		OptionalDouble pLabelOpt = labels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
+		double pLabel = pLabelOpt.isPresent()?pLabelOpt.getAsDouble():0;
+		log.trace("p label for "+label+": "+pLabel);
+		OptionalDouble pRangeOpt = MATCH_RANGE? rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,label)).max():OptionalDouble.of(0);
 		// we only want objectproperties, so exclude xsd
-		double dr = (dro.isPresent()&&!range.startsWith(XSD.getURI()))?dro.getAsDouble()*RANGE_LABEL_MULTIPLIER:0;
-
-		return Math.max(dl, dr);
+		double pRange = (pRangeOpt.isPresent()&&!range.startsWith(XSD.getURI()))?pRangeOpt.getAsDouble()*RANGE_LABEL_MULTIPLIER:0;
+		log.trace("p range for "+label+": "+pRange);
+		return Math.max(pLabel, pRange);
 	}
 
 	public static enum PropertyType {DIMENSION,MEASURE,ATTRIBUTE}

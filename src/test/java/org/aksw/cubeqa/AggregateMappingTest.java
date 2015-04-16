@@ -2,8 +2,8 @@ package org.aksw.cubeqa;
 
 import static org.junit.Assert.*;
 import java.util.Collections;
-import org.aksw.cubeqa.Aggregate;
-import org.aksw.cubeqa.AggregateMapping;
+import org.aksw.cubeqa.detector.Aggregate;
+import org.aksw.cubeqa.detector.AggregateMapping;
 import org.junit.Test;
 
 public class AggregateMappingTest

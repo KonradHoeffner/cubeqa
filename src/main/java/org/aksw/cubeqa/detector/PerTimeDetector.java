@@ -39,10 +39,10 @@ public class PerTimeDetector extends Detector
 				Matcher matcher = pattern.matcher(phrase);
 				while(matcher.find())
 				{
-					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
+					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0).trim());
 					fragment.getPerProperties().add(timeUnit.property.get());
 					fragments.add(fragment);
-					phrase = phrase.replace(matcher.group(0), "").replace("  "," ");
+					phrase = phrase.replace(matcher.group(0), " ").replace("  "," ");
 					log.debug("detected property "+timeUnit.property.get()+" with data type "+timeUnit.property.get().range);
 				}
 			}

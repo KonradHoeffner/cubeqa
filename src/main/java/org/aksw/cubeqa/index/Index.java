@@ -5,6 +5,7 @@ import java.util.*;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.property.ComponentProperty;
+import org.apache.log4j.Level;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
@@ -20,6 +21,7 @@ import org.apache.lucene.store.FSDirectory;
 @Log4j
 public abstract class Index
 {
+	{log.setLevel(Level.ALL);}
 	protected static final int	FUZZY_MIN_LENGTH	= 6;
 	protected static final Analyzer analyzer = new EnglishAnalyzer();
 	protected static final QueryParser parser = new QueryParser("textlabel", analyzer);
