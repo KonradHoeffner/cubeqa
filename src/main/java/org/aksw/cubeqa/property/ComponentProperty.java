@@ -5,14 +5,15 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java_cup.internal_error;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
-import org.aksw.cubeqa.Cube;
-import org.aksw.cubeqa.CubeSparql;
+import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.property.scorer.*;
 import org.aksw.cubeqa.property.scorer.temporal.TemporalScorer;
 import org.aksw.linkedspending.tools.DataModel;
 import org.aksw.linkedspending.tools.DataModel.Owl;
+import org.apache.log4j.Level;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import com.hp.hpl.jena.query.ResultSet;
@@ -27,6 +28,7 @@ import de.konradhoeffner.commons.Pair;
 @Log4j
 public class ComponentProperty implements Serializable
 {
+//	{log.setLevel(Level.ALL);}
 	private static final long	serialVersionUID	= 5L;
 	private static final AtomicInteger id = new AtomicInteger(0);
 	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
@@ -65,19 +67,23 @@ public class ComponentProperty implements Serializable
 	}
 
 	/** How probably is the label is referring to this property? */
-	public double match(String label)
+	public double match(final String label)
 	{
-		OptionalDouble pLabelOpt = labels.stream().mapToDouble(l->similarity.getDistance(l,label)).max();
+		String noStop = Stopwords.remove(label, Stopwords.PROPERTY_WORDS);
+		if(noStop.equals("country")&&this.labels.contains("country"))
+		{
+			System.out.println("breakpoint");
+		}
+		OptionalDouble pLabelOpt = labels.stream().mapToDouble(l->similarity.getDistance(Stopwords.remove(l,Stopwords.PROPERTY_WORDS),noStop)).max();
 		double pLabel = pLabelOpt.isPresent()?pLabelOpt.getAsDouble():0;
-		log.trace("p label for "+label+": "+pLabel);
-		OptionalDouble pRangeOpt = MATCH_RANGE? rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,label)).max():OptionalDouble.of(0);
+		log.trace("p label for "+noStop+": "+pLabel);
+		OptionalDouble pRangeOpt = MATCH_RANGE? rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,noStop)).max():OptionalDouble.of(0);
 		// we only want objectproperties, so exclude xsd
 		double pRange = (pRangeOpt.isPresent()&&!range.startsWith(XSD.getURI()))?pRangeOpt.getAsDouble()*RANGE_LABEL_MULTIPLIER:0;
-		log.trace("p range for "+label+": "+pRange);
+		log.trace("p range for "+noStop+": "+pRange);
 		return Math.max(pLabel, pRange);
 	}
 
-	public static enum PropertyType {DIMENSION,MEASURE,ATTRIBUTE}
 	public final PropertyType propertyType;
 
 	private ComponentProperty(Cube cube, String uri)//, PropertyType type)
@@ -94,7 +100,6 @@ public class ComponentProperty implements Serializable
 		}
 
 		String propertyTypeQuery = "select ?p {?spec ?p <"+uri+">. filter(contains(str(?p),\"http://purl.org/linked-data/cube#\"))} limit 1";
-
 		String pt = cube.sparql.select(propertyTypeQuery).next().get("?p").asResource().getURI();
 		switch(pt)
 		{

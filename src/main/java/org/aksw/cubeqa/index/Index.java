@@ -21,11 +21,12 @@ import org.apache.lucene.store.FSDirectory;
 @Log4j
 public abstract class Index
 {
-	{log.setLevel(Level.ALL);}
+//	{log.setLevel(Level.ALL);}
 	protected static final int	FUZZY_MIN_LENGTH	= 6;
 	protected static final Analyzer analyzer = new EnglishAnalyzer();
 	protected static final QueryParser parser = new QueryParser("textlabel", analyzer);
 	private static final int	NUMBER_OF_HITS	= 5;
+	private static final float	LUCENE_SCORE_MIN	= 3;
 	// TODO: make sure instances for multiple cubes are not conflicting, property uris may not be unique
 	protected final ComponentProperty property;
 
@@ -102,7 +103,6 @@ public abstract class Index
 			{
 				Document doc = searcher.doc(hit.doc);
 				log.trace("Query "+q+" results in "+Arrays.toString(doc.getValues("originallabel")));
-				log.trace(searcher.explain(q, hit.doc));
 				if(fuzzy)
 				{
 					Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3).forEach(
@@ -110,6 +110,9 @@ public abstract class Index
 				}
 				else
 				{
+					if(hit.score>=LUCENE_SCORE_MIN)
+					{
+					log.trace(searcher.explain(q, hit.doc));
 					Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3)
 					// even if transposed should have some minimal string distance
 					.filter(l->distance.getDistance(ns, normalize(l))>0.5)
@@ -117,6 +120,7 @@ public abstract class Index
 					.filter(l->ns.length()*2>normalize(l).length())
 					.forEach(
 							l->idWithUnnormalizedScore.put(doc.get(fieldName), (double) hit.score));
+					}
 				}
 //				log.debug("label index result labels "+Arrays.toString(doc.getValues("originallabel"))+", uri "+doc.get("uri")+" score "+score);
 			}

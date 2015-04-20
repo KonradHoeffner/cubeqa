@@ -9,6 +9,8 @@ public class ComponentPropertyTest
 
 	@Test public void testMatch()
 	{
+		ComponentProperty rc = ComponentProperty.getInstance(Cube.FINLAND_AID, "http://linkedspending.aksw.org/ontology/finland-aid-recipient-country");
+		System.out.println(rc.match("country"));
 		ComponentProperty ea = ComponentProperty.getInstance(Cube.FINLAND_AID, "http://linkedspending.aksw.org/ontology/finland-aid-amounts-extended");
 		ComponentProperty a = ComponentProperty.getInstance(Cube.FINLAND_AID, "http://linkedspending.aksw.org/ontology/finland-aid-amount");
 

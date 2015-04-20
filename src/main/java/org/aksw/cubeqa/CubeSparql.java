@@ -35,8 +35,9 @@ public class CubeSparql implements Serializable
 		CubeSparql cs = new CubeSparql("http://linkedspending.aksw.org/instance/",
 				"http://linkedspending.aksw.org/ontology/",
 				"http://linkedspending.aksw.org/",
-				"http://linkedspending.aksw.org/sparql");
-		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology/");
+				"http://localhost:8890/sparql");
+//				"http://linkedspending.aksw.org/sparql");
+		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeName);
 		return cs;
 	}
@@ -73,6 +74,7 @@ public class CubeSparql implements Serializable
 		{
 		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
 		qe.setDefaultGraphURIs(defaultGraphs);
+
 		return qe.execSelect();
 		} catch(Exception e) {throw new RuntimeException("Error on sparql select on endpoint "+endpoint+" with query:\n"+query,e);}
 	}

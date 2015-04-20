@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
+import org.aksw.cubeqa.property.PropertyType;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.Restriction;
 
@@ -137,10 +138,19 @@ public class CubeTemplateFragment
 				restrictions.add(scoreResult.toRestriction());
 			});
 		}
-		// if no answer property, search in match results for property refs and take the highest scored, if no property refs take default one
+		// do we have leftover name refs? use them as per properties
+		Set<ComponentProperty> leftOverNamed = matchResults.stream().flatMap(mr->mr.nameRefs.keySet().stream()).collect(Collectors.toSet());
+		perProperties.addAll(leftOverNamed);
+
+		// if no answer property, search in match results for property refs for measures and take the highest scored, if no property refs take default one
 		if(answerProperties.isEmpty())
 		{
-			matchResults.stream().map(MatchResult::getNameRefs).map(Map::entrySet).flatMap(Set::stream).max(Comparator.comparing(e->e.getValue()))
+			matchResults.stream()
+			.map(MatchResult::getNameRefs)
+			.map(Map::entrySet)
+			.flatMap(Set::stream)
+			.filter(entry->entry.getKey().propertyType==PropertyType.MEASURE)
+			.max(Comparator.comparing(e->e.getValue()))
 			.ifPresent(e->answerProperties.add(e.getKey()));
 			if(answerProperties.isEmpty())
 			{
@@ -148,6 +158,7 @@ public class CubeTemplateFragment
 				answerProperties.add(cube.getDefaultAnswerProperty());
 			}
 		}
+
 		return new CubeTemplate(cube, restrictions, answerProperties, perProperties,aggregates);
 	}
 

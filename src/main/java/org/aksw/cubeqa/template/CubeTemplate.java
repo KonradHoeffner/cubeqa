@@ -8,7 +8,6 @@ import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.aksw.cubeqa.property.ComponentProperty.PropertyType;
 import org.aksw.cubeqa.restriction.Restriction;
 import de.konradhoeffner.commons.Pair;
 
@@ -48,7 +47,7 @@ public class CubeTemplate
 		sb.append("\n{\n");
 		for(String pattern: wherePatterns) {sb.append(pattern);sb.append(" ");}
 		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
-		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p+"> ?"+p.var);}
+		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p+"> ?"+p.var+".");}
 		sb.append("\n}");
 		if(!orderLimitPatterns.isEmpty()) sb.append(orderLimitPatterns.iterator().next());
 		return sb.toString();

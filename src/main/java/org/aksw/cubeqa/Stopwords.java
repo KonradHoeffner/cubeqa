@@ -17,6 +17,10 @@ public class Stopwords
 			new HashSet<>(Arrays.asList(
 			      "what","how many","how","is","why","will","where","when"));
 
+	static public final Set<String> PROPERTY_WORDS =
+			new HashSet<>(Arrays.asList(
+			      "reference","recipient"));
+
 	public static String remove(String s, Set<String> words)
 	{
 		for(String word: words)
@@ -26,7 +30,7 @@ public class Stopwords
 			s=s.replaceAll("(?i) "+word+"$","");
 			s=s.replaceAll("  "," ");
 		}
-		return s;
+		return s.trim();
 	}
 
 }

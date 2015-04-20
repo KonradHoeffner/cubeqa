@@ -21,7 +21,7 @@ import edu.stanford.nlp.trees.Tree;
 @Log4j
 public class CubeTemplator
 {
-	{log.setLevel(Level.ALL);}
+//	{log.setLevel(Level.ALL);}
 	private static final int	PHRASE_MIN_LENGTH	= 3;
 	private static final int	PHRASE_MAX_LENGTH	= 30;
 
