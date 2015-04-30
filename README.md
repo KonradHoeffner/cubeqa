@@ -15,4 +15,3 @@ CubeQA uses [Project Lombok](http://projectlombok.org/), which removes much boil
 ##Warning: Research Prototype##
 While CubeQA is implemented in Java using Maven so it theoretically should run everywhere, it is under development, using snapshots and generally
 of the status of a research prototype so I don't give any guarantee of it successfully running on your machine but I'm happy to help with your questions (best to open a new issue).
-At the moment, our Maven repository is acting up so you may get errors "unable to resolve artifact" or "error opening zip file".
