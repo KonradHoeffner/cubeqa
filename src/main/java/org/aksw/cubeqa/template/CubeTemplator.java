@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.Stopwords;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -39,14 +40,17 @@ public class CubeTemplator
 
 	public CubeTemplate buildTemplate(String question)
 	{
-		String noStop = question;
-//		String noStop = Stopwords.remove(question, Stopwords.QUESTION_WORDS);
+//		String noStop = question;
+		String noStop = Stopwords.remove(question, Stopwords.FINLAND_AID_WORDS);
+		noStop = Stopwords.remove(noStop, Stopwords.PROPERTY_WORDS);
 		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
 		Pair<CubeTemplateFragment,String> detectResult = detect(noStop);
 		Tree root = StanfordNlp.parse(detectResult.b);
 		CubeTemplateFragment rootFragment = visitRecursive(root);
 		CubeTemplate finalTemplate = CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate();
-		if(finalTemplate.aggregates.isEmpty()) {finalTemplate.aggregates.add(Aggregate.SUM);}
+// TODO move default aggregate from templator to cubetemplate or cubetemplatefragment
+		Set<String> orderLimitPatterns = finalTemplate.restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
+		if(finalTemplate.aggregates.isEmpty()&&orderLimitPatterns.isEmpty()) {finalTemplate.aggregates.add(Aggregate.SUM);}
 		return finalTemplate;
 	}
 

@@ -2,8 +2,10 @@ package org.aksw.cubeqa.index;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
+import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.log4j.Level;
 import org.apache.lucene.analysis.Analyzer;
@@ -22,11 +24,9 @@ import org.apache.lucene.store.FSDirectory;
 public abstract class Index
 {
 //	{log.setLevel(Level.ALL);}
-	protected static final int	FUZZY_MIN_LENGTH	= 6;
 	protected static final Analyzer analyzer = new EnglishAnalyzer();
 	protected static final QueryParser parser = new QueryParser("textlabel", analyzer);
 	private static final int	NUMBER_OF_HITS	= 5;
-	private static final float	LUCENE_SCORE_MIN	= 3;
 	// TODO: make sure instances for multiple cubes are not conflicting, property uris may not be unique
 	protected final ComponentProperty property;
 
@@ -77,18 +77,22 @@ public abstract class Index
 	}
 
 	@SneakyThrows
-	protected Map<String,Double> getIdWithScore(String s, String fieldName)
+	protected Map<String,Double> getIdWithScore(String s, String fieldName, double minScore)
 	{
 		Map<String,Double> idWithScore = new HashMap<>();
 		String ns=normalize(s);
 		if(ns.isEmpty()) {return idWithScore;}
 
 		List<Query> queries = new LinkedList<>();
-		if(ns.length()>=FUZZY_MIN_LENGTH)
+		if((Config.INSTANCE.indexQueries==Config.IndexQueries.FUZZY||Config.INSTANCE.indexQueries==Config.IndexQueries.BOTH)
+				&&ns.length()>=Config.INSTANCE.indexNonExactMatchMinLength)
 		{
 			queries.add(new FuzzyQuery(new Term("stringlabel",ns)));
 		}
-		queries.add(parser.parse(ns));
+		if(Config.INSTANCE.indexQueries==Config.IndexQueries.ANALYZED||Config.INSTANCE.indexQueries==Config.IndexQueries.BOTH)
+		{
+			queries.add(parser.parse(ns));
+		}
 
 		IndexSearcher searcher = new IndexSearcher(reader);
 
@@ -110,30 +114,31 @@ public abstract class Index
 				}
 				else
 				{
-					if(hit.score>=LUCENE_SCORE_MIN)
+					if(hit.score>=Config.INSTANCE.indexMinLuceneScore)
 					{
-					log.trace(searcher.explain(q, hit.doc));
-					Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3)
-					// even if transposed should have some minimal string distance
-					.filter(l->distance.getDistance(ns, normalize(l))>0.5)
-					// original label is the document from lucene which can be much longer than our string so we make sure they are not too dissimilar in length
-					.filter(l->ns.length()*2>normalize(l).length())
-					.forEach(
-							l->idWithUnnormalizedScore.put(doc.get(fieldName), (double) hit.score));
+						log.trace(searcher.explain(q, hit.doc));
+						Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3)
+						// even if transposed should have some minimal string distance
+						.filter(l->distance.getDistance(ns, normalize(l))>0.5)
+						// original label is the document from lucene which can be much longer than our string so we make sure they are not too dissimilar in length
+						.filter(l->ns.length()*2>normalize(l).length())
+						.forEach(
+								l->idWithUnnormalizedScore.put(doc.get(fieldName), (double) hit.score));
 					}
 				}
-//				log.debug("label index result labels "+Arrays.toString(doc.getValues("originallabel"))+", uri "+doc.get("uri")+" score "+score);
+				//				log.debug("label index result labels "+Arrays.toString(doc.getValues("originallabel"))+", uri "+doc.get("uri")+" score "+score);
 			}
 			if(hits.length>0)
 			{
 				if(!fuzzy)
 				{
-				double max = idWithUnnormalizedScore.values().stream().reduce(0.0, Double::max);
-				idWithUnnormalizedScore.forEach((ss,l)->{idWithScore.put(ss,l/max);});
+					double max = idWithUnnormalizedScore.values().stream().reduce(0.0, Double::max);
+					idWithUnnormalizedScore.forEach((ss,l)->{idWithScore.put(ss,l/max);});
 				}
 				break; // only use second index when fuzzy one doesn't work
 			}
 		}
-		return idWithScore;
+		// only keep elements with a score of at least minScore
+		return idWithScore.keySet().stream().filter(id->idWithScore.get(id)>=minScore).collect(Collectors.toMap(id->id, id->idWithScore.get(id)));
 	}
 }

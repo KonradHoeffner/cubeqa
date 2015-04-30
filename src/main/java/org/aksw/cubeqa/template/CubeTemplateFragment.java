@@ -152,7 +152,7 @@ public class CubeTemplateFragment
 			.filter(entry->entry.getKey().propertyType==PropertyType.MEASURE)
 			.max(Comparator.comparing(e->e.getValue()))
 			.ifPresent(e->answerProperties.add(e.getKey()));
-			if(answerProperties.isEmpty())
+			if(answerProperties.isEmpty()/*&&perProperties.isEmpty()*/)
 			{
 				log.debug("no answer property found, using default of "+cube.getDefaultAnswerProperty());
 				answerProperties.add(cube.getDefaultAnswerProperty());

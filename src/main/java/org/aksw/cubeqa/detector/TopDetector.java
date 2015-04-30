@@ -24,6 +24,7 @@ public class TopDetector extends Detector
 	}
 
 	final String[][] keywords = new String[][] {{"highest number","highest amount","top","most","highest","largest","biggest"},{"least","smallest","lowest"}};
+//	final String[][] keywords = new String[][] {{"highest"},{}};
 	public static final TopDetector INSTANCE = new TopDetector();
 
 	final Map<Pattern,OrderModifier> patternModifier = new HashMap<>();

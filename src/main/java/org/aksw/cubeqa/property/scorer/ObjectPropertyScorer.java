@@ -2,6 +2,7 @@ package org.aksw.cubeqa.property.scorer;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.index.LabelIndex;
 import org.aksw.cubeqa.property.ComponentProperty;
 import de.konradhoeffner.commons.Streams;
@@ -10,8 +11,6 @@ import de.konradhoeffner.commons.Streams;
 public class ObjectPropertyScorer extends MultiSetScorer
 {
 	transient LabelIndex index;
-	private static final double	THRESHOLD	= 0.4;
-
 
 	private synchronized void loadOrCreateIndex()
 	{
@@ -31,10 +30,9 @@ public class ObjectPropertyScorer extends MultiSetScorer
 	{
 		loadOrCreateIndex();
 
-		Map<String,Double> urisWithScore = index.getUrisWithScore(value);
+		Map<String,Double> urisWithScore = index.getUrisWithScore(value,Config.INSTANCE.indexMinScore);
 
 		return urisWithScore.keySet().stream()
-				.filter(u->urisWithScore.get(u)>THRESHOLD)
 				.max(Comparator.comparing(urisWithScore::get))
 				.map(uri->new ScoreResult(property, uri, urisWithScore.get(uri)));
 	}

@@ -1,6 +1,7 @@
 package org.aksw.cubeqa.property.scorer;
 
 import java.util.Optional;
+import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.google.common.collect.Range;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -9,6 +10,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 public class NumericScorer extends Scorer
 {
 	final Range<Double> range;
+
 
 	public NumericScorer(ComponentProperty property)
 	{
@@ -24,7 +26,7 @@ public class NumericScorer extends Scorer
 		try
 		{
 			double d = Double.valueOf(value);
-			return Optional.of(new ScoreResult(property, value, range.contains(d)?1.0:0.0));
+			return Optional.of(new ScoreResult(property, value, range.contains(d)?Config.INSTANCE.boostNumeric:0.0));
 		}
 		catch(NumberFormatException e) {return Optional.empty();}
 	}

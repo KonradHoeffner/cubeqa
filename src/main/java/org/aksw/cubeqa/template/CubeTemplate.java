@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.aksw.cubeqa.ComponentPropertyTest;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -30,6 +31,8 @@ public class CubeTemplate
 
 	public String sparqlQuery()
 	{
+//		new ComponentPropertyTest().testVar();
+//		System.out.println(Cube.FINLAND_AID.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
 		if(!isComplete())  throw new IllegalStateException("not complete");
 		Set<String> wherePatterns = restrictions.stream().flatMap(r->r.wherePatterns().stream()).collect(Collectors.toSet());
 		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">. ?obs a qb:Observation.\n");
@@ -38,7 +41,10 @@ public class CubeTemplate
 		if(orderLimitPatterns.size()>1) throw new IllegalArgumentException("more than one orderlimit pattern");
 
 		StringBuilder sb = new StringBuilder();
+//		System.out.println(Cube.FINLAND_AID.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
 		//		answerProperties.forEach(action)
+//		System.out.println(answerProperties.iterator().next());
+//		System.out.println(answerProperties.iterator().next()==Cube.FINLAND_AID.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount"));
 		String resultDef = "xsd:decimal(?"+answerProperties.iterator().next().var+")";
 		if(!aggregates.isEmpty()) {resultDef = aggregates.iterator().next()+"("+resultDef+")";}
 		sb.append("select "+resultDef+" ");
@@ -47,7 +53,7 @@ public class CubeTemplate
 		sb.append("\n{\n");
 		for(String pattern: wherePatterns) {sb.append(pattern);sb.append(" ");}
 		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
-		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p+"> ?"+p.var+".");}
+		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
 		sb.append("\n}");
 		if(!orderLimitPatterns.isEmpty()) sb.append(orderLimitPatterns.iterator().next());
 		return sb.toString();

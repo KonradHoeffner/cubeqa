@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.function.Function;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
+import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
@@ -45,9 +46,9 @@ public class LabelIndex extends Index
 	}
 
 	@SneakyThrows
-	public Map<String,Double> getUrisWithScore(String s)
+	public Map<String,Double> getUrisWithScore(String s, double minScore)
 	{
-		return getIdWithScore(s, "uri");
+		return getIdWithScore(s, "uri",minScore);
 	}
 
 	public void add(String uri, Set<String> labels) throws IOException

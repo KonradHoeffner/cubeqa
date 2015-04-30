@@ -88,7 +88,8 @@ public class ComponentProperty implements Serializable
 
 	private ComponentProperty(Cube cube, String uri)//, PropertyType type)
 	{
-		var = "v"+id.getAndIncrement();
+//		var = "v"+id.getAndIncrement();
+		var = "v"+Math.abs(uri.hashCode());
 		this.cube = cube;
 		this.uri = uri;
 
@@ -100,7 +101,9 @@ public class ComponentProperty implements Serializable
 		}
 
 		String propertyTypeQuery = "select ?p {?spec ?p <"+uri+">. filter(contains(str(?p),\"http://purl.org/linked-data/cube#\"))} limit 1";
-		String pt = cube.sparql.select(propertyTypeQuery).next().get("?p").asResource().getURI();
+		String pt;
+		try {pt = cube.sparql.select(propertyTypeQuery).next().get("?p").asResource().getURI();}
+		catch(Exception e) {throw new RuntimeException("error with sparql query "+propertyTypeQuery,e);}
 		switch(pt)
 		{
 			case "http://purl.org/linked-data/cube#measure": this.propertyType=PropertyType.MEASURE;break;
@@ -169,7 +172,7 @@ public class ComponentProperty implements Serializable
 
 			} else
 			{
-				log.info("range "+range+": creating object property for "+this.uri);
+				log.trace("range "+range+": creating object property scorer for "+this.uri);
 				return new ObjectPropertyScorer(this);
 			}
 		}
@@ -179,7 +182,8 @@ public class ComponentProperty implements Serializable
 
 	public static synchronized ComponentProperty getInstance(Cube cubeUri, String uri)//, String type)
 	{
-		Pair<String,String> key = new Pair<String,String>(cubeUri.uri, uri);
+//		Pair<String,String> key = new Pair<String,String>(cubeUri.uri, uri);
+		Pair<String,String> key = new Pair<String,String>(uri, uri);
 		ComponentProperty instance = instances.get(key);
 		if(instance==null)
 		{
@@ -218,7 +222,7 @@ public class ComponentProperty implements Serializable
 
 	@Override public String toString()
 	{
-		return uri;
+		return "("+uri+", "+var+")";
 	}
 
 	public String shortName()

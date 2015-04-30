@@ -21,6 +21,10 @@ public class Stopwords
 			new HashSet<>(Arrays.asList(
 			      "reference","recipient"));
 
+	static public final Set<String> FINLAND_AID_WORDS =
+			new HashSet<>(Arrays.asList(
+			      "aid"));
+
 	public static String remove(String s, Set<String> words)
 	{
 		for(String word: words)

@@ -37,7 +37,7 @@ public class CubeSparql implements Serializable
 				"http://linkedspending.aksw.org/",
 				"http://localhost:8890/sparql");
 //				"http://linkedspending.aksw.org/sparql");
-		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology");
+		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology/");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeName);
 		return cs;
 	}

@@ -14,6 +14,7 @@ public class Performance
 {
 	final double precision;
 	final double recall;
+	final boolean empty;
 
 	public static final Performance performance(Set correct, Set found)
 	{
@@ -29,10 +30,10 @@ public class Performance
 			{
 //			throw new IllegalArgumentException("correct==0");
 			log.fatal("no correct answer");
-			return new Performance(0, 0);
+			return new Performance(0, 0,true);
 			}
-		if(found==0) return new Performance(0,0);
-		return new Performance((double)correctFound/found,(double)correctFound/correct);
+		if(found==0) return new Performance(0,0,true);
+		return new Performance((double)correctFound/found,(double)correctFound/correct,false);
 	}
 
 	double fscore() {return fscore(1);}

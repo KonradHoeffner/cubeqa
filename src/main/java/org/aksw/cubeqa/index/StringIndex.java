@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
+import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
@@ -46,7 +47,7 @@ public class StringIndex extends Index
 	@SneakyThrows
 	public Map<String,Double> getStringsWithScore(String s)
 	{
-		return getIdWithScore(s, "originallabel");
+		return getIdWithScore(s, "originallabel",Config.INSTANCE.indexMinScore);
 	}
 
 	public void add(String s) throws IOException

@@ -2,13 +2,12 @@ package org.aksw.cubeqa.property.scorer.temporal;
 
 import java.time.Year;
 import java.time.format.DateTimeParseException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j;
+import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorer;
@@ -69,7 +68,9 @@ public class TemporalScorer extends Scorer
 		{
 			if(interval.equals(questionInterval)||questionInterval.contains(interval))
 			{
-				return Optional.of(new ScoreResult(property, value, 1));
+				double score = 1;
+				if(property.range.equals("http://www.w3.org/2001/XMLSchema#date")) score = Config.INSTANCE.boostDate;
+				return Optional.of(new ScoreResult(property, value, score));
 			}
 		}
 		return Optional.empty();

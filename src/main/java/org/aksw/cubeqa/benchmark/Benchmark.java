@@ -86,9 +86,10 @@ public class Benchmark
 		log.info("Evaluating cube "+algorithm.cube.name+ " on benchmark "+name+" with "+questions.size()+" questions");
 		List<Performance> performances = new ArrayList<>();
 		for(int i=1;i<=questions.size();i++) {performances.add(evaluate(algorithm,i));}
-		log.info("Average precision "+ performances.stream().mapToDouble(Performance::getPrecision).average());
+		log.info("Average precision "+ performances.stream().filter(p->!p.isEmpty()).mapToDouble(Performance::getPrecision).average());
 		log.info("Average recall "+ performances.stream().mapToDouble(Performance::getRecall).average());
-		log.info("Average f score "+ performances.stream().mapToDouble(Performance::fscore).average());
+//		log.info("f score")
+				log.info("Average f score "+ performances.stream().mapToDouble(Performance::fscore).average());
 	}
 
 	public Performance evaluate(Algorithm algorithm, int questionNumber)

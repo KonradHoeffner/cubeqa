@@ -15,9 +15,10 @@ public class TopRestriction extends RestrictionWithPhrase
 
 	@Override public Set<String> orderLimitPatterns()
 	{
-		return Collections.singleton("order by "+modifier.toString()+"(?"+property.var+") limit "+n);
+//		System.out.println(property.var);
+//		System.out.println(property.cube.properties.ge);
+		return Collections.singleton("order by "+modifier.toString()+"(xsd:decimal(?"+property.var+")) limit "+n);
 	}
-
 
 	public TopRestriction(ComponentProperty property,String phrase, int n, OrderModifier modifier)
 	{
@@ -25,5 +26,4 @@ public class TopRestriction extends RestrictionWithPhrase
 		this.n=n;
 		this.modifier=modifier;
 	}
-
 }
