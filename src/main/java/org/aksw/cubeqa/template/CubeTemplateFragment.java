@@ -155,7 +155,8 @@ public class CubeTemplateFragment
 			if(answerProperties.isEmpty()/*&&perProperties.isEmpty()*/)
 			{
 				log.debug("no answer property found, using default of "+cube.getDefaultAnswerProperty());
-				answerProperties.add(cube.getDefaultAnswerProperty());
+				answerProperties.add(cube.properties.values().stream().filter(p->p.propertyType==PropertyType.MEASURE).findAny().get());
+//				answerProperties.add(cube.getDefaultAnswerProperty());
 			}
 		}
 

@@ -40,9 +40,9 @@ public class CubeTemplator
 
 	public CubeTemplate buildTemplate(String question)
 	{
-//		String noStop = question;
-		String noStop = Stopwords.remove(question, Stopwords.FINLAND_AID_WORDS);
-		noStop = Stopwords.remove(noStop, Stopwords.PROPERTY_WORDS);
+		String noStop = question;
+//		String noStop = Stopwords.remove(question, Stopwords.FINLAND_AID_WORDS);
+//		noStop = Stopwords.remove(noStop, Stopwords.PROPERTY_WORDS);
 		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
 		Pair<CubeTemplateFragment,String> detectResult = detect(noStop);
 		Tree root = StanfordNlp.parse(detectResult.b);

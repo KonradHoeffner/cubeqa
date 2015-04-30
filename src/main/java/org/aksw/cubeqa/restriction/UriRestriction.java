@@ -13,7 +13,7 @@ public class UriRestriction extends Restriction
 
 	public Set<String> wherePatterns()
 	{
-		return Collections.singleton("?obs <"+property+"> <"+uri+">.");
+		return Collections.singleton("?obs <"+property.uri+"> <"+uri+">.");
 	}
 
 	public UriRestriction(ComponentProperty property, String uri)

@@ -32,7 +32,7 @@ public class IntervalRestriction extends RestrictionWithPhrase
 			String rightFilter = "filter(?"+property.var+" "+rightComparator+" \""+rightEndpoint+"\"). ";
 			terms.add(rightFilter);
 		}
-		terms.add("?obs <"+property+"> ?"+property.var+".");
+		terms.add("?obs <"+property.uri+"> ?"+property.var+".");
 		return terms;
 	}
 
