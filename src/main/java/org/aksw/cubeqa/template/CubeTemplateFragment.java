@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
+import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -155,8 +156,13 @@ public class CubeTemplateFragment
 			if(answerProperties.isEmpty()/*&&perProperties.isEmpty()*/)
 			{
 				log.debug("no answer property found, using default of "+cube.getDefaultAnswerProperty());
+				if(Config.INSTANCE.useDefaultAnswerProperty)
+				{
+					answerProperties.add(cube.getDefaultAnswerProperty());
+				} else
+				{
 				answerProperties.add(cube.properties.values().stream().filter(p->p.propertyType==PropertyType.MEASURE).findAny().get());
-//				answerProperties.add(cube.getDefaultAnswerProperty());
+				}
 			}
 		}
 

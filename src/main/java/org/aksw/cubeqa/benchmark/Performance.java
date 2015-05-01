@@ -59,14 +59,16 @@ public class Performance
 				nm2.put(key2,m.get(key1));
 				normalizedFoundMap1.add(nm1);
 				normalizedFoundMap2.add(nm2);
-				Performance p1 = performance(correct, normalizedFoundMap1, true);
-				Performance p2 = performance(correct, normalizedFoundMap2, true);
-				return p1.precision>p2.precision?p1:p2;
 			}
+			Performance p1 = performance(correct, normalizedFoundMap1, true);
+			Performance p2 = performance(correct, normalizedFoundMap2, true);
+			return p1.fscore()>p2.fscore()?p1:p2;
 
 //			throw new RuntimeException("its a map");
 		}
 		Set correctFound = new HashSet(found);
+		System.out.println(correct);
+		System.out.println(found);
 		correctFound.retainAll(correct);
 		return performance(correct.size(),found.size(),correctFound.size());
 	}

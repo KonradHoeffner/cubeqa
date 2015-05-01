@@ -6,8 +6,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.aksw.cubeqa.Cube;
-import org.aksw.cubeqa.Stopwords;
+import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -22,7 +21,7 @@ import edu.stanford.nlp.trees.Tree;
 @Log4j
 public class CubeTemplator
 {
-//	{log.setLevel(Level.ALL);}
+	//	{log.setLevel(Level.ALL);}
 	private static final int	PHRASE_MIN_LENGTH	= 3;
 	private static final int	PHRASE_MAX_LENGTH	= 30;
 
@@ -41,14 +40,17 @@ public class CubeTemplator
 	public CubeTemplate buildTemplate(String question)
 	{
 		String noStop = question;
-//		String noStop = Stopwords.remove(question, Stopwords.FINLAND_AID_WORDS);
-//		noStop = Stopwords.remove(noStop, Stopwords.PROPERTY_WORDS);
+		if(Config.INSTANCE.removeStopWords)
+		{
+			noStop = Stopwords.remove(noStop, Stopwords.FINLAND_AID_WORDS);
+			noStop = Stopwords.remove(noStop, Stopwords.PROPERTY_WORDS);
+		}
 		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
 		Pair<CubeTemplateFragment,String> detectResult = detect(noStop);
 		Tree root = StanfordNlp.parse(detectResult.b);
 		CubeTemplateFragment rootFragment = visitRecursive(root);
 		CubeTemplate finalTemplate = CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate();
-// TODO move default aggregate from templator to cubetemplate or cubetemplatefragment
+		// TODO move default aggregate from templator to cubetemplate or cubetemplatefragment
 		Set<String> orderLimitPatterns = finalTemplate.restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
 		if(finalTemplate.aggregates.isEmpty()&&orderLimitPatterns.isEmpty()) {finalTemplate.aggregates.add(Aggregate.SUM);}
 		return finalTemplate;
