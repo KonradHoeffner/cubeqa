@@ -7,7 +7,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.XSD;
 
-enum AnswerType
+enum DataType
 {
 	NUMBER,STRING,URI,BOOLEAN,DATE,YEAR,DATETIME;
 
@@ -15,7 +15,7 @@ enum AnswerType
 			XSD.xdouble,XSD.integer,XSD.positiveInteger,XSD.negativeInteger,XSD.nonNegativeInteger,XSD.nonPositiveInteger)
 			.stream().map(Resource::getURI).collect(Collectors.toSet());
 
-	public static AnswerType typeOf(RDFNode node)
+	public static DataType typeOf(RDFNode node)
 	{
 		if(node.isResource()) {return URI;}
 		String typeUri = node.asLiteral().getDatatypeURI();

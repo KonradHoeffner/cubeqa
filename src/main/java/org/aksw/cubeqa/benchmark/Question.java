@@ -12,7 +12,7 @@ class Question
 	public final String string;
 	public final String query;
 	public final Set<Map<String,String>> answers;
-	public final Map<String,AnswerType> answerTypes;
+	public final Map<String,DataType> answerTypes;
 
 	public Question(String string, String query)
 	{
@@ -22,7 +22,7 @@ class Question
 		this.answerTypes=null;
 	}
 
-	public Question(String string, String query, Set<Map<String,String>> answers, Map<String,AnswerType> answerTypes)
+	public Question(String string, String query, Set<Map<String,String>> answers, Map<String,DataType> answerTypes)
 	{
 		this.string=string;
 		this.query=query;

@@ -28,9 +28,9 @@ public class Config
 	public double boostNumeric = 0.98; // give precedence to years over date and other numbers
 	public double boostDate = 0.99; // give precedence to years over date
 
-	public boolean	removeStopWords = true;
+	public boolean	removeStopWords = false;
 
-	public boolean	useDefaultAnswerProperty = true;
+	public boolean	useDefaultAnswerProperty = false;
 
 
 //	@Option(name="-indexDoNonExactMatch")

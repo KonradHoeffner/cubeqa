@@ -14,7 +14,7 @@ public class BenchmarkTest
 	{
 		Question q = Benchmark.completeQuestion(CubeSparql.FINLAND_AID, "some string","ask {?s ?p ?o.}");
 		assertTrue(q.answers.size()==1);
-		assertTrue(q.answerTypes.get("")==AnswerType.BOOLEAN);
+		assertTrue(q.answerTypes.get("")==DataType.BOOLEAN);
 		assertTrue(q.answers.iterator().next().get("").equals("true"));
 	}
 
@@ -38,7 +38,7 @@ public class BenchmarkTest
 		Benchmark b = Benchmark.fromQald("finland-aid");
 		assertTrue(b.questions.size()==100);
 		assertTrue(b.questions.get(0).string.equals("What was the average aid to environment per month in year 2010?"));
-		assertTrue(b.questions.get(0).answerTypes.get("")==AnswerType.NUMBER);
+		assertTrue(b.questions.get(0).answerTypes.get("")==DataType.NUMBER);
 		assertTrue(b.questions.get(0).answers.iterator().next().get("").toString().startsWith("262.6"));
 	}
 

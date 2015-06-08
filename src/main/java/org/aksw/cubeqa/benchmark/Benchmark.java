@@ -36,11 +36,11 @@ public class Benchmark
 	static Question completeQuestion(CubeSparql sparql, String string, String query)
 	{
 		Set<Map<String,String>> answers = new HashSet<>();
-		Map<String,AnswerType> tagTypes  = new HashMap<>();
+		Map<String,DataType> tagTypes  = new HashMap<>();
 
 		if(query.startsWith("ask"))
 		{
-			tagTypes.put("",AnswerType.BOOLEAN);
+			tagTypes.put("",DataType.BOOLEAN);
 			Map<String,String> answer = new HashMap<String,String>();
 			answer.put("",String.valueOf(sparql.ask(query)));
 			answers.add(Collections.unmodifiableMap(answer));
@@ -58,7 +58,7 @@ public class Benchmark
 				if(varNames.size()==1)
 				{
 					RDFNode node = qs.get(varNames.iterator().next());
-					tagTypes.put("",AnswerType.typeOf(node));
+					tagTypes.put("",DataType.typeOf(node));
 					String ns = nodeString(qs.get(varNames.iterator().next()));
 					if(!ns.isEmpty()) {answer.put("", ns);}
 				} else
@@ -68,7 +68,7 @@ public class Benchmark
 						RDFNode node = qs.get(var);
 						if(node!=null)
 						{
-							tagTypes.put(var,AnswerType.typeOf(node));
+							tagTypes.put(var,DataType.typeOf(node));
 							String ns = nodeString(qs.get(var));
 							if(!ns.isEmpty()) {answer.put(var, ns);}
 						}
@@ -91,6 +91,7 @@ public class Benchmark
 		int askCount = 0;
 		for(int i=1;i<=questions.size();i++)
 		{
+			if(i==74) {performances.add(new Performance(0,0,true));continue;} // q 74 gets wrongly positively evaluated
 			Question q = questions.get(i-1);
 //			// remove questions with unions
 			if(q.query.toLowerCase().contains("union")) {unionCount++;continue;}
@@ -176,7 +177,7 @@ public class Benchmark
 		List<Question> questions = new ArrayList<>();
 		for(int i=0; i<questionNodes.getLength();i++)
 		{
-			Map<String,AnswerType> tagTypes = new HashMap<>();
+			Map<String,DataType> tagTypes = new HashMap<>();
 			Set<Map<String,String>> answers = new HashSet<>();
 			Element questionElement = (Element) questionNodes.item(i);
 			String string = questionElement.getElementsByTagName("string").item(0).getTextContent().trim();
@@ -192,12 +193,12 @@ public class Benchmark
 				{
 					for(Element var: Nodes.childElements(answerElement))
 					{
-						tagTypes.put(var.getTagName(), AnswerType.valueOf(var.getAttribute("answerType").toUpperCase()));
+						tagTypes.put(var.getTagName(), DataType.valueOf(var.getAttribute("answerType").toUpperCase()));
 						answer.put(var.getTagName(), var.getTextContent());
 					}
 				} else
 				{
-					tagTypes.put("", AnswerType.valueOf(answerElement.getAttribute("answerType").toUpperCase()));
+					tagTypes.put("", DataType.valueOf(answerElement.getAttribute("answerType").toUpperCase()));
 					answer.put("", direct);
 				}
 				answers.add(Collections.unmodifiableMap(answer));
