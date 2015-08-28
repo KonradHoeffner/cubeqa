@@ -12,7 +12,11 @@ import org.aksw.cubeqa.restriction.*;
 import org.aksw.cubeqa.restriction.TopRestriction.OrderModifier;
 import org.aksw.cubeqa.template.CubeTemplateFragment;
 
-/** Detects "highest n" or "lowest n" type phrases. */
+/** Detects "highest n" or "lowest n" type phrases.
+ *  Patterns: [keyword] [n] [measure] [dimension value]
+ *  Example: [Top] [10] [aid receiving] [geographic areas]
+ * */
+
 public class TopDetector extends Detector
 {
 	@Data
@@ -63,7 +67,8 @@ public class TopDetector extends Detector
 					// patterns don't overlap so we can return here
 					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
 					fragment.getRestrictions().add(new TopRestriction(max.property, max.value, n,e.getValue()));
-					fragments.add(fragment);
+
+					// TODO: check this function for the top 10 aided countries case
 				}
 			}
 		}

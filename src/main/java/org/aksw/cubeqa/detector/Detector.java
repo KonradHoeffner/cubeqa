@@ -8,8 +8,9 @@ import org.aksw.cubeqa.property.scorer.Scorers;
 import org.aksw.cubeqa.template.CubeTemplateFragment;
 import de.konradhoeffner.commons.MemoryBenchmark;
 
-/**Abstract class for a Dectector, which is called before scorers and transforms certain keyphrases into additional query modifiers, such as aggregates.
- * A detector can find several or no matches in a phrase.*/
+/**Abstract class for a Detector, which is called before scorers and transforms certain keyphrases into additional query modifiers, such as aggregates.
+ * A detector can find several or no matches in a phrase.
+ * */
 public abstract class Detector
 {
 	/** Detection is supposed to not overlap in phrases.*/

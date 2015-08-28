@@ -45,7 +45,7 @@ public class BenchmarkTest
 	@Test public void testSaveAndLoadQald() throws IOException
 	{
 		Benchmark b = Benchmark.fromQald("finland-aid");
-		b.saveAsQald(CubeSparql.FINLAND_AID, new File(new File("benchmark"),"test.xml"));
+		b.saveAsQald(new File(new File("benchmark"),"test.xml"));
 		Benchmark c = Benchmark.fromQald("test");
 		for(int i=0;i<100;i++)
 		{

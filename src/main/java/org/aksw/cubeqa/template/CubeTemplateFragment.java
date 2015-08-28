@@ -117,7 +117,6 @@ public class CubeTemplateFragment
 		return fragment;
 	}
 
-
 	CubeTemplate toTemplate()
 	{
 		// there will be no further combining so all leftover matchresult values will have to be guessed where they fit or thrown away

@@ -11,8 +11,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
-import org.aksw.cubeqa.Algorithm;
-import org.aksw.cubeqa.CubeSparql;
+import org.aksw.cubeqa.*;
 import org.apache.commons.csv.*;
 import org.apache.log4j.Level;
 import org.w3c.dom.*;
@@ -25,15 +24,16 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 @Log4j
 public class Benchmark
 {
-	protected final String name;
-	protected final List<Question> questions;
+	public final String name;
+	public final List<Question> questions;
 
-	public void completeQuestions(CubeSparql sparql)
-	{
-		questions.stream().forEach(q->completeQuestion(sparql, q.string, q.query));
-	}
+	// this doesnt do anything
+	//	public void completeQuestions(CubeSparql sparql)
+	//	{
+	//		questions.stream().forEach(q->completeQuestion(sparql, q.string, q.query));
+	//	}
 
-	static Question completeQuestion(CubeSparql sparql, String string, String query)
+	static Question completeQuestion(CubeSparql sparql,String string, String query)
 	{
 		Set<Map<String,String>> answers = new HashSet<>();
 		Map<String,DataType> tagTypes  = new HashMap<>();
@@ -78,7 +78,7 @@ public class Benchmark
 
 			}
 		}
-		return new Question(string, query, answers, tagTypes);
+		return new Question(sparql.cubeUri, string, query, answers, tagTypes);
 	}
 
 	public void evaluate(Algorithm algorithm)
@@ -93,11 +93,11 @@ public class Benchmark
 		{
 			if(i==74) {performances.add(new Performance(0,0,true));continue;} // q 74 gets wrongly positively evaluated
 			Question q = questions.get(i-1);
-//			// remove questions with unions
+			//			// remove questions with unions
 			if(q.query.toLowerCase().contains("union")) {unionCount++;continue;}
-//			// remove questions with subqueries
+			//			// remove questions with subqueries
 			if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
-//			// remove ask queries
+			//			// remove ask queries
 			if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
 			count++;
 			performances.add(evaluate(algorithm,i));
@@ -108,8 +108,8 @@ public class Benchmark
 		System.out.println(askCount+ "ask queries");
 		log.info("Average precision "+ performances.stream().filter(p->!p.isEmpty()).mapToDouble(Performance::getPrecision).average());
 		log.info("Average recall "+ performances.stream().mapToDouble(Performance::getRecall).average());
-//		log.info("f score")
-				log.info("Average f score "+ performances.stream().mapToDouble(Performance::fscore).average());
+		//		log.info("f score")
+		log.info("Average f score "+ performances.stream().mapToDouble(Performance::fscore).average());
 	}
 
 	public Performance evaluate(Algorithm algorithm, int questionNumber)
@@ -124,7 +124,8 @@ public class Benchmark
 		String query = algorithm.answer(question.string).sparqlQuery();
 		Question found;
 		try
-		{found = completeQuestion(algorithm.cube.sparql, question.string, query);
+		{
+			found = completeQuestion(algorithm.cube.sparql, question.string, query);
 		}
 		catch(Exception e)
 		{
@@ -146,7 +147,16 @@ public class Benchmark
 		{
 			for(CSVRecord record: parser)
 			{
-				questions.add(new Question(record.get(0),record.get(1)));
+				if(record.size()<3)
+				{
+					questions.add(new Question(Cube.getInstance(name).uri, record.get(0),record.get(1)));
+				} else
+				{
+					String uri = record.get(2);
+					if(!uri.startsWith("http")) {uri=Cube.linkedSpendingUri(uri);}
+					questions.add(new Question(uri, record.get(0),record.get(1)));
+				}
+
 			}
 		}
 		return new Benchmark(name,questions);
@@ -173,14 +183,15 @@ public class Benchmark
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
 		doc.getDocumentElement().normalize();
-		NodeList questionNodes = doc.getElementsByTagName("question");
 		List<Question> questions = new ArrayList<>();
+		NodeList questionNodes = doc.getElementsByTagName("question");
 		for(int i=0; i<questionNodes.getLength();i++)
 		{
 			Map<String,DataType> tagTypes = new HashMap<>();
 			Set<Map<String,String>> answers = new HashSet<>();
 			Element questionElement = (Element) questionNodes.item(i);
 			String string = questionElement.getElementsByTagName("string").item(0).getTextContent().trim();
+			String cubeUri = questionElement.getAttribute("cubeuri");
 			String query = Nodes.directTextContent(questionElement.getElementsByTagName("query").item(0)).trim();
 
 			Element answersElement = (Element) questionElement.getElementsByTagName("answers").item(0);
@@ -203,19 +214,18 @@ public class Benchmark
 				}
 				answers.add(Collections.unmodifiableMap(answer));
 			}
-			Question question = new Question(string, query, answers,tagTypes);
+			Question question = new Question(cubeUri,string, query, answers,tagTypes);
 			questions.add(question);
 		}
-
 		return new Benchmark(name, questions);
 	}
 
 	/** {@link #} */
-	public void saveAsQald(CubeSparql sparql) {saveAsQald(sparql,new File (new File("benchmark"),name+".xml"));}
+	public void saveAsQald() {saveAsQald(new File (new File("benchmark"),name+".xml"));}
 
 	/**	 */
 	@SneakyThrows
-	public void saveAsQald(CubeSparql sparql, File file)
+	public void saveAsQald(File file)
 	{
 		int id = 0;
 		try(FileWriter fw = new FileWriter(file))
@@ -228,6 +238,7 @@ public class Benchmark
 			{
 				writer.writeStartElement("question");
 				writer.writeAttribute("id",String.valueOf(++id));
+				writer.writeAttribute("cubeuri",question.cubeUri);
 				writer.writeAttribute("hybrid","false");
 				writer.writeAttribute("statistical","true");
 				writer.writeCharacters("\n");
@@ -242,7 +253,7 @@ public class Benchmark
 				writer.writeCharacters("\n");
 				if(question.answers==null)
 				{
-					question = completeQuestion(sparql, question.string, question.query);
+					question = completeQuestion(CubeSparql.linkedSpendingForUri(question.cubeUri), question.string, question.query);
 					////					if(true) throw new IllegalArgumentException("answers are null");
 					//					log.warn("Benchmark contains no answers, querying SPARQL endpoint");
 					//					if(question.query.startsWith("ask"))

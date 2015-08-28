@@ -9,7 +9,7 @@ public class CubeSparqlTest
 
 	@Test public void testLinkedSpending()
 	{
-		CubeSparql sparql = CubeSparql.linkedSpending("black-budget");
+		CubeSparql sparql = CubeSparql.linkedSpendingForName("black-budget");
 		String query = "select count(distinct(?cp)) as ?count {?cp a qb:DimensionProperty}";
 
 		int countBlackBudget = sparql.select(query).nextSolution().get("count").asLiteral().getInt();

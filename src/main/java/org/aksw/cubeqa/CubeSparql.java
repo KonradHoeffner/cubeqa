@@ -13,16 +13,19 @@ public class CubeSparql implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 
-//	static public final CubeSparql LINKED_SPENDING = new CubeSparql(
-//			"http://linkedspending.aksw.org/instance/",
-//			"http://linkedspending.aksw.org/ontology/",
-//			"http://linkedspending.aksw.org/",
-//			"http://linkedspending.aksw.org/sparql"
-////			"http://localhost:8890/sparql"
-//			);
 
-	static public final CubeSparql FINLAND_AID = linkedSpending("finland-aid");
 
+	//	static public final CubeSparql LINKED_SPENDING = new CubeSparql(
+	//			"http://linkedspending.aksw.org/instance/",
+	//			"http://linkedspending.aksw.org/ontology/",
+	//			"http://linkedspending.aksw.org/",
+	//			"http://linkedspending.aksw.org/sparql"
+	////			"http://localhost:8890/sparql"
+	//			);
+
+	static public final CubeSparql FINLAND_AID = linkedSpendingForName("finland-aid");
+
+	public final String cubeUri;
 	public final String prefixInstance;
 	public final String prefixOntology;
 	public final String superGraph;
@@ -30,29 +33,35 @@ public class CubeSparql implements Serializable
 	private final String prefixes;
 	private List<String> defaultGraphs = new ArrayList<>();
 
-	static public CubeSparql linkedSpending(String cubeName)
+	static public CubeSparql linkedSpendingForName(String cubeName)
 	{
-		CubeSparql cs = new CubeSparql("http://linkedspending.aksw.org/instance/",
+		return linkedSpendingForUri(Cube.linkedSpendingUri(cubeName));
+	}
+
+	static public CubeSparql linkedSpendingForUri(String cubeUri)
+	{
+		CubeSparql cs = new CubeSparql(cubeUri,
+				"http://linkedspending.aksw.org/instance/",
 				"http://linkedspending.aksw.org/ontology/",
 				"http://linkedspending.aksw.org/",
-				"http://localhost:8890/sparql");
-//				"http://linkedspending.aksw.org/sparql");
+//				"http://localhost:8890/sparql");
+						"http://linkedspending.aksw.org/sparql");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology/");
-		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeName);
+		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeUri.substring(cubeUri.lastIndexOf('/')+1));
 		return cs;
 	}
 
-	public CubeSparql(String prefixInstance, String prefixOntology, String superGraph, String endpoint)
+	public CubeSparql(String cubeUri, String prefixInstance, String prefixOntology, String superGraph, String endpoint)
 	{
-		super();
+		this.cubeUri=cubeUri;
 		this.prefixInstance = prefixInstance;
 		this.prefixOntology = prefixOntology;
 		this.superGraph = superGraph;
 		this.endpoint = endpoint;
-		 prefixes = "prefix dcterms: <"+DCTerms.getURI()
-					+">\n prefix : <"+prefixInstance
-//					+">\n prefix lso: <"+prefixOntology
-					+">\n prefix qb: <"+DataModel.DataCube.BASE+">\n";
+		this.prefixes = "prefix dcterms: <"+DCTerms.getURI()
+				+">\n prefix : <"+prefixInstance
+				//					+">\n prefix lso: <"+prefixOntology
+				+">\n prefix qb: <"+DataModel.DataCube.BASE+">\n";
 	}
 
 	String cubeUrl(String datasetName) {return prefixInstance+datasetName;}
@@ -61,10 +70,10 @@ public class CubeSparql implements Serializable
 	{
 		try
 		{
-		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
-		defaultGraphs.forEach(qe::addDefaultGraph);
+			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
+			defaultGraphs.forEach(qe::addDefaultGraph);
 
-		return qe.execAsk();
+			return qe.execAsk();
 		} catch(Exception e) {throw new RuntimeException("Error on SPARQL ASK on endpoint "+endpoint+" with query:\n"+query,e);}
 	}
 
@@ -72,10 +81,9 @@ public class CubeSparql implements Serializable
 	{
 		try
 		{
-		QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
-		qe.setDefaultGraphURIs(defaultGraphs);
-
-		return qe.execSelect();
+			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
+			//		qe.setDefaultGraphURIs(defaultGraphs);
+			return qe.execSelect();
 		} catch(Exception e) {throw new RuntimeException("Error on sparql select on endpoint "+endpoint+" with query:\n"+query,e);}
 	}
 

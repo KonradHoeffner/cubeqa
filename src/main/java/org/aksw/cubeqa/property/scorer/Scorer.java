@@ -34,7 +34,7 @@ public abstract class Scorer implements Serializable
 	{
 		String query = "select ?value (count(?value) as ?cnt)"
 				+ "{?obs a qb:Observation. ?obs <"+property.uri+"> ?value. } group by ?value";
-		ResultSet rs = CubeSparql.linkedSpending(property.cube.name).select(query);
+		ResultSet rs = CubeSparql.linkedSpendingForName(property.cube.name).select(query);
 		return rs;
 	}
 

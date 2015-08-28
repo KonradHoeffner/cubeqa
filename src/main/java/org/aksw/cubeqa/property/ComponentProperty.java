@@ -28,7 +28,7 @@ import de.konradhoeffner.commons.Pair;
 @Log4j
 public class ComponentProperty implements Serializable
 {
-//	{log.setLevel(Level.ALL);}
+	//	{log.setLevel(Level.ALL);}
 	private static final long	serialVersionUID	= 5L;
 	private static final AtomicInteger id = new AtomicInteger(0);
 	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
@@ -47,7 +47,7 @@ public class ComponentProperty implements Serializable
 	//	public final Domain domain;
 
 	public final Set<String> labels;
-//	public final PropertyType type;
+	//	public final PropertyType type;
 
 	@NonNull public final Scorer scorer;
 
@@ -66,14 +66,11 @@ public class ComponentProperty implements Serializable
 		return null;
 	}
 
-	/** How probably is the label is referring to this property? */
-	public double match(final String label)
+	/** How probably is the phrase referring to this property? */
+	public double match(final String phrase)
 	{
-		String noStop = Stopwords.remove(label, Stopwords.PROPERTY_WORDS);
-		if(noStop.equals("country")&&this.labels.contains("country"))
-		{
-			System.out.println("breakpoint");
-		}
+		String noStop = Stopwords.remove(phrase, Stopwords.PROPERTY_WORDS);
+//		if(uri.contains("finland-aid-recipient-country")) System.out.println(phrase+" "+labels);
 		OptionalDouble pLabelOpt = labels.stream().mapToDouble(l->similarity.getDistance(Stopwords.remove(l,Stopwords.PROPERTY_WORDS),noStop)).max();
 		double pLabel = pLabelOpt.isPresent()?pLabelOpt.getAsDouble():0;
 		log.trace("p label for "+noStop+": "+pLabel);
@@ -88,7 +85,7 @@ public class ComponentProperty implements Serializable
 
 	private ComponentProperty(Cube cube, String uri)//, PropertyType type)
 	{
-//		var = "v"+id.getAndIncrement();
+		//		var = "v"+id.getAndIncrement();
 		var = "v"+Math.abs(uri.hashCode());
 		this.cube = cube;
 		this.uri = uri;
@@ -98,6 +95,14 @@ public class ComponentProperty implements Serializable
 			labels.add(CubeSparql.suffix(uri));
 			labels.addAll(stream(cube.sparql.select("select distinct(?l) {<"+uri+"> rdfs:label ?l}"))
 					.map(qs->qs.get("l").asLiteral().getLexicalForm()).collect(Collectors.toSet()));
+			if(Config.INSTANCE.useManualLabels)
+			{
+				Collection<String> manualLabels = cube.manualLabels.get(uri);
+				if(manualLabels!=null)
+				{
+					cube.manualLabels.get(uri).stream().forEach(label->labels.add(label));
+				}
+			}
 		}
 
 		String propertyTypeQuery = "select ?p {?spec ?p <"+uri+">. filter(contains(str(?p),\"http://purl.org/linked-data/cube#\"))} limit 1";
@@ -130,7 +135,7 @@ public class ComponentProperty implements Serializable
 
 			});
 			this.range=ranges.isEmpty()?null:ranges.iterator().next();
-//			if(range.equals(XSD.xstring.getURI())) {range=null;}
+			//			if(range.equals(XSD.xstring.getURI())) {range=null;}
 			//			else {range = guessRange();}
 			this.scorer = scorer(types);
 		}
@@ -182,7 +187,7 @@ public class ComponentProperty implements Serializable
 
 	public static synchronized ComponentProperty getInstance(Cube cubeUri, String uri)//, String type)
 	{
-//		Pair<String,String> key = new Pair<String,String>(cubeUri.uri, uri);
+		//		Pair<String,String> key = new Pair<String,String>(cubeUri.uri, uri);
 		Pair<String,String> key = new Pair<String,String>(uri, uri);
 		ComponentProperty instance = instances.get(key);
 		if(instance==null)

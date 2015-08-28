@@ -7,23 +7,26 @@ import lombok.ToString;
 /**A single benchmark question along with a correct SPARQL query.*/
 @ToString
 @EqualsAndHashCode
-class Question
+public class Question
 {
+	public final String cubeUri;
 	public final String string;
 	public final String query;
 	public final Set<Map<String,String>> answers;
 	public final Map<String,DataType> answerTypes;
 
-	public Question(String string, String query)
+	public Question(String cubeUri, String string, String query)
 	{
+		this.cubeUri=cubeUri;
 		this.string=string;
 		this.query=query;
 		this.answers=null;
 		this.answerTypes=null;
 	}
 
-	public Question(String string, String query, Set<Map<String,String>> answers, Map<String,DataType> answerTypes)
+	public Question(String cubeUri, String string, String query, Set<Map<String,String>> answers, Map<String,DataType> answerTypes)
 	{
+		this.cubeUri=cubeUri;
 		this.string=string;
 		this.query=query;
 //		if(answers.isEmpty()) {throw new IllegalArgumentException("empty answer set");}

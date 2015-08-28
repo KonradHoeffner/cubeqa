@@ -1,0 +1,3 @@
+http://linkedspending.aksw.org/ontology/finland-aid-recipient-country	country
+http://linkedspending.aksw.org/ontology/finland-aid-amount	money	aid	amount of aid
+http://linkedspending.aksw.org/ontology/DateComponentSpecification	time	date

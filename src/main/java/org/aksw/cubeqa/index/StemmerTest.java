@@ -1,16 +1,26 @@
 package org.aksw.cubeqa.index;
 
 import static org.junit.Assert.*;
+import org.aksw.cubeqa.template.StanfordNlp;
 import org.junit.Test;
 import org.tartarus.snowball.ext.PorterStemmer;
+import edu.northwestern.at.utils.corpuslinguistics.stemmer.LancasterStemmer;
 
 public class StemmerTest
 {
 	@Test public void stemmerTest()
 	{
-		 PorterStemmer stemmer = new PorterStemmer();
-		 stemmer.setCurrent("strengthening civil society");
-		 stemmer.stem();
-		 assertEquals(stemmer.getCurrent(),"strengthening civil societi");
+//		 PorterStemmer stemmer = new PorterStemmer();
+		LancasterStemmer stemmer = new LancasterStemmer();
+		assertEquals(stemmer.stem("egyptian"),stemmer.stem("egypt"));
+//		stemmer.
+		assertEquals(stemmer.stem("strengthening civil society"),stemmer.stem("strengthen civil society"));
+//		 stemmer.setCurrent("strengthening civil society");
+//		 stemmer.stem();
+//		 assertEquals(stemmer.getCurrent(),"strengthening civil societi");
+//		 stemmer.setCurrent("egyptian");
+//		 stemmer.stem();
+//		 assertEquals(stemmer.getCurrent(),"egypt");
+
 	}
 }

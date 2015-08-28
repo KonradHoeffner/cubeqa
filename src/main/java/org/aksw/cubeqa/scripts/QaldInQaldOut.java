@@ -11,7 +11,7 @@ public class QaldInQaldOut
 
 	public static void main(String[] args) throws IOException
 	{
-		Benchmark.fromQald("finland-aid").saveAsQald(null,new File(new File("benchmark"),"test.xml"));
+		Benchmark.fromQald("finland-aid").saveAsQald(new File(new File("benchmark"),"test.xml"));
 	}
 
 }
