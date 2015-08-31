@@ -19,19 +19,21 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
-/** Abstract benchmark class with evaluate function.*/
+/** Benchmark class with the evaluate function that is used for the papers.
+ * Use {@link Benchmark#fromCsv(String)} and {@link Benchmark#fromQald(String)} to load a benchmark from a file.
+ * CSV files contain questions and correct SPARQL queries.
+ * QALD XML files also contain the results of the correct SPARQL queries so they are faster to evaluate.
+ * CSV can be converted to QALD by using {@link Benchmark#fromCsv(String)}  and then {@link Benchmark#saveAsQald()} or {@link Benchmark#saveAsQald(File)}.
+ * Call {@link Benchmark#evaluate(Algorithm)} to execute CubeQA and write precision and recall to the log.*/
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Log4j
 public class Benchmark
 {
+	/**Identifier used as filename for serialization.*/
 	public final String name;
 	public final List<Question> questions;
-
-	// this doesnt do anything
-	//	public void completeQuestions(CubeSparql sparql)
-	//	{
-	//		questions.stream().forEach(q->completeQuestion(sparql, q.string, q.query));
-	//	}
+	/**True, iff the answers to the correct SPARQL queries are precomputed.*/
+	public final boolean isComplete;
 
 	static Question completeQuestion(CubeSparql sparql,String string, String query)
 	{
@@ -51,7 +53,7 @@ public class Benchmark
 			Set<String> varNames = new TreeSet<String>();
 			while(rs.hasNext())
 			{
-				Map answer = new HashMap<String,Object>();
+				Map<String,String> answer = new HashMap<>();
 				QuerySolution qs = rs.nextSolution();
 				// TODO: how to deal with unions where one part does not exist?
 				varNames.addAll(stream(qs.varNames()).collect(Collectors.toList()));
@@ -83,7 +85,7 @@ public class Benchmark
 
 	public void evaluate(Algorithm algorithm)
 	{
-		log.info("Evaluating cube "+algorithm.cube.name+ " on benchmark "+name+" with "+questions.size()+" questions");
+		log.info("Evaluating benchmark "+name+" with "+questions.size()+" questions");
 		List<Performance> performances = new ArrayList<>();
 		int count = 0;
 		int unionCount = 0;
@@ -121,11 +123,12 @@ public class Benchmark
 		log.debug("correct query: "+question.query);
 		log.debug("correct answer: "+question.answers);
 
-		String query = algorithm.answer(question.string).sparqlQuery();
+		Cube cube = Cube.getInstance(Cube.linkedSpendingCubeName(question.cubeUri));
+		String query = algorithm.answer(cube.name,question.string).sparqlQuery();
 		Question found;
 		try
 		{
-			found = completeQuestion(algorithm.cube.sparql, question.string, query);
+			found = completeQuestion(cube.sparql, question.string, query);
 		}
 		catch(Exception e)
 		{
@@ -159,7 +162,7 @@ public class Benchmark
 
 			}
 		}
-		return new Benchmark(name,questions);
+		return new Benchmark(name,questions,false);
 	}
 
 	static String nodeString(RDFNode node)
@@ -169,7 +172,8 @@ public class Benchmark
 		throw new IllegalArgumentException();
 	}
 
-	/** QALD XML format with answers. file gets loaded from benchmark/name.xml. */
+	/**Load a benchmark from a QALD 5 XML format slightly modified for statistical questions and multi-dimensional answers.
+	 * Queries with empty answers are assumed to result from empty SPARQL result sets and are not executed again.*/
 	@SneakyThrows
 	public static Benchmark fromQald(String name)
 	{
@@ -217,7 +221,7 @@ public class Benchmark
 			Question question = new Question(cubeUri,string, query, answers,tagTypes);
 			questions.add(question);
 		}
-		return new Benchmark(name, questions);
+		return new Benchmark(name, questions,true);
 	}
 
 	/** {@link #} */

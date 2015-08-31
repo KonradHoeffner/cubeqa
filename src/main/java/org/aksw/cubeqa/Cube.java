@@ -46,6 +46,7 @@ public class Cube implements Serializable
 	}
 
 	static public String linkedSpendingUri(String name) {return "http://linkedspending.aksw.org/instance/"+name;}
+	static public String linkedSpendingCubeName(String uri) {return uri.replaceAll("http://linkedspending.aksw.org/instance/", "");}
 
 	public String probablyUniqueAsciiId()
 	{

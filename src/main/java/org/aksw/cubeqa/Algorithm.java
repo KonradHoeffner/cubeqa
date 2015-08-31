@@ -8,16 +8,10 @@ import org.aksw.cubeqa.template.CubeTemplator;
 @Log4j
 public class Algorithm
 {
-	public final Cube cube;
 
-	public Algorithm(String cubeName)
+	public CubeTemplate answer(String cubeName, String question)
 	{
-		this.cube = Cube.getInstance(cubeName);
-	}
-
-	public CubeTemplate answer(String question)
-	{
-		CubeTemplate template = new CubeTemplator(cube).buildTemplate(question);
+		CubeTemplate template = new CubeTemplator(Cube.getInstance(cubeName)).buildTemplate(question);
 		return template;
 	}
 }

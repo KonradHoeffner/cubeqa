@@ -20,7 +20,7 @@ public class BenchmarkTest
 
 	@Test public void testEvaluate()
 	{
-		Benchmark.fromQald("finland-aid").evaluate(new Algorithm("finland-aid"),0);
+		Benchmark.fromQald("finland-aid").evaluate(new Algorithm(),0);
 	}
 
 	@Test public void testFromCsv()
