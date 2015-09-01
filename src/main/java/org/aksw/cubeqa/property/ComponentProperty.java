@@ -148,6 +148,9 @@ public class ComponentProperty implements Serializable
 		//		this.type=type;
 	}
 
+	/**Guesses the correct scorer for a property, e.g. NumericScorer for xsd:integer.
+	 * @param types a set of RDF classes which are the RDF types of the property
+	 * @return a specific scorer that is the best fit for the types and range. */
 	private Scorer scorer(Set<String> types)
 	{
 		for(String type: types)
@@ -177,11 +180,14 @@ public class ComponentProperty implements Serializable
 
 			} else
 			{
-				log.trace("range "+range+": creating object property scorer for "+this.uri);
-				return new ObjectPropertyScorer(this);
+				log.warn("range "+range+" unknown: creating NOP scorer for "+this.uri);
+				return NopScorer.INSTANCE;
 			}
 		}
-		throw new RuntimeException("no scorer found for component "+this+" with range "+range);
+		log.warn("no range: creating NOP property scorer for "+this.uri);
+		return NopScorer.INSTANCE;
+
+//		throw new RuntimeException("no scorer found for component "+this+" with range "+range);
 		//		return scorer;
 	}
 
@@ -193,6 +199,7 @@ public class ComponentProperty implements Serializable
 		if(instance==null)
 		{
 			instance = new ComponentProperty(cubeUri, uri);//, PropertyType.ofRdfType(type));
+			instances.put(key, instance);
 		}
 		return instance;
 	}

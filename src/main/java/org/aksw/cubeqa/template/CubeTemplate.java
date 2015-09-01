@@ -32,7 +32,7 @@ public class CubeTemplate
 	public String sparqlQuery()
 	{
 //		new ComponentPropertyTest().testVar();
-//		System.out.println(Cube.FINLAND_AID.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
+//		System.out.println(Cube.FINLAND_AID().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
 		if(!isComplete())  throw new IllegalStateException("not complete");
 		Set<String> wherePatterns = restrictions.stream().flatMap(r->r.wherePatterns().stream()).collect(Collectors.toSet());
 		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">. ?obs a qb:Observation.\n");
@@ -41,10 +41,10 @@ public class CubeTemplate
 		if(orderLimitPatterns.size()>1) throw new IllegalArgumentException("more than one orderlimit pattern");
 
 		StringBuilder sb = new StringBuilder();
-//		System.out.println(Cube.FINLAND_AID.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
+//		System.out.println(Cube.FINLAND_AID().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
 		//		answerProperties.forEach(action)
 //		System.out.println(answerProperties.iterator().next());
-//		System.out.println(answerProperties.iterator().next()==Cube.FINLAND_AID.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount"));
+//		System.out.println(answerProperties.iterator().next()==Cube.FINLAND_AID().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount"));
 		String resultDef = "xsd:decimal(?"+answerProperties.iterator().next().var+")";
 		if(!aggregates.isEmpty()) {resultDef = aggregates.iterator().next()+"("+resultDef+")";}
 		sb.append("select "+resultDef+" ");

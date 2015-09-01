@@ -6,6 +6,7 @@ import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.aksw.cubeqa.property.ComponentProperty;
+import org.aksw.cubeqa.property.scorer.NopScorer;
 import org.apache.commons.collections15.MapUtils;
 import org.apache.commons.collections15.MultiMap;
 import org.apache.commons.collections15.multimap.MultiHashMap;
@@ -27,7 +28,7 @@ public class Cube implements Serializable
 	//	public final Set<String> labels = new TreeSet<String>();
 	public final Map<String,ComponentProperty> properties;
 
-	public final CubeSparql sparql = CubeSparql.FINLAND_AID;
+	public final CubeSparql sparql;
 
 	static Map<String,Cube> instances = new HashMap<>();
 	/** manually created additional labels in case the original labels are not good enough*/
@@ -37,7 +38,11 @@ public class Cube implements Serializable
 	static private File cacheFolder = new File("cache");
 	static {cacheFolder.mkdir();}
 
-	static public final Cube FINLAND_AID = Cube.getInstance("finland-aid");
+	static public Cube finlandAid()
+	{
+		if(1==1) {throw new IllegalAccessError();}
+		return Cube.getInstance("finland-aid");
+	}
 
 	static String extractName(RDFNode node)
 	{
@@ -106,12 +111,12 @@ public class Cube implements Serializable
 					//					" ?p a ?type. FILTER (?type != <"+RDF.Property.getURI()+"> && ?type != <"+DataModel.DataCube.ComponentProperty.getURI()+">)"+
 					//					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
-			ResultSet rs = CubeSparql.FINLAND_AID.select(query);
+			ResultSet rs = CubeSparql.getLinkedSpendingInstanceForName(cubeName).select(query);
 			String uri = linkedSpendingUri(cubeName);
 			MultiMap<String,String> manualLabels = new MultiHashMap<>();
 
 			InputStream labelStream = Cube.class.getClassLoader().getResourceAsStream(cubeName+"/manuallabels.tsv");
-			if(labelStream==null) throw new RuntimeException("manual labels not found");// for testing
+//			if(labelStream==null) throw new RuntimeException("manual labels not found");// for testing
 			if(labelStream!=null)
 			{
 				try(TSVReader reader = new TSVReader(labelStream))
@@ -125,7 +130,7 @@ public class Cube implements Serializable
 				catch (IOException e) {throw new RuntimeException("Exception reading additional labels from tsv file.",e);}
 			}
 			// TODO: make the multi map unmodifiable
-			c = new Cube(cubeName,uri, properties,manualLabels);
+			c = new Cube(cubeName,uri, properties,CubeSparql.getLinkedSpendingInstanceForUri(uri),manualLabels);
 			instances.put(cubeName, c);
 			while(rs.hasNext())
 			{
@@ -135,7 +140,11 @@ public class Cube implements Serializable
 				String propertyUri = qs.get("p").asResource().getURI();
 
 				ComponentProperty property = ComponentProperty.getInstance(c, propertyUri);//, qs.get("type").asResource().getURI());
-				properties.put(propertyUri, property);
+				if(property.scorer!=NopScorer.INSTANCE)
+				{
+					// only properties with scorer are useful for us
+					properties.put(propertyUri, property);
+				}
 				//				if(qs.contains("label")) {property.labels.add(qs.get("label").asLiteral().getLexicalForm());}
 			}
 		}
@@ -160,9 +169,7 @@ public class Cube implements Serializable
 
 	public ComponentProperty getDefaultAnswerProperty()
 	{
-		// TODO: generalize
-
-		return ComponentProperty.getInstance(this,"http://linkedspending.aksw.org/ontology/finland-aid-amount");
+		return ComponentProperty.getInstance(this,"http://linkedspending.aksw.org/ontology/"+name+"-amount");
 	}
 
 }

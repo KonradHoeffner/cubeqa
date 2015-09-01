@@ -55,6 +55,11 @@ public class LabelIndex extends Index
 	{
 		if(indexWriter==null) throw new IllegalStateException("indexWriter is null, call startWrites() first.");
 		Document doc = new Document();
+		if(uri==null)
+		{
+			log.error("label index add uri==null. the following labels will not be added: "+labels);
+			return;
+		}
 		doc.add(new StringField("uri", uri, Field.Store.YES));
 		//		doc.add(new TextField("cube", cube.name, Field.Store.YES));
 		//		doc.add(new TextField("property", cube.name, Field.Store.YES));

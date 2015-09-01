@@ -10,20 +10,20 @@ public class ComponentPropertyTest
 {
 	@Test public void testVar()
 	{
-		Cube c = Cube.FINLAND_AID;
+		Cube c = Cube.finlandAid();
 		Set<String> vars = c.properties.values().stream().map(p->p.var).collect(Collectors.toSet());
 		for(ComponentProperty p: c.properties.values()) System.out.println(p.var+" "+p.uri);
-		System.out.println(Cube.FINLAND_AID.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
+		System.out.println(Cube.finlandAid().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
 		System.out.println(vars);
 		assertEquals(vars.size(),c.properties.size());
 	}
 
 	@Test public void testMatch()
 	{
-		ComponentProperty rc = ComponentProperty.getInstance(Cube.FINLAND_AID, "http://linkedspending.aksw.org/ontology/finland-aid-recipient-country");
+		ComponentProperty rc = ComponentProperty.getInstance(Cube.finlandAid(), "http://linkedspending.aksw.org/ontology/finland-aid-recipient-country");
 		System.out.println(rc.match("country"));
-		ComponentProperty ea = ComponentProperty.getInstance(Cube.FINLAND_AID, "http://linkedspending.aksw.org/ontology/finland-aid-amounts-extended");
-		ComponentProperty a = ComponentProperty.getInstance(Cube.FINLAND_AID, "http://linkedspending.aksw.org/ontology/finland-aid-amount");
+		ComponentProperty ea = ComponentProperty.getInstance(Cube.finlandAid(), "http://linkedspending.aksw.org/ontology/finland-aid-amounts-extended");
+		ComponentProperty a = ComponentProperty.getInstance(Cube.finlandAid(), "http://linkedspending.aksw.org/ontology/finland-aid-amount");
 
 		System.out.println(ea.match("extended amounts"));
 		System.out.println(a.match("extended amounts"));
@@ -31,7 +31,7 @@ public class ComponentPropertyTest
 
 	@Test public void testRanges()
 	{
-		Cube c = Cube.FINLAND_AID;
+		Cube c = Cube.finlandAid();
 //		System.out.println(c.properties.values());
 		Set<String> ranges = c.properties.values().stream().map(p->p.range).collect(Collectors.toSet());
 		assertTrue(ranges.contains("http://www.w3.org/2001/XMLSchema#date"));

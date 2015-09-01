@@ -3,7 +3,6 @@ package org.aksw.cubeqa.benchmark;
 import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import org.aksw.cubeqa.Algorithm;
 import org.aksw.cubeqa.CubeSparql;
 import org.junit.Test;
@@ -12,7 +11,7 @@ public class BenchmarkTest
 {
 	@Test public void testCompleteQuestion()
 	{
-		Question q = Benchmark.completeQuestion(CubeSparql.FINLAND_AID, "some string","ask {?s ?p ?o.}");
+		Question q = Benchmark.completeQuestion(CubeSparql.finlandAid(), "some string","ask {?s ?p ?o.}");
 		assertTrue(q.answers.size()==1);
 		assertTrue(q.answerTypes.get("")==DataType.BOOLEAN);
 		assertTrue(q.answers.iterator().next().get("").equals("true"));

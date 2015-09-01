@@ -15,8 +15,6 @@ public class NumericScorerTest
 		assertEquals(scorer.score("180000").get().score,1,0);
 		assertEquals(scorer.score("4312").get().score,1,0);
 		assertEquals(scorer.score("123456789").get().score,0,0);
-
-//		assertTrue(scorer.score("https://openspending.org/finland-aid/recipient-country/et")>0.6);
 	}
 
 }

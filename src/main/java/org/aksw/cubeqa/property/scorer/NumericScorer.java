@@ -5,7 +5,6 @@ import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.google.common.collect.Range;
 import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
 
 /** tests if a number is included in the range. */
 public class NumericScorer extends Scorer
@@ -15,8 +14,8 @@ public class NumericScorer extends Scorer
 	public NumericScorer(ComponentProperty property)
 	{
 		super(property);
-		// sometimes returns NAN although the values are correct, adding ?d to the variables seems to help
-		String query = "select ?d (min(xsd:double(?d)) as ?min) (max(xsd:double(?d)) as ?max) {?o a qb:Observation. ?o qb:dataSet <"+property.cube.uri+">."
+		// sometimes returns NAN although the values are correct
+		String query = "select (min(xsd:double(?d)) as ?min) (max(xsd:double(?d)) as ?max) {?o a qb:Observation. ?o qb:dataSet <"+property.cube.uri+">."
 				+ "?o <"+property.uri+"> ?d.}";
 		QuerySolution qs = property.cube.sparql.select(query).next();
 

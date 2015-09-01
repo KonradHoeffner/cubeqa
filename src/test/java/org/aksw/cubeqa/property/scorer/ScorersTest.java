@@ -11,14 +11,14 @@ public class ScorersTest
 {
 	void test(String s)
 	{
-		System.out.println(Scorers.scorePhraseProperties(Cube.FINLAND_AID,s));
-//		System.out.println(Scorers.scorePhraseValues(Cube.FINLAND_AID,s));
+		System.out.println(Scorers.scorePhraseProperties(Cube.finlandAid(),s));
+//		System.out.println(Scorers.scorePhraseValues(Cube.FINLAND_AID(),s));
 	}
 
 	/** @param shouldBe either a uri (objectproperty) or a label lexical form (datatypeproperty) */
 	void test(String s,String shouldBe)
 	{
-		Map<ComponentProperty, ScoreResult> m = Scorers.scorePhraseValues(Cube.FINLAND_AID,s);
+		Map<ComponentProperty, ScoreResult> m = Scorers.scorePhraseValues(Cube.finlandAid(),s);
 		assertEquals(m.values().stream().max(Comparator.comparing(ScoreResult::getScore)).get().value,shouldBe);
 	}
 

@@ -11,7 +11,7 @@ public class HalfInfiniteIntervalDetectorTest
 {
 	@Test public void testDetect()
 	{
-		Cube cube = Cube.FINLAND_AID;
+		Cube cube = Cube.finlandAid();
 		Set<CubeTemplateFragment> fragments = HalfInfiniteIntervalDetector.INSTANCE.detect(cube,"How many countries had amounts of more than 1000000 € in 2010?");
 		CubeTemplateFragment fragment = CubeTemplateFragment.combine(fragments);
 		assertTrue(fragment.getRestrictions().size()==1);

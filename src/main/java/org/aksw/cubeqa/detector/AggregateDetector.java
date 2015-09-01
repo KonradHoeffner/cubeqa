@@ -51,7 +51,7 @@ public class AggregateDetector extends Detector
 			Aggregate aggregate = aggregateMap.get(s);
 			fragments.add(new CubeTemplateFragment(cube, s,
 					Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.singleton(aggregate), Collections.emptySet()));
-			log.debug("Found aggregate "+aggregate+ "in phrase '"+s+"'");
+			log.debug("Found aggregate "+aggregate+ " in phrase '"+s+"'");
 		});
 		return fragments;
 	}

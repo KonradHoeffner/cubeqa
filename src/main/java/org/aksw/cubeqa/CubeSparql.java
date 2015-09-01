@@ -13,17 +13,13 @@ public class CubeSparql implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 
-
-
-	//	static public final CubeSparql LINKED_SPENDING = new CubeSparql(
-	//			"http://linkedspending.aksw.org/instance/",
-	//			"http://linkedspending.aksw.org/ontology/",
-	//			"http://linkedspending.aksw.org/",
-	//			"http://linkedspending.aksw.org/sparql"
-	////			"http://localhost:8890/sparql"
-	//			);
-
-	static public final CubeSparql FINLAND_AID = linkedSpendingForName("finland-aid");
+	static private CubeSparql finlandAid = null;
+	static public synchronized CubeSparql finlandAid()
+	{
+		if(1==1) throw new RuntimeException("should not be called by benchmark2");
+		if(finlandAid==null) {finlandAid = getLinkedSpendingInstanceForName("finland-aid");}
+		return finlandAid;
+	}
 
 	public final String cubeUri;
 	public final String prefixInstance;
@@ -33,19 +29,19 @@ public class CubeSparql implements Serializable
 	private final String prefixes;
 	private List<String> defaultGraphs = new ArrayList<>();
 
-	static public CubeSparql linkedSpendingForName(String cubeName)
+	static public CubeSparql getLinkedSpendingInstanceForName(String cubeName)
 	{
-		return linkedSpendingForUri(Cube.linkedSpendingUri(cubeName));
+		return getLinkedSpendingInstanceForUri(Cube.linkedSpendingUri(cubeName));
 	}
 
-	static public CubeSparql linkedSpendingForUri(String cubeUri)
+	static public CubeSparql getLinkedSpendingInstanceForUri(String cubeUri)
 	{
 		CubeSparql cs = new CubeSparql(cubeUri,
 				"http://linkedspending.aksw.org/instance/",
 				"http://linkedspending.aksw.org/ontology/",
 				"http://linkedspending.aksw.org/",
-//				"http://localhost:8890/sparql");
-						"http://linkedspending.aksw.org/sparql");
+								"http://localhost:8890/sparql");
+//				"http://linkedspending.aksw.org/sparql");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology/");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeUri.substring(cubeUri.lastIndexOf('/')+1));
 		return cs;

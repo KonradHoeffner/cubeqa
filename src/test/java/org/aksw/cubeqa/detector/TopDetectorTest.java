@@ -11,7 +11,7 @@ public class TopDetectorTest
 	/** uses CubeTemplateFragment.toString to test more easily, may break if CubeTemplateFragment.toString changes*/
 	@Test public void testDetect()
 	{
-		Cube cube = Cube.FINLAND_AID;
+		Cube cube = Cube.finlandAid();
 		{
 			String ds = TopDetector.INSTANCE.detect(cube,"10 highest amounts").toString();
 //			assertTrue(Pattern.matches("(?i).*order by DESC\\(\\?v[0-9]+\\) limit 5.*", ds));

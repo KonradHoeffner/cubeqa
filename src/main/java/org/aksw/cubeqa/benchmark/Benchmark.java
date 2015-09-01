@@ -88,26 +88,26 @@ public class Benchmark
 		log.info("Evaluating benchmark "+name+" with "+questions.size()+" questions");
 		List<Performance> performances = new ArrayList<>();
 		int count = 0;
-		int unionCount = 0;
-		int subqueryCount = 0;
-		int askCount = 0;
+//		int unionCount = 0;
+//		int subqueryCount = 0;
+//		int askCount = 0;
 		for(int i=1;i<=questions.size();i++)
 		{
-			if(i==74) {performances.add(new Performance(0,0,true));continue;} // q 74 gets wrongly positively evaluated
+//			if(i==74) {performances.add(new Performance(0,0,true));continue;} // q 74 gets wrongly positively evaluated // removed as for old benchmark
 			Question q = questions.get(i-1);
 			//			// remove questions with unions
-			if(q.query.toLowerCase().contains("union")) {unionCount++;continue;}
-			//			// remove questions with subqueries
-			if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
-			//			// remove ask queries
-			if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
+//			if(q.query.toLowerCase().contains("union")) {unionCount++;continue;}
+//			//			// remove questions with subqueries
+//			if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
+//			//			// remove ask queries
+//			if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
 			count++;
 			performances.add(evaluate(algorithm,i));
 		}
 		log.info(count+" questions processed");
-		System.out.println(unionCount+ "union queries");
-		System.out.println(subqueryCount+ "sub queries");
-		System.out.println(askCount+ "ask queries");
+//		System.out.println(unionCount+ "union queries");
+//		System.out.println(subqueryCount+ "sub queries");
+//		System.out.println(askCount+ "ask queries");
 		log.info("Average precision "+ performances.stream().filter(p->!p.isEmpty()).mapToDouble(Performance::getPrecision).average());
 		log.info("Average recall "+ performances.stream().mapToDouble(Performance::getRecall).average());
 		//		log.info("f score")
@@ -123,7 +123,8 @@ public class Benchmark
 		log.debug("correct query: "+question.query);
 		log.debug("correct answer: "+question.answers);
 
-		Cube cube = Cube.getInstance(Cube.linkedSpendingCubeName(question.cubeUri));
+		String cubeName = Cube.linkedSpendingCubeName(question.cubeUri);
+		Cube cube = Cube.getInstance(cubeName);
 		String query = algorithm.answer(cube.name,question.string).sparqlQuery();
 		Question found;
 		try
@@ -138,7 +139,7 @@ public class Benchmark
 		log.debug("found query: "+found.query);
 		log.debug("found answer: "+found.answers);
 		Performance p = Performance.performance(question.answers, found.answers);
-		log.info("Performance "+p);
+		log.info(p);
 		return p;
 	}
 
@@ -257,7 +258,7 @@ public class Benchmark
 				writer.writeCharacters("\n");
 				if(question.answers==null)
 				{
-					question = completeQuestion(CubeSparql.linkedSpendingForUri(question.cubeUri), question.string, question.query);
+					question = completeQuestion(CubeSparql.getLinkedSpendingInstanceForUri(question.cubeUri), question.string, question.query);
 					////					if(true) throw new IllegalArgumentException("answers are null");
 					//					log.warn("Benchmark contains no answers, querying SPARQL endpoint");
 					//					if(question.query.startsWith("ask"))
