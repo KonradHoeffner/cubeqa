@@ -12,7 +12,7 @@ import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
-import org.apache.log4j.Level;
+import org.apache.commons.lang.StringEscapeUtils;
 import de.konradhoeffner.commons.Pair;
 import edu.stanford.nlp.trees.Tree;
 
@@ -27,8 +27,7 @@ public class CubeTemplator
 
 	private final Cube cube;
 
-	/** Sublist of trees that satisfiy the given predicate
-	 */
+	/** Sublist of trees that satisfiy the given predicate */
 	List<CubeTemplateFragment> fragments(List<Tree> trees, Predicate<CubeTemplateFragment> predicate)
 	{
 		return trees.stream()
@@ -39,6 +38,17 @@ public class CubeTemplator
 
 	public CubeTemplate buildTemplate(String question)
 	{
+		Optional<Pair<String,EnumSet<AnswerType>>> oPair = AnswerType.eatAndQuestionWord(question);
+		EnumSet<AnswerType> eats = EnumSet.allOf(AnswerType.class);
+		if(!oPair.isPresent()) {log.warn("no question word found for question '"+question+"': no answer type restriction possible.");}
+		else
+		{
+			String questionWord = oPair.get().a;
+			eats = oPair.get().b;
+			question = question.substring(questionWord.length());
+		}
+
+
 		String noStop = question;
 		if(Config.INSTANCE.removeStopWords)
 		{
@@ -56,23 +66,23 @@ public class CubeTemplator
 		return finalTemplate;
 	}
 
-	/** @param question
+	/** @param question the full question used on all detectors
 	 * @return the combined detected fragment and the leftover phrase
 	 */
-	Pair<CubeTemplateFragment,String> detect(String question)
+	Pair<CubeTemplateFragment,String> detect(final String question)
 	{
 		CubeTemplateFragment allDetectorFragment = null;
 
+		String reducedPhrase = question;
 		for(Detector detector: Detector.DETECTORS)
 		{
-			Set<CubeTemplateFragment> detectorResults = detector.detect(cube,question);
+			Set<CubeTemplateFragment> detectorResults = detector.detect(cube,reducedPhrase);
 			if(!detectorResults.isEmpty())
 			{
 				for(CubeTemplateFragment fragment: detectorResults)
 				{
-					String reducedPhrase = question.replace(fragment.phrase,"").replace("  ", " ");
+					reducedPhrase = question.replace(fragment.phrase,"").replace("  ", " ");
 					if(reducedPhrase.equals(question)) throw new IllegalArgumentException("fragment phrase '"+fragment.phrase+"' not found in whole phrase "+question);
-					question = reducedPhrase;
 					log.debug("Detector "+detector.getClass().getSimpleName()+" matched part: '"+fragment.phrase+"', left over phrase: "+question);
 				}
 				// keep results from earlier used detectors
@@ -80,12 +90,12 @@ public class CubeTemplator
 				allDetectorFragment = CubeTemplateFragment.combine(new ArrayList<>(detectorResults));
 			}
 		}
-		if(allDetectorFragment==null) {return new Pair<>(new CubeTemplateFragment(cube, ""),question);}
-		return new Pair<>(allDetectorFragment,question);
+		if(allDetectorFragment==null) {return new Pair<>(new CubeTemplateFragment(cube,""),reducedPhrase);}
+		return new Pair<>(allDetectorFragment,reducedPhrase);
 	}
 
 	/** The recursive algorithm. */
-	CubeTemplateFragment visitRecursive(Tree tree)
+	CubeTemplateFragment visitRecursive(String question, Tree tree)
 	{
 		while(/*!tree.isPreTerminal()&&*/tree.children().length==1)
 		{
@@ -108,6 +118,7 @@ public class CubeTemplator
 			log.trace("visiting tree "+tree);
 			log.trace("Phrase \""+phrase+"\"...");
 			// either we detected nothing or only part of the phrase
+
 			MatchResult matchResult = identify(phrase);
 			// whole phrase matched, subtrees skipped
 			if(!matchResult.isEmpty())
@@ -162,7 +173,7 @@ public class CubeTemplator
 		}
 	}
 
-	public MatchResult identify(String phrase)
+	public MatchResult identify(String phrase, int phraseIndex)
 	{
 		Map<ComponentProperty,Double> nameRefs = Scorers.scorePhraseProperties(cube,phrase);
 		Map<ComponentProperty,ScoreResult> valueRefs = Scorers.scorePhraseValues(cube,phrase);
@@ -172,7 +183,7 @@ public class CubeTemplator
 //			System.out.println(nameRefs);
 //			System.out.println(valueRefs);
 //		}
-		return new MatchResult(phrase, nameRefs, valueRefs);
+		return new MatchResult(phrase, phraseIndex, nameRefs, valueRefs);
 	}
 
 }

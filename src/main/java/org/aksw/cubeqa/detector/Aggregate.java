@@ -3,5 +3,4 @@ package org.aksw.cubeqa.detector;
 public enum Aggregate
 {
 	MIN,MAX,COUNT,AVG,SUM;
-
 }

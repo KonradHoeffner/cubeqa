@@ -50,22 +50,29 @@ public class PerTimeDetector extends Detector
 		return fragments;
 	}
 
+	/** unit of time, such as day, month or year */
 	static class TimeUnit
 	{
 		public final Cube cube;
 		public final Set<Pattern> patterns = new HashSet<>();
 		public final Optional<ComponentProperty> property;
 
-		public TimeUnit(Cube cube, String name, Resource dataType)
+		/**
+		 * @param cube
+		 * @param label the surface form, e.g. "year"
+		 * @param dataType the XSD datatype representing the time unit, e.g. XSD.gYear.
+		 */
+		public TimeUnit(Cube cube, String label, Resource dataType)
 		{
+			if(label==null) throw new IllegalArgumentException("label is null" );
 			this.cube=cube;
-			List<String> prePatterns = Arrays.asList("per "+name,name+"ly");
+			List<String> prePatterns = Arrays.asList("per "+label,label+"ly");
 			for(String prePattern: prePatterns)
 			{
 				patterns.add(Pattern.compile("(?i)(^|[\\s,])"+prePattern+"($|[\\s.])"));
 //				patterns.add(Pattern.compile("(?i)[^\\s,]"+prePattern+"[\\s,.$]"));
 			}
-			Set<ComponentProperty> candidates = cube.properties.values().stream().filter(p->p.range.equals(dataType.getURI())).collect(Collectors.toSet());
+			Set<ComponentProperty> candidates = cube.properties.values().stream().filter(p->dataType.getURI().equals(p.range)).collect(Collectors.toSet());
 			if(candidates.isEmpty())
 			{
 				property = Optional.empty();
@@ -79,7 +86,7 @@ public class PerTimeDetector extends Detector
 			{
 				//			 multiple properties with the right data type, which one has the highest string similarity?
 				bestCandidate = candidates.stream().max(Comparator.comparing(
-						p->p.labels.stream().max(Comparator.comparing(l->similarity.getDistance(name, l))).get())).get();
+						p->p.labels.stream().max(Comparator.comparing(l->similarity.getDistance(label, l))).get())).get();
 			}
 			property = Optional.of(bestCandidate);
 		}

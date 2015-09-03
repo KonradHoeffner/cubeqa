@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.property.scorer.*;
 import org.aksw.cubeqa.property.scorer.temporal.TemporalScorer;
+import org.aksw.linkedspending.Sparql;
 import org.aksw.linkedspending.tools.DataModel;
 import org.aksw.linkedspending.tools.DataModel.Owl;
 import org.apache.log4j.Level;
@@ -148,20 +149,29 @@ public class ComponentProperty implements Serializable
 		//		this.type=type;
 	}
 
+	private Scorer scorerFromValues()
+	{
+		ResultSet rs = cube.sparql.select("select ?o {?s <"+uri+"> ?o.} limit 1");
+		return rs.nextSolution().get("o").isLiteral()?new StringScorer(this):new ObjectPropertyScorer(this);
+	}
+
 	/**Guesses the correct scorer for a property, e.g. NumericScorer for xsd:integer.
 	 * @param types a set of RDF classes which are the RDF types of the property
 	 * @return a specific scorer that is the best fit for the types and range. */
 	private Scorer scorer(Set<String> types)
 	{
+		boolean datatypeProperty = false;
+		forloop:
 		for(String type: types)
 		{
 			switch(type)
 			{
 				case Owl.OBJECT_PROPERTY_URI:return new ObjectPropertyScorer(this);
-				case Owl.DATATYPE_PROPERTY_URI:
+				case Owl.DATATYPE_PROPERTY_URI:datatypeProperty=true;break forloop;
 				default:
 			}
 		}
+		if(!datatypeProperty) {log.trace("property "+this.uri+" is neither object nor datatype property");}
 
 		if(range!=null)
 		{
@@ -180,12 +190,14 @@ public class ComponentProperty implements Serializable
 
 			} else
 			{
-				log.warn("range "+range+" unknown: creating NOP scorer for "+this.uri);
-				return NopScorer.INSTANCE;
+				log.warn("unknown type and range "+range+". fetching values. "+this.uri);
+				return scorerFromValues();
+//				return NopScorer.INSTANCE;
 			}
 		}
-		log.warn("no range: creating NOP property scorer for "+this.uri);
-		return NopScorer.INSTANCE;
+		log.warn("unknown type and no range: fetching values for "+this.uri);
+		return scorerFromValues();
+//		return NopScorer.INSTANCE;
 
 //		throw new RuntimeException("no scorer found for component "+this+" with range "+range);
 		//		return scorer;

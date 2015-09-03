@@ -26,7 +26,6 @@ public class AnswerTypeTest
 		test("Which country has the lowest amount of commitments?",EnumSet.allOf(AnswerType.class));
 		test("How many countries had amounts of more than 1000000 € in 2010?",AnswerType.COUNTABLE);
 		test("Where is the biggest aid for medical services?",AnswerType.LOCATION);
-		//				In which countries was education on sexual and reproductive health in evening schools funded?
 		test("When did Paraguy get money from the Finish Red Cross?",AnswerType.TEMPORAL);
 		test("Did the Ukraine receive money in 2009?",AnswerType.AFFIRMATIVE);
 		test("Was Ethiopia given money for primary education?",AnswerType.AFFIRMATIVE);

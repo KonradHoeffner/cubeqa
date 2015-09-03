@@ -3,7 +3,7 @@ package org.aksw.cubeqa.property.scorer;
 import java.util.Optional;
 import org.aksw.cubeqa.property.ComponentProperty;
 
-/** When no real scorer could be found this shuts a property out from being detected.*/
+/** No Operation Scorer used when no other Scorer could be identified.*/
 public final class NopScorer extends Scorer
 {
 	private NopScorer() {super(null);}

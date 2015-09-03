@@ -27,11 +27,11 @@ public class CubeTemplateFragment
 	final Cube cube;
 	final String phrase;
 
-	final Set<Restriction> restrictions;
-	final Set<ComponentProperty> answerProperties;
-	final Set<ComponentProperty> perProperties;
-	final Set<Aggregate> aggregates;
-	final Set<MatchResult> matchResults;
+	private final Set<Restriction> restrictions;
+	private final Set<ComponentProperty> answerProperties;
+	private final Set<ComponentProperty> perProperties;
+	private final Set<Aggregate> aggregates;
+	private final Set<MatchResult> matchResults;
 
 	private Set<ComponentProperty> unreferredProperties()
 	{

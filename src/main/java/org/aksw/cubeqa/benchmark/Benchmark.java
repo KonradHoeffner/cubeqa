@@ -85,13 +85,18 @@ public class Benchmark
 
 	public void evaluate(Algorithm algorithm)
 	{
-		log.info("Evaluating benchmark "+name+" with "+questions.size()+" questions");
+		evaluate(algorithm, 1, questions.size());
+	}
+
+	public void evaluate(Algorithm algorithm,int startQuestionNumber,int endQuestionNumber)
+	{
+		log.info("Evaluating benchmark "+name+" with "+questions.size()+" questions, ["+startQuestionNumber+","+endQuestionNumber+"]");
 		List<Performance> performances = new ArrayList<>();
 		int count = 0;
 //		int unionCount = 0;
 //		int subqueryCount = 0;
 //		int askCount = 0;
-		for(int i=1;i<=questions.size();i++)
+		for(int i=startQuestionNumber;i<=endQuestionNumber;i++)
 		{
 //			if(i==74) {performances.add(new Performance(0,0,true));continue;} // q 74 gets wrongly positively evaluated // removed as for old benchmark
 			Question q = questions.get(i-1);

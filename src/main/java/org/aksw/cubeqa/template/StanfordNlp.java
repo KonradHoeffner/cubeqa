@@ -3,9 +3,12 @@ package org.aksw.cubeqa.template;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Properties;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j;
 import edu.stanford.nlp.io.NullOutputStream;
 import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
+import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
@@ -20,8 +23,16 @@ import edu.stanford.nlp.util.CoreMap;
 @Log4j
 public class StanfordNlp
 {
-	static private final StanfordCoreNLP parser;
+	static private final StanfordCoreNLP treeParser;
 //	static private final StanfordCoreNLP lemmatizer;
+
+	@RequiredArgsConstructor
+	@ToString
+	static public class ParseResult
+	{
+		final Tree parseTree;
+		final String pos;
+	}
 
 	static
 	{
@@ -32,7 +43,7 @@ public class StanfordNlp
 		{
 		Properties props = new Properties();
 		props.put("annotators", "tokenize, ssplit, pos, parse");
-		parser = new StanfordCoreNLP(props);
+		treeParser = new StanfordCoreNLP(props);
 		}
 //		{
 //		Properties props = new Properties();
@@ -45,12 +56,12 @@ public class StanfordNlp
 
 	public static Tree parse(String sentence)
 	{
-		log.trace("parsing sentence: "+sentence);
+		log.trace("parsing sentence: '"+sentence+"' as tree");
 		Annotation document = new Annotation(sentence);
-		parser.annotate(document);
+		treeParser.annotate(document);
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-		//		return sentences.get(0).get(BasicDependenciesAnnotation.class);
 		return sentences.get(0).get(TreeAnnotation.class);
+//		return new ParseResult(sentences.get(0).get(TreeAnnotation.class),document.get(PartOfSpeechAnnotation.class));
 	}
 
 //	public static String lemmatize(String text)
