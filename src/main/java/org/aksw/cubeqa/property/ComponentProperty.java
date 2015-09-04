@@ -5,16 +5,11 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java_cup.internal_error;
-import lombok.NonNull;
-import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.property.scorer.*;
 import org.aksw.cubeqa.property.scorer.temporal.TemporalScorer;
-import org.aksw.linkedspending.Sparql;
 import org.aksw.linkedspending.tools.DataModel;
 import org.aksw.linkedspending.tools.DataModel.Owl;
-import org.apache.log4j.Level;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import com.hp.hpl.jena.query.ResultSet;
@@ -22,6 +17,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.XSD;
 import de.konradhoeffner.commons.Pair;
+import lombok.NonNull;
+import lombok.extern.log4j.Log4j;
 
 /** Represents a component property of a RDF Data Cube.
  * Implements the Multiton Pattern, with the key being the combination of cube name and uri, because information about values is safed.
@@ -51,6 +48,8 @@ public class ComponentProperty implements Serializable
 	//	public final PropertyType type;
 
 	@NonNull public final Scorer scorer;
+
+	public final AnswerType answerType;
 
 	//	static Domain propertyDomain(String propertyUri)
 	//	{
@@ -138,7 +137,9 @@ public class ComponentProperty implements Serializable
 			this.range=ranges.isEmpty()?null:ranges.iterator().next();
 			//			if(range.equals(XSD.xstring.getURI())) {range=null;}
 			//			else {range = guessRange();}
-			this.scorer = scorer(types);
+			Pair<Scorer,AnswerType> sat = scorerAndType(types);
+			scorer = sat.a;
+			answerType = sat.b;
 		}
 
 		this.labels=Collections.unmodifiableSet(labels);
@@ -158,7 +159,7 @@ public class ComponentProperty implements Serializable
 	/**Guesses the correct scorer for a property, e.g. NumericScorer for xsd:integer.
 	 * @param types a set of RDF classes which are the RDF types of the property
 	 * @return a specific scorer that is the best fit for the types and range. */
-	private Scorer scorer(Set<String> types)
+	private Pair<Scorer,AnswerType> scorerAndType(Set<String> types)
 	{
 		boolean datatypeProperty = false;
 		forloop:
@@ -166,7 +167,7 @@ public class ComponentProperty implements Serializable
 		{
 			switch(type)
 			{
-				case Owl.OBJECT_PROPERTY_URI:return new ObjectPropertyScorer(this);
+				case Owl.OBJECT_PROPERTY_URI:return new Pair<>(new ObjectPropertyScorer(this),AnswerType.ENTITY);
 				case Owl.DATATYPE_PROPERTY_URI:datatypeProperty=true;break forloop;
 				default:
 			}
@@ -177,27 +178,30 @@ public class ComponentProperty implements Serializable
 		{
 			if(range.startsWith(XSD.getURI()))
 			{
-				Set<String> xsdNumeric = Arrays.asList(XSD.decimal,XSD.xbyte,XSD.xshort,XSD.xint,XSD.xlong,XSD.xfloat,XSD.xdouble)
+				Set<String> integers = Arrays.asList(XSD.xbyte,XSD.xint,XSD.xlong,XSD.integer,
+						XSD.xlong,XSD.negativeInteger,XSD.positiveInteger,XSD.nonNegativeInteger,XSD.nonPositiveInteger,XSD.positiveInteger,XSD.xshort,
+						XSD.unsignedLong,XSD.unsignedInt,XSD.unsignedShort,XSD.unsignedByte)
+						.stream().map(Resource::getURI).collect(Collectors.toSet());
+
+				Set<String> floats = Arrays.asList(XSD.decimal,XSD.xfloat,XSD.xdouble)
 						.stream().map(Resource::getURI).collect(Collectors.toSet());
 				//				Set<String> xsdTemporal = Arrays.asList(XSD.date,XSD.dateTime,XSD.gDay,XSD.gMonth,XSD.gMonthDay,XSD.gYear,XSD.gYearMonth)
 				//						.stream().map(Resource::getURI).collect(Collectors.toSet());
 				// TODO: ensure right parsing of all xsd temporal types
-				if(range.endsWith("Integer")||xsdNumeric.contains(range)) {return new NumericScorer(this);}
-				if(range.equals(XSD.xstring.getURI())) {return new StringScorer(this);}
-				//					if(r.equals(XSD.xboolean.getURI())) {return new BooleanScorer(this);} // TODO investigate do we need a boolean scorer?
-				if(range.equals(XSD.gYear.getURI())) {return TemporalScorer.yearScorer(this);}
-				if(range.equals(XSD.date.getURI())||range.equals(XSD.dateTime.getURI())) {return TemporalScorer.dateScorer(this);}
 
+				if(floats.contains(range)) {return new Pair<>(new NumericScorer(this),AnswerType.UNCOUNTABLE);}
+				if(range.equals(XSD.xstring.getURI())) {return new Pair<>(new StringScorer(this),AnswerType.ENTITY);}
+				//					if(r.equals(XSD.xboolean.getURI())) {return new BooleanScorer(this);} // TODO investigate do we need a boolean scorer?
+				if(range.equals(XSD.gYear.getURI())) {return new Pair<>(TemporalScorer.yearScorer(this),AnswerType.TEMPORAL);}
+				if(range.equals(XSD.date.getURI())||range.equals(XSD.dateTime.getURI())) {return new Pair<>(TemporalScorer.dateScorer(this),AnswerType.TEMPORAL);}
 			} else
 			{
 				log.warn("unknown type and range "+range+". fetching values. "+this.uri);
-				return scorerFromValues();
-//				return NopScorer.INSTANCE;
+				return new Pair<>(scorerFromValues(),AnswerType.ENTITY);
 			}
 		}
 		log.warn("unknown type and no range: fetching values for "+this.uri);
-		return scorerFromValues();
-//		return NopScorer.INSTANCE;
+		return new Pair<>(scorerFromValues(),AnswerType.ENTITY);
 
 //		throw new RuntimeException("no scorer found for component "+this+" with range "+range);
 		//		return scorer;
@@ -227,20 +231,34 @@ public class ComponentProperty implements Serializable
 
 	@Override public boolean equals(Object obj)
 	{
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
 		ComponentProperty other = (ComponentProperty) obj;
 		if (cube == null)
 		{
-			if (other.cube != null) return false;
+			if (other.cube != null) {
+				return false;
+			}
 		}
-		else if (!cube.equals(other.cube)) return false;
+		else if (!cube.equals(other.cube)) {
+			return false;
+		}
 		if (uri == null)
 		{
-			if (other.uri != null) return false;
+			if (other.uri != null) {
+				return false;
+			}
 		}
-		else if (!uri.equals(other.uri)) return false;
+		else if (!uri.equals(other.uri)) {
+			return false;
+		}
 		return true;
 	}
 

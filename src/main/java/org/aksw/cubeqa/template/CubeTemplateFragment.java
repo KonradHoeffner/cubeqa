@@ -2,15 +2,14 @@ package org.aksw.cubeqa.template;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.*;
-import lombok.extern.log4j.Log4j;
-import org.aksw.cubeqa.Config;
-import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.PropertyType;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.Restriction;
+import lombok.*;
+import lombok.extern.log4j.Log4j;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode
@@ -55,7 +54,9 @@ public class CubeTemplateFragment
 //		{log.warn("empty fragment set, combination empty");}
 
 		// *** new sets are unions over all fragment sets **********************************************************
-		if(fragments.stream().map(f->f.cube.uri).collect(Collectors.toSet()).size()>1) throw new IllegalArgumentException("different cube uris, can't combine");
+		if(fragments.stream().map(f->f.cube.uri).collect(Collectors.toSet()).size()>1) {
+			throw new IllegalArgumentException("different cube uris, can't combine");
+		}
 		// TODO join restrictions if possible (e.g. intervals for numericals, detect impossibilities)
 		Set<Restriction> restrictions = new HashSet<>();
 		Set<ComponentProperty> answerProperties = new HashSet<>();
@@ -117,7 +118,7 @@ public class CubeTemplateFragment
 		return fragment;
 	}
 
-	CubeTemplate toTemplate()
+	CubeTemplate toTemplate(EnumSet<AnswerType> expectedAnswerTypes)
 	{
 		// there will be no further combining so all leftover matchresult values will have to be guessed where they fit or thrown away
 
@@ -142,16 +143,38 @@ public class CubeTemplateFragment
 		Set<ComponentProperty> leftOverNamed = matchResults.stream().flatMap(mr->mr.nameRefs.keySet().stream()).collect(Collectors.toSet());
 		perProperties.addAll(leftOverNamed);
 
-		// if no answer property, search in match results for property refs for measures and take the highest scored, if no property refs take default one
+		// if no answer property, search in match results for property refs that are compatible with the answer types
 		if(answerProperties.isEmpty())
 		{
-			matchResults.stream()
+			Set<ComponentProperty> candidates = matchResults.stream()
 			.map(MatchResult::getNameRefs)
-			.map(Map::entrySet)
+			.map(Map::keySet)
 			.flatMap(Set::stream)
-			.filter(entry->entry.getKey().propertyType==PropertyType.MEASURE)
-			.max(Comparator.comparing(e->e.getValue()))
-			.ifPresent(e->answerProperties.add(e.getKey()));
+			.collect(Collectors.toSet());
+
+			Set<ComponentProperty> fittingAnswerType = candidates.stream()
+					.filter(c->expectedAnswerTypes.contains(c.answerType))
+					.collect(Collectors.toSet());
+
+			if(fittingAnswerType.size()==1)
+			{
+				answerProperties.add(fittingAnswerType.iterator().next());
+			} else if(fittingAnswerType.size()==0)
+			{
+				// TODO look at all candidates even if their types don't fit, maybe doing a count or something?
+			} else
+			{
+				// TODO multiple options, use the one with the highest value
+			}
+
+
+//			matchResults.stream()
+//			.map(MatchResult::getNameRefs)
+//			.map(Map::entrySet)
+//			.flatMap(Set::stream)
+//			.filter(entry->entry.getKey().propertyType==PropertyType.MEASURE)
+//			.max(Comparator.comparing(e->e.getValue()))
+//			.ifPresent(e->answerProperties.add(e.getKey()));
 			if(answerProperties.isEmpty()/*&&perProperties.isEmpty()*/)
 			{
 				log.debug("no answer property found, using default of "+cube.getDefaultAnswerProperty());

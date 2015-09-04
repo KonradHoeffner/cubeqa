@@ -1,17 +1,11 @@
 package org.aksw.cubeqa.template;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import java.util.*;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import de.konradhoeffner.commons.Pair;
+import lombok.*;
 
 /** Result of a match on a part of the parse tree. Gets combined with other match results to a template fragment. */
 @EqualsAndHashCode

@@ -4,17 +4,16 @@ import static org.aksw.cubeqa.Trees.phrase;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
-import org.apache.commons.lang.StringEscapeUtils;
 import de.konradhoeffner.commons.Pair;
 import edu.stanford.nlp.trees.Tree;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 /** Generates the Cube Template. */
 @RequiredArgsConstructor
@@ -82,7 +81,9 @@ public class CubeTemplator
 				for(CubeTemplateFragment fragment: detectorResults)
 				{
 					reducedPhrase = question.replace(fragment.phrase,"").replace("  ", " ");
-					if(reducedPhrase.equals(question)) throw new IllegalArgumentException("fragment phrase '"+fragment.phrase+"' not found in whole phrase "+question);
+					if(reducedPhrase.equals(question)) {
+						throw new IllegalArgumentException("fragment phrase '"+fragment.phrase+"' not found in whole phrase "+question);
+					}
 					log.debug("Detector "+detector.getClass().getSimpleName()+" matched part: '"+fragment.phrase+"', left over phrase: "+question);
 				}
 				// keep results from earlier used detectors
@@ -130,7 +131,9 @@ public class CubeTemplator
 		// either we didn't match because the phrase is too long or matching didn't find anything, so match subtrees separately
 		log.trace("unmatched, looking at subtrees");
 		List<CubeTemplateFragment> childFragments = fragments(tree.getChildrenAsList(),x->true);
-		if(childFragments.isEmpty()) return new CubeTemplateFragment(cube, phrase);
+		if(childFragments.isEmpty()) {
+			return new CubeTemplateFragment(cube, phrase);
+		}
 		List<CubeTemplateFragment> childFragmentsWithRefs = childFragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
 		List<CubeTemplateFragment> childFragmentsWithoutRefs = new LinkedList<>(childFragments);
 		childFragmentsWithoutRefs.removeAll(childFragmentsWithRefs);
@@ -173,7 +176,7 @@ public class CubeTemplator
 		}
 	}
 
-	public MatchResult identify(String phrase, int phraseIndex)
+	public MatchResult identify(String phrase/*, int phraseIndex*/)
 	{
 		Map<ComponentProperty,Double> nameRefs = Scorers.scorePhraseProperties(cube,phrase);
 		Map<ComponentProperty,ScoreResult> valueRefs = Scorers.scorePhraseValues(cube,phrase);
@@ -183,7 +186,7 @@ public class CubeTemplator
 //			System.out.println(nameRefs);
 //			System.out.println(valueRefs);
 //		}
-		return new MatchResult(phrase, phraseIndex, nameRefs, valueRefs);
+		return new MatchResult(phrase,/* phraseIndex, */nameRefs, valueRefs);
 	}
 
 }

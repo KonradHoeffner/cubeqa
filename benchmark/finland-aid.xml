@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?><dataset id="finland-aid"><question id="1" hybrid="false" statistical="true">
+<?xml version='1.0' encoding='UTF-8'?><dataset id="finland-aid"><question id="1" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What was the average aid committed per month in year 2010?</string>
 <query>
 select (sum(xsd:decimal(?aid))/12) as ?result
@@ -11,7 +11,7 @@ filter(year(?year)=2010).
 </answers>
 </query>
 </question>
-<question id="2" hybrid="false" statistical="true">
+<question id="2" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the average yearly aid over the Finnfund channel?</string>
 <query>
 select avg(?yearly) as ?result
@@ -27,7 +27,7 @@ select sum(xsd:decimal(?aid)) as ?yearly ?year
 </answers>
 </query>
 </question>
-<question id="3" hybrid="false" statistical="true">
+<question id="3" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money was given to strengthen civil society in Yemen?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?result
@@ -40,7 +40,7 @@ select sum(xsd:decimal(?aid)) as ?result
 </answers>
 </query>
 </question>
-<question id="4" hybrid="false" statistical="true">
+<question id="4" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much is committed in Ethiopia?</string>
 <query>
 select sum(xsd:decimal(?c)) as ?result
@@ -52,7 +52,7 @@ select sum(xsd:decimal(?c)) as ?result
 </answers>
 </query>
 </question>
-<question id="5" hybrid="false" statistical="true">
+<question id="5" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much does Peru receive for fishery research a year?</string>
 <query>
 select avg(?sum) as ?result
@@ -69,7 +69,7 @@ select sum(xsd:decimal(?aid)) as ?sum ?year
 </answers>
 </query>
 </question>
-<question id="6" hybrid="false" statistical="true">
+<question id="6" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many countries have extended amounts of  > 1000000 $?</string>
 <query>
 select count(?country) as ?result
@@ -86,7 +86,7 @@ having sum(xsd:decimal(?extended))>1000000
 </answers>
 </query>
 </question>
-<question id="7" hybrid="false" statistical="true">
+<question id="7" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the total aid to Egypt?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?result
@@ -98,7 +98,7 @@ select sum(xsd:decimal(?aid)) as ?result
 </answers>
 </query>
 </question>
-<question id="8" hybrid="false" statistical="true">
+<question id="8" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which were the top 10 aided countries in 2011?</string>
 <query>
 select ?result
@@ -123,7 +123,7 @@ limit 10<answers>
 </answers>
 </query>
 </question>
-<question id="9" hybrid="false" statistical="true">
+<question id="9" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money give Finnish Red Cross on health education?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?result
@@ -136,7 +136,7 @@ select sum(xsd:decimal(?aid)) as ?result
 </answers>
 </query>
 </question>
-<question id="10" hybrid="false" statistical="true">
+<question id="10" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the amount of aid and the amount of commitments per country per year?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?total_aid sum(xsd:decimal(?commitments)) as ?total_commitments ?country
@@ -162,13 +162,13 @@ group by ?country<answers>
 <total_aid answerType="number">1668029</total_aid>
 <total_commitments answerType="number">177440</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cl</country>
-<total_aid answerType="number">1344619</total_aid>
-<total_commitments answerType="number">1909727</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/za</country>
 <total_aid answerType="number">45074544</total_aid>
 <total_commitments answerType="number">43903762</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cl</country>
+<total_aid answerType="number">1344619</total_aid>
+<total_commitments answerType="number">1909727</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mu</country>
 <total_aid answerType="number">18875</total_aid>
@@ -238,10 +238,6 @@ group by ?country<answers>
 <total_aid answerType="number">6388158</total_aid>
 <total_commitments answerType="number">6879605</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country>
-<total_aid answerType="number">208449</total_aid>
-<total_commitments answerType="number">265416</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sv</country>
 <total_aid answerType="number">951798</total_aid>
 <total_commitments answerType="number">1034088</total_commitments>
@@ -249,6 +245,10 @@ group by ?country<answers>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</country>
 <total_aid answerType="number">14019636</total_aid>
 <total_commitments answerType="number">11818971</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country>
+<total_aid answerType="number">208449</total_aid>
+<total_commitments answerType="number">265416</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sl</country>
 <total_aid answerType="number">6923564</total_aid>
@@ -266,13 +266,13 @@ group by ?country<answers>
 <total_aid answerType="number">2756857</total_aid>
 <total_commitments answerType="number">3114399</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</country>
-<total_aid answerType="number">237425</total_aid>
-<total_commitments answerType="number">260000</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/zw</country>
 <total_aid answerType="number">13657651</total_aid>
 <total_commitments answerType="number">13644901</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</country>
+<total_aid answerType="number">237425</total_aid>
+<total_commitments answerType="number">260000</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/iq</country>
 <total_aid answerType="number">16939070</total_aid>
@@ -374,13 +374,13 @@ group by ?country<answers>
 <total_aid answerType="number">108280416</total_aid>
 <total_commitments answerType="number">178343140</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ng</country>
-<total_aid answerType="number">2866318</total_aid>
-<total_commitments answerType="number">4187194</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/td</country>
 <total_aid answerType="number">18089457</total_aid>
 <total_commitments answerType="number">18089457</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ng</country>
+<total_aid answerType="number">2866318</total_aid>
+<total_commitments answerType="number">4187194</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ht</country>
 <total_aid answerType="number">17510811</total_aid>
@@ -430,45 +430,45 @@ group by ?country<answers>
 <total_aid answerType="number">9328026</total_aid>
 <total_commitments answerType="number">13806599</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country>
-<total_aid answerType="number">20643979</total_aid>
-<total_commitments answerType="number">29426469</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pk</country>
 <total_aid answerType="number">40765911</total_aid>
 <total_commitments answerType="number">36225655</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country>
+<total_aid answerType="number">20643979</total_aid>
+<total_commitments answerType="number">29426469</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cm</country>
 <total_aid answerType="number">1197159</total_aid>
 <total_commitments answerType="number">2033701</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cd</country>
-<total_aid answerType="number">30091327</total_aid>
-<total_commitments answerType="number">30612038</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/et</country>
 <total_aid answerType="number">79823904</total_aid>
 <total_commitments answerType="number">154564626</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cd</country>
+<total_aid answerType="number">30091327</total_aid>
+<total_commitments answerType="number">30612038</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dm</country>
 <total_aid answerType="number">16000</total_aid>
 <total_commitments answerType="number">17000</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tl</country>
-<total_aid answerType="number">4134583</total_aid>
-<total_commitments answerType="number">4802107</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sr</country>
 <total_aid answerType="number">189853</total_aid>
 <total_commitments answerType="number">253900</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ec</country>
-<total_aid answerType="number">4093655</total_aid>
-<total_commitments answerType="number">4890359</total_commitments>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tl</country>
+<total_aid answerType="number">4134583</total_aid>
+<total_commitments answerType="number">4802107</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vc</country>
 <total_aid answerType="number">147400</total_aid>
 <total_commitments answerType="number">153400</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ec</country>
+<total_aid answerType="number">4093655</total_aid>
+<total_commitments answerType="number">4890359</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ke</country>
 <total_aid answerType="number">76081772</total_aid>
@@ -482,10 +482,6 @@ group by ?country<answers>
 <total_aid answerType="number">19384245</total_aid>
 <total_commitments answerType="number">7744047</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/xk</country>
-<total_aid answerType="number">4181728</total_aid>
-<total_commitments answerType="number">8633452</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mv</country>
 <total_aid answerType="number">1099047</total_aid>
 <total_commitments answerType="number">1026410</total_commitments>
@@ -493,6 +489,10 @@ group by ?country<answers>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/id</country>
 <total_aid answerType="number">14096599</total_aid>
 <total_commitments answerType="number">14127768</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/xk</country>
+<total_aid answerType="number">4181728</total_aid>
+<total_commitments answerType="number">8633452</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dz</country>
 <total_aid answerType="number">2193230</total_aid>
@@ -526,13 +526,13 @@ group by ?country<answers>
 <total_aid answerType="number">957099</total_aid>
 <total_commitments answerType="number">1204481</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cv</country>
-<total_aid answerType="number">26000</total_aid>
-<total_commitments answerType="number">26000</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mx</country>
 <total_aid answerType="number">2859083</total_aid>
 <total_commitments answerType="number">3102568</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cv</country>
+<total_aid answerType="number">26000</total_aid>
+<total_commitments answerType="number">26000</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/by</country>
 <total_aid answerType="number">1036637</total_aid>
@@ -550,10 +550,6 @@ group by ?country<answers>
 <total_aid answerType="number">12297326</total_aid>
 <total_commitments answerType="number">12654673</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lb</country>
-<total_aid answerType="number">7109929</total_aid>
-<total_commitments answerType="number">9496534</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bo</country>
 <total_aid answerType="number">3157234</total_aid>
 <total_commitments answerType="number">5114495</total_commitments>
@@ -562,33 +558,37 @@ group by ?country<answers>
 <total_aid answerType="number">8511110</total_aid>
 <total_commitments answerType="number">9332921</total_commitments>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lb</country>
+<total_aid answerType="number">7109929</total_aid>
+<total_commitments answerType="number">9496534</total_commitments>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/in</country>
 <total_aid answerType="number">18234315</total_aid>
 <total_commitments answerType="number">30661330</total_commitments>
-</answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cn</country>
-<total_aid answerType="number">30121286</total_aid>
-<total_commitments answerType="number">34281393</total_commitments>
-</answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mk</country>
-<total_aid answerType="number">873995</total_aid>
-<total_commitments answerType="number">812538</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ni</country>
 <total_aid answerType="number">76598583</total_aid>
 <total_commitments answerType="number">78442788</total_commitments>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mk</country>
+<total_aid answerType="number">873995</total_aid>
+<total_commitments answerType="number">812538</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cn</country>
+<total_aid answerType="number">30121286</total_aid>
+<total_commitments answerType="number">34281393</total_commitments>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/th</country>
 <total_aid answerType="number">3180025</total_aid>
 <total_commitments answerType="number">4709063</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country>
-<total_aid answerType="number">11600908</total_aid>
-<total_commitments answerType="number">14099756</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/la</country>
 <total_aid answerType="number">23148626</total_aid>
 <total_commitments answerType="number">39609091</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country>
+<total_aid answerType="number">11600908</total_aid>
+<total_commitments answerType="number">14099756</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ve</country>
 <total_aid answerType="number">1555884</total_aid>
@@ -622,13 +622,13 @@ group by ?country<answers>
 <total_aid answerType="number">3319883801</total_aid>
 <total_commitments answerType="number">3886040490</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country>
-<total_aid answerType="number">8199661</total_aid>
-<total_commitments answerType="number">12189382</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/md</country>
 <total_aid answerType="number">4832300</total_aid>
 <total_commitments answerType="number">5257013</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country>
+<total_aid answerType="number">8199661</total_aid>
+<total_commitments answerType="number">12189382</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gt</country>
 <total_aid answerType="number">4621490</total_aid>
@@ -638,13 +638,13 @@ group by ?country<answers>
 <total_aid answerType="number">422127</total_aid>
 <total_commitments answerType="number">677800</total_commitments>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</country>
-<total_aid answerType="number">371053</total_aid>
-<total_commitments answerType="number">603425</total_commitments>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bd</country>
 <total_aid answerType="number">4965838</total_aid>
 <total_commitments answerType="number">5986596</total_commitments>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</country>
+<total_aid answerType="number">371053</total_aid>
+<total_commitments answerType="number">603425</total_commitments>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bt</country>
 <total_aid answerType="number">585955</total_aid>
@@ -653,7 +653,7 @@ group by ?country<answers>
 </answers>
 </query>
 </question>
-<question id="11" hybrid="false" statistical="true">
+<question id="11" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money did the Egyptian government receive for rural development?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?result
@@ -666,7 +666,7 @@ select sum(xsd:decimal(?aid)) as ?result
 </answers>
 </query>
 </question>
-<question id="12" hybrid="false" statistical="true">
+<question id="12" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What's are the 10 highest aid amounts?</string>
 <query>
 select xsd:decimal(?result)
@@ -686,7 +686,7 @@ select xsd:decimal(?result)
 </answers>
 </query>
 </question>
-<question id="13" hybrid="false" statistical="true">
+<question id="13" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much did Uruguay receive?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?result
@@ -698,7 +698,7 @@ select sum(xsd:decimal(?aid)) as ?result
 </answers>
 </query>
 </question>
-<question id="14" hybrid="false" statistical="true">
+<question id="14" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money goes into food crop production
 over time?</string>
 <query>
@@ -729,7 +729,7 @@ select ?date sum(xsd:decimal(?aid)) as ?result
 </answers>
 </query>
 </question>
-<question id="15" hybrid="false" statistical="true">
+<question id="15" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>In South and Central Asia, how much aid was given to the regional FLEG programme in Mekong?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -742,7 +742,7 @@ select sum(xsd:decimal(?amount)) as ?result
 </answers>
 </query>
 </question>
-<question id="16" hybrid="false" statistical="true">
+<question id="16" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money Embassy of Finland contribute to Egyptian projects?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -755,7 +755,7 @@ select sum(xsd:decimal(?amount)) as ?result
 </answers>
 </query>
 </question>
-<question id="17" hybrid="false" statistical="true">
+<question id="17" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Are there observations whose start date is after their end date?</string>
 <query>
 ask
@@ -768,7 +768,7 @@ filter(?sd>?ed).
 </answers>
 </query>
 </question>
-<question id="18" hybrid="false" statistical="true">
+<question id="18" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is average aid amount per aid sector?</string>
 <query>
 select ?sector avg(xsd:decimal(?amount)) as ?average
@@ -785,11 +785,11 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">92324.269230769230769</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31182</sector>
 </answer>
-<answer><average answerType="number">3716782.36</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/13010</sector>
-</answer>
 <answer><average answerType="number">27311.75</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31193</sector>
+</answer>
+<answer><average answerType="number">3716782.36</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/13010</sector>
 </answer>
 <answer><average answerType="number">42373.2</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/41082</sector>
@@ -824,11 +824,11 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">750000</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/60063</sector>
 </answer>
-<answer><average answerType="number">63049.506024096385542</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/12281</sector>
-</answer>
 <answer><average answerType="number">90404.571428571428571</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31191</sector>
+</answer>
+<answer><average answerType="number">63049.506024096385542</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/12281</sector>
 </answer>
 <answer><average answerType="number">37547</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/23082</sector>
@@ -845,11 +845,11 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">22642.4</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31261</sector>
 </answer>
-<answer><average answerType="number">0</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/21050</sector>
-</answer>
 <answer><average answerType="number">252437.440677966101695</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/23010</sector>
+</answer>
+<answer><average answerType="number">0</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/21050</sector>
 </answer>
 <answer><average answerType="number">2825.263157894736842</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/32163</sector>
@@ -869,20 +869,20 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">81541.142857142857143</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/14050</sector>
 </answer>
-<answer><average answerType="number">500000</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/13081</sector>
-</answer>
 <answer><average answerType="number">52399.600609756097561</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/11230</sector>
+</answer>
+<answer><average answerType="number">500000</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/13081</sector>
 </answer>
 <answer><average answerType="number">72568</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/21030</sector>
 </answer>
-<answer><average answerType="number">57557.671875</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/11240</sector>
-</answer>
 <answer><average answerType="number">9256.666666666666667</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31291</sector>
+</answer>
+<answer><average answerType="number">57557.671875</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/11240</sector>
 </answer>
 <answer><average answerType="number">366593.647887323943662</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15250</sector>
@@ -905,11 +905,11 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">1967.666666666666667</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/53040</sector>
 </answer>
-<answer><average answerType="number">78635.256198347107438</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/16064</sector>
-</answer>
 <answer><average answerType="number">179451.6</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15120</sector>
+</answer>
+<answer><average answerType="number">78635.256198347107438</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/16064</sector>
 </answer>
 <answer><average answerType="number">388783.463768115942029</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/14020</sector>
@@ -920,14 +920,14 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">276771.666666666666667</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31281</sector>
 </answer>
-<answer><average answerType="number">0</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/23062</sector>
+<answer><average answerType="number">71298.363636363636364</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/31161</sector>
 </answer>
 <answer><average answerType="number">421085.846153846153846</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/22010</sector>
 </answer>
-<answer><average answerType="number">71298.363636363636364</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/31161</sector>
+<answer><average answerType="number">0</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/23062</sector>
 </answer>
 <answer><average answerType="number">226962</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/60020</sector>
@@ -968,20 +968,20 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">232216.657142857142857</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/43081</sector>
 </answer>
-<answer><average answerType="number">783617.776722090261283</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/72010</sector>
-</answer>
 <answer><average answerType="number">68000.4</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31130</sector>
 </answer>
 <answer><average answerType="number">79275.875</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/13030</sector>
 </answer>
-<answer><average answerType="number">93945.804347826086957</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/23040</sector>
+<answer><average answerType="number">783617.776722090261283</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/72010</sector>
 </answer>
 <answer><average answerType="number">8260.928571428571429</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/32310</sector>
+</answer>
+<answer><average answerType="number">93945.804347826086957</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/23040</sector>
 </answer>
 <answer><average answerType="number">29604.692307692307692</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/14081</sector>
@@ -1013,26 +1013,26 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">65437.318181818181818</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/22030</sector>
 </answer>
-<answer><average answerType="number">162841.583333333333333</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/32210</sector>
-</answer>
 <answer><average answerType="number">353457.968036529680365</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/41010</sector>
 </answer>
-<answer><average answerType="number">155266.666666666666667</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/31110</sector>
+<answer><average answerType="number">162841.583333333333333</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/32210</sector>
 </answer>
 <answer><average answerType="number">95050</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/32170</sector>
 </answer>
+<answer><average answerType="number">155266.666666666666667</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/31110</sector>
+</answer>
 <answer><average answerType="number">1044235.596551724137931</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/43010</sector>
 </answer>
-<answer><average answerType="number">261172.513513513513514</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/15210</sector>
-</answer>
 <answer><average answerType="number">15161</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/23068</sector>
+</answer>
+<answer><average answerType="number">261172.513513513513514</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/15210</sector>
 </answer>
 <answer><average answerType="number">-44637.454545454545455</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/23061</sector>
@@ -1061,17 +1061,17 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">23116.817518248175182</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/32171</sector>
 </answer>
-<answer><average answerType="number">113549.25</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/16063</sector>
-</answer>
 <answer><average answerType="number">179952.291666666666667</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15151</sector>
 </answer>
-<answer><average answerType="number">39780.914893617021277</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/15164</sector>
+<answer><average answerType="number">113549.25</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/16063</sector>
 </answer>
 <answer><average answerType="number">273542.350649350649351</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/14010</sector>
+</answer>
+<answer><average answerType="number">39780.914893617021277</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/15164</sector>
 </answer>
 <answer><average answerType="number">29995.4</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/12240</sector>
@@ -1082,11 +1082,11 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">52850.317829457364341</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/16061</sector>
 </answer>
-<answer><average answerType="number">984197.363636363636364</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/72040</sector>
-</answer>
 <answer><average answerType="number">0</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/32167</sector>
+</answer>
+<answer><average answerType="number">984197.363636363636364</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/72040</sector>
 </answer>
 <answer><average answerType="number">106892.466666666666667</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31320</sector>
@@ -1121,11 +1121,11 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">195160.761904761904762</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/23030</sector>
 </answer>
-<answer><average answerType="number">503339.736842105263158</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/31120</sector>
-</answer>
 <answer><average answerType="number">619310.299145299145299</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15110</sector>
+</answer>
+<answer><average answerType="number">503339.736842105263158</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/31120</sector>
 </answer>
 <answer><average answerType="number">377621.891891891891892</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/43082</sector>
@@ -1145,23 +1145,23 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">253315.360655737704918</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/11130</sector>
 </answer>
-<answer><average answerType="number">195000</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/60040</sector>
+<answer><average answerType="number">53294.19578313253012</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/32130</sector>
 </answer>
 <answer><average answerType="number">6826.4</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/32164</sector>
 </answer>
-<answer><average answerType="number">53294.19578313253012</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/32130</sector>
+<answer><average answerType="number">195000</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/60040</sector>
+</answer>
+<answer><average answerType="number">-130421</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/32172</sector>
 </answer>
 <answer><average answerType="number">37944.457627118644068</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15163</sector>
 </answer>
 <answer><average answerType="number">116690.297297297297297</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31150</sector>
-</answer>
-<answer><average answerType="number">-130421</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/32172</sector>
 </answer>
 <answer><average answerType="number">0</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15261</sector>
@@ -1172,11 +1172,11 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">60190.524590163934426</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15153</sector>
 </answer>
-<answer><average answerType="number">0</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/32265</sector>
-</answer>
 <answer><average answerType="number">120799.941176470588235</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/33210</sector>
+</answer>
+<answer><average answerType="number">0</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/32265</sector>
 </answer>
 <answer><average answerType="number">76958.636363636363636</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/43030</sector>
@@ -1187,20 +1187,20 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">871891.725490196078431</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/73010</sector>
 </answer>
+<answer><average answerType="number">468337.925925925925926</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/11420</sector>
+</answer>
 <answer><average answerType="number">33649.333333333333333</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/25020</sector>
 </answer>
-<answer><average answerType="number">468337.925925925925926</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/11420</sector>
+<answer><average answerType="number">87020.343137254901961</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/12261</sector>
 </answer>
 <answer><average answerType="number">96689.4</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/16062</sector>
 </answer>
 <answer><average answerType="number">69297.902702702702703</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/16050</sector>
-</answer>
-<answer><average answerType="number">87020.343137254901961</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/12261</sector>
 </answer>
 <answer><average answerType="number">4373</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/32120</sector>
@@ -1217,11 +1217,11 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">64391.153846153846154</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/31194</sector>
 </answer>
-<answer><average answerType="number">59551.666666666666667</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/12182</sector>
-</answer>
 <answer><average answerType="number">477714.882352941176471</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/24010</sector>
+</answer>
+<answer><average answerType="number">59551.666666666666667</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/12182</sector>
 </answer>
 <answer><average answerType="number">0</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/60010</sector>
@@ -1259,29 +1259,29 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">151576.75</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/12230</sector>
 </answer>
-<answer><average answerType="number">378614.444444444444444</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/23067</sector>
-</answer>
 <answer><average answerType="number">0</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/14022</sector>
+</answer>
+<answer><average answerType="number">378614.444444444444444</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/23067</sector>
 </answer>
 <answer><average answerType="number">10309.1</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/41040</sector>
 </answer>
-<answer><average answerType="number">266259.545226130653266</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/43040</sector>
-</answer>
 <answer><average answerType="number">44553.630952380952381</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/11330</sector>
+</answer>
+<answer><average answerType="number">266259.545226130653266</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/43040</sector>
 </answer>
 <answer><average answerType="number">189928.623595505617978</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15130</sector>
 </answer>
-<answer><average answerType="number">687644.072463768115942</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/24040</sector>
-</answer>
 <answer><average answerType="number">83952.742268041237113</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/12220</sector>
+</answer>
+<answer><average answerType="number">687644.072463768115942</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/24040</sector>
 </answer>
 <answer><average answerType="number">273484.096551724137931</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/11110</sector>
@@ -1298,20 +1298,20 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 <answer><average answerType="number">88650.3</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/15113</sector>
 </answer>
-<answer><average answerType="number">219762.322033898305085</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/13040</sector>
-</answer>
 <answer><average answerType="number">127731.3</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/41050</sector>
 </answer>
-<answer><average answerType="number">52117.138613861386139</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/74010</sector>
+<answer><average answerType="number">219762.322033898305085</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/13040</sector>
+</answer>
+<answer><average answerType="number">105414.818181818181818</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/14015</sector>
 </answer>
 <answer><average answerType="number">98739.285714285714286</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/11182</sector>
 </answer>
-<answer><average answerType="number">105414.818181818181818</average>
-<sector answerType="uri">https://openspending.org/finland-aid/sector/14015</sector>
+<answer><average answerType="number">52117.138613861386139</average>
+<sector answerType="uri">https://openspending.org/finland-aid/sector/74010</sector>
 </answer>
 <answer><average answerType="number">482018.28125</average>
 <sector answerType="uri">https://openspending.org/finland-aid/sector/14040</sector>
@@ -1322,7 +1322,7 @@ select ?sector avg(xsd:decimal(?amount)) as ?average
 </answers>
 </query>
 </question>
-<question id="19" hybrid="false" statistical="true">
+<question id="19" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money gets each country in 2008?</string>
 <query>
 select ?country sum(xsd:decimal(?amount)) as ?sum
@@ -1335,11 +1335,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/my</country>
 <sum answerType="number">239565</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/0</country>
-<sum answerType="number">519537556</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ao</country>
 <sum answerType="number">1664469</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/0</country>
+<sum answerType="number">519537556</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mk</country>
 <sum answerType="number">138951</sum>
@@ -1359,17 +1359,17 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ke</country>
 <sum answerType="number">11329937</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cf</country>
-<sum answerType="number">2220555</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/iq</country>
 <sum answerType="number">5679579</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country>
-<sum answerType="number">29666924</sum>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cf</country>
+<sum answerType="number">2220555</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bj</country>
 <sum answerType="number">118523</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country>
+<sum answerType="number">29666924</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ng</country>
 <sum answerType="number">361215</sum>
@@ -1389,11 +1389,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lb</country>
 <sum answerType="number">396113</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
-<sum answerType="number">474809</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/me</country>
 <sum answerType="number">317206</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
+<sum answerType="number">474809</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/al</country>
 <sum answerType="number">344916</sum>
@@ -1449,20 +1449,20 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/er</country>
 <sum answerType="number">274363</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ve</country>
-<sum answerType="number">276822</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/af</country>
 <sum answerType="number">18076246</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ve</country>
+<sum answerType="number">276822</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country>
 <sum answerType="number">2034811</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sn</country>
-<sum answerType="number">325454</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cm</country>
 <sum answerType="number">138217</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sn</country>
+<sum answerType="number">325454</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tn</country>
 <sum answerType="number">58191</sum>
@@ -1473,11 +1473,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</country>
 <sum answerType="number">776315</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/py</country>
-<sum answerType="number">198</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/so</country>
 <sum answerType="number">9502169</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/py</country>
+<sum answerType="number">198</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/zw</country>
 <sum answerType="number">795168</sum>
@@ -1488,11 +1488,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sr</country>
 <sum answerType="number">58853</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cd</country>
-<sum answerType="number">4716975</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tm</country>
 <sum answerType="number">90498</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cd</country>
+<sum answerType="number">4716975</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rs</country>
 <sum answerType="number">11650949</sum>
@@ -1530,11 +1530,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ci</country>
 <sum answerType="number">224125</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/th</country>
-<sum answerType="number">392217</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mw</country>
 <sum answerType="number">1233745</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/th</country>
+<sum answerType="number">392217</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ph</country>
 <sum answerType="number">525736</sum>
@@ -1566,11 +1566,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/jo</country>
 <sum answerType="number">171749</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country>
-<sum answerType="number">3694936</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bi</country>
 <sum answerType="number">155645</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country>
+<sum answerType="number">3694936</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bf</country>
 <sum answerType="number">124171</sum>
@@ -1611,11 +1611,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bz</country>
 <sum answerType="number">20405</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</country>
-<sum answerType="number">31497</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gh</country>
 <sum answerType="number">102037</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</country>
+<sum answerType="number">31497</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ye</country>
 <sum answerType="number">121817</sum>
@@ -1668,19 +1668,19 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tr</country>
 <sum answerType="number">401354</sum>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/md</country>
+<sum answerType="number">973278</sum>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country>
 <sum answerType="number">389388</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ma</country>
 <sum answerType="number">264638</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/md</country>
-<sum answerType="number">973278</sum>
-</answer>
 </answers>
 </query>
 </question>
-<question id="20" hybrid="false" statistical="true">
+<question id="20" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much extended amounts are given to Tajikistan for rescheduling and refinancing?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -1693,7 +1693,7 @@ select sum(xsd:decimal(?amount)) as ?result
 </answers>
 </query>
 </question>
-<question id="21" hybrid="false" statistical="true">
+<question id="21" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much aid receives a country?</string>
 <query>
 select ?country sum(xsd:decimal(?amount)) as ?sum
@@ -1707,11 +1707,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/jo</country>
 <sum answerType="number">964639</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kn</country>
-<sum answerType="number">3895</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kz</country>
 <sum answerType="number">696196</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kn</country>
+<sum answerType="number">3895</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sb</country>
 <sum answerType="number">105400</sum>
@@ -1719,11 +1719,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ge</country>
 <sum answerType="number">12701026</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ag</country>
-<sum answerType="number">29500</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mw</country>
 <sum answerType="number">6237123</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ag</country>
+<sum answerType="number">29500</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sn</country>
 <sum answerType="number">2475828</sum>
@@ -1752,11 +1752,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tl</country>
 <sum answerType="number">4134583</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country>
-<sum answerType="number">1119840</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sl</country>
 <sum answerType="number">6923564</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country>
+<sum answerType="number">1119840</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ph</country>
 <sum answerType="number">5454643</sum>
@@ -1764,23 +1764,23 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bf</country>
 <sum answerType="number">1603084</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
-<sum answerType="number">5199329</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ua</country>
 <sum answerType="number">6536928</sum>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
+<sum answerType="number">5199329</sum>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bd</country>
 <sum answerType="number">4965838</sum>
-</answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</country>
-<sum answerType="number">237425</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cm</country>
 <sum answerType="number">1197159</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pk</country>
 <sum answerType="number">40765911</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</country>
+<sum answerType="number">237425</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sy</country>
 <sum answerType="number">2792733</sum>
@@ -1818,11 +1818,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mv</country>
 <sum answerType="number">1099047</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</country>
-<sum answerType="number">10597047</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gn</country>
 <sum answerType="number">65592</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</country>
+<sum answerType="number">10597047</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ao</country>
 <sum answerType="number">8511110</sum>
@@ -1833,17 +1833,17 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/jm</country>
 <sum answerType="number">90298</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ye</country>
-<sum answerType="number">6388158</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/my</country>
 <sum answerType="number">957099</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country>
-<sum answerType="number">208449</sum>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ye</country>
+<sum answerType="number">6388158</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/fj</country>
 <sum answerType="number">40451</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country>
+<sum answerType="number">208449</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gm</country>
 <sum answerType="number">582694</sum>
@@ -1866,17 +1866,17 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rw</country>
 <sum answerType="number">2756857</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</country>
-<sum answerType="number">79059</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/az</country>
 <sum answerType="number">1248940</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ir</country>
-<sum answerType="number">3130209</sum>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</country>
+<sum answerType="number">79059</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vc</country>
 <sum answerType="number">147400</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ir</country>
+<sum answerType="number">3130209</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/hn</country>
 <sum answerType="number">9328026</sum>
@@ -2001,11 +2001,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ug</country>
 <sum answerType="number">23039593</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/th</country>
-<sum answerType="number">3180025</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/za</country>
 <sum answerType="number">45074544</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/th</country>
+<sum answerType="number">3180025</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tr</country>
 <sum answerType="number">2343676</sum>
@@ -2028,11 +2028,11 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ar</country>
 <sum answerType="number">1096359</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</country>
-<sum answerType="number">371053</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mx</country>
 <sum answerType="number">2859083</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</country>
+<sum answerType="number">371053</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country>
 <sum answerType="number">11600908</sum>
@@ -2046,26 +2046,26 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/iq</country>
 <sum answerType="number">16939070</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country>
-<sum answerType="number">194423911</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/id</country>
 <sum answerType="number">14096599</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/et</country>
-<sum answerType="number">79823904</sum>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country>
+<sum answerType="number">194423911</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/md</country>
 <sum answerType="number">4832300</sum>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/et</country>
+<sum answerType="number">79823904</sum>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ga</country>
 <sum answerType="number">52190</sum>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vn</country>
-<sum answerType="number">108280416</sum>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ly</country>
 <sum answerType="number">1658768</sum>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vn</country>
+<sum answerType="number">108280416</sum>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gt</country>
 <sum answerType="number">4621490</sum>
@@ -2082,7 +2082,7 @@ select ?country sum(xsd:decimal(?amount)) as ?sum
 </answers>
 </query>
 </question>
-<question id="22" hybrid="false" statistical="true">
+<question id="22" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the total Dignity International aid from all sectors?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?result
@@ -2094,7 +2094,7 @@ select sum(xsd:decimal(?aid)) as ?result
 </answers>
 </query>
 </question>
-<question id="23" hybrid="false" statistical="true">
+<question id="23" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money Nepal receives for Environmental policy and administrative management?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -2107,7 +2107,7 @@ select sum(xsd:decimal(?amount)) as ?result
 </answers>
 </query>
 </question>
-<question id="24" hybrid="false" statistical="true">
+<question id="24" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Top 10 aid receiving geographic areas in south east and central asia?</string>
 <query>
 select ?result
@@ -2133,7 +2133,7 @@ limit 10<answers>
 </answers>
 </query>
 </question>
-<question id="25" hybrid="false" statistical="true">
+<question id="25" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which country has the lowest amount of commitments?</string>
 <query>
 select ?result
@@ -2147,7 +2147,7 @@ limit 1<answers>
 </answers>
 </query>
 </question>
-<question id="26" hybrid="false" statistical="true">
+<question id="26" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which countries received more than they were committed?</string>
 <query>
 select ?result
@@ -2163,21 +2163,21 @@ having sum(xsd:decimal(?aid))>sum(xsd:decimal(?c))<answers>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/za</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/rs</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/bf</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/fj</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/bf</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/mk</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/zw</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/lk</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ml</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/lk</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/pk</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/me</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/cr</answer>
 </answers>
 </query>
 </question>
-<question id="27" hybrid="false" statistical="true">
+<question id="27" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Where is the biggest aid for medical services?</string>
 <query>
 select ?result
@@ -2192,7 +2192,7 @@ limit 1<answers>
 </answers>
 </query>
 </question>
-<question id="28" hybrid="false" statistical="true">
+<question id="28" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which country receives the biggest share of its aid from Fida International?</string>
 <query>
 select ?country
@@ -2214,7 +2214,7 @@ UNION
 </answers>
 </query>
 </question>
-<question id="29" hybrid="false" statistical="true">
+<question id="29" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which types of flow are there?</string>
 <query>
 select distinct(?result)
@@ -2225,7 +2225,7 @@ select distinct(?result)
 </answers>
 </query>
 </question>
-<question id="30" hybrid="false" statistical="true">
+<question id="30" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>For which sectors is the money, invested into Sierra Leona, used for?</string>
 <query>
 select ?result
@@ -2253,7 +2253,7 @@ select ?result
 </answers>
 </query>
 </question>
-<question id="31" hybrid="false" statistical="true">
+<question id="31" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many percent aid of a country is for that countries administrative costs?</string>
 <query>
 select ?country sum(xsd:decimal(?aid_admin))/sum(xsd:decimal(?aid_all))*100 as ?admin_percent
@@ -2277,14 +2277,15 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country>
 <admin_percent answerType="number">2.894592013427813</admin_percent>
 </answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/fj</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gw</country>
 <admin_percent answerType="number">2.43999189801426</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
-<admin_percent answerType="number">5.949479250110928</admin_percent>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ge</country>
 <admin_percent answerType="number">1.343946544161078</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
+<admin_percent answerType="number">5.949479250110928</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bz</country>
 <admin_percent answerType="number">37.134760006487465</admin_percent>
@@ -2320,11 +2321,11 @@ UNION
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/iq</country>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country>
-<admin_percent answerType="number">6.216388661015404</admin_percent>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tg</country>
 <admin_percent answerType="number">0.544012576963678</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cu</country>
+<admin_percent answerType="number">6.216388661015404</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ec</country>
 <admin_percent answerType="number">4.897652586747051</admin_percent>
@@ -2367,10 +2368,10 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/za</country>
 <admin_percent answerType="number">11.15457318880475</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</country>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/np</country>
 <admin_percent answerType="number">4.993992474637067</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</country>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ni</country>
 <admin_percent answerType="number">5.796373543881354</admin_percent>
@@ -2378,17 +2379,17 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ke</country>
 <admin_percent answerType="number">7.398091358860569</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kg</country>
-<admin_percent answerType="number">1.745953293414036</admin_percent>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ml</country>
 <admin_percent answerType="number">0.280645725418636</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ng</country>
-<admin_percent answerType="number">36.772158567193173</admin_percent>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kg</country>
+<admin_percent answerType="number">1.745953293414036</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/jm</country>
 <admin_percent answerType="number">3.913707944804979</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ng</country>
+<admin_percent answerType="number">36.772158567193173</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/co</country>
 <admin_percent answerType="number">8.91713912030611</admin_percent>
@@ -2399,24 +2400,24 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tn</country>
 <admin_percent answerType="number">17.461144373305064</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</country>
-<admin_percent answerType="number">12.343325456610695</admin_percent>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tm</country>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</country>
-<admin_percent answerType="number">1.339505938602816</admin_percent>
-</answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rw</country>
-<admin_percent answerType="number">1.341128683859917</admin_percent>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</country>
+<admin_percent answerType="number">12.343325456610695</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mr</country>
 <admin_percent answerType="number">0.938313038773197</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cv</country>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rw</country>
+<admin_percent answerType="number">1.341128683859917</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</country>
+<admin_percent answerType="number">1.339505938602816</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gt</country>
 <admin_percent answerType="number">1.80476426433899</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cv</country>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ao</country>
 <admin_percent answerType="number">0.621810786137178</admin_percent>
@@ -2439,10 +2440,10 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/er</country>
 <admin_percent answerType="number">0.6738055580291</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sr</country>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bo</country>
 <admin_percent answerType="number">9.720122106882163</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sr</country>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ss</country>
 </answer>
@@ -2458,15 +2459,13 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mg</country>
 <admin_percent answerType="number">0.308232322092082</admin_percent>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sb</country>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bt</country>
 <admin_percent answerType="number">0.746985690027391</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sb</country>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ph</country>
 <admin_percent answerType="number">7.914010137785369</admin_percent>
-</answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/fj</country>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/in</country>
 <admin_percent answerType="number">13.589038030767813</admin_percent>
@@ -2521,10 +2520,10 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kz</country>
 <admin_percent answerType="number">3.805106607909267</admin_percent>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ly</country>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uz</country>
 <admin_percent answerType="number">5.212741667921961</admin_percent>
-</answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ly</country>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ug</country>
 <admin_percent answerType="number">0.767153308654367</admin_percent>
@@ -2532,11 +2531,11 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rs</country>
 <admin_percent answerType="number">0.48641740052125</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country>
-<admin_percent answerType="number">13.833761965995142</admin_percent>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bw</country>
 <admin_percent answerType="number">3.692988402691217</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country>
+<admin_percent answerType="number">13.833761965995142</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country>
 <admin_percent answerType="number">3.036430408525426</admin_percent>
@@ -2547,22 +2546,22 @@ UNION
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/md</country>
 <admin_percent answerType="number">8.680400637377646</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country>
-<admin_percent answerType="number">1.276745146853715</admin_percent>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/xk</country>
 <admin_percent answerType="number">11.152973124985652</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/et</country>
-<admin_percent answerType="number">7.129816652415297</admin_percent>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country>
+<admin_percent answerType="number">1.276745146853715</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bj</country>
 <admin_percent answerType="number">0.550192678812621</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pg</country>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/et</country>
+<admin_percent answerType="number">7.129816652415297</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pk</country>
 <admin_percent answerType="number">4.773591346946717</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pg</country>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</country>
 <admin_percent answerType="number">1.95753299158409</admin_percent>
@@ -2588,26 +2587,26 @@ UNION
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gn</country>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/na</country>
-<admin_percent answerType="number">15.366409102838687</admin_percent>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gh</country>
 <admin_percent answerType="number">1.948774985862087</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/na</country>
+<admin_percent answerType="number">15.366409102838687</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tr</country>
 <admin_percent answerType="number">19.964363674842427</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ve</country>
-<admin_percent answerType="number">60.760378023040278</admin_percent>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mn</country>
 <admin_percent answerType="number">1.605813895944836</admin_percent>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country>
-<admin_percent answerType="number">20.515514820046845</admin_percent>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ve</country>
+<admin_percent answerType="number">60.760378023040278</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mv</country>
 <admin_percent answerType="number">1.895551327650228</admin_percent>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country>
+<admin_percent answerType="number">20.515514820046845</admin_percent>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cm</country>
 <admin_percent answerType="number">1.082562967826329</admin_percent>
@@ -2626,7 +2625,7 @@ UNION
 </answers>
 </query>
 </question>
-<question id="32" hybrid="false" statistical="true">
+<question id="32" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which type of sector is receiving the most in India?</string>
 <query>
 select ?result
@@ -2641,7 +2640,7 @@ limit 1<answers>
 </answers>
 </query>
 </question>
-<question id="33" hybrid="false" statistical="true">
+<question id="33" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much aid is received by Zambia on a single day?</string>
 <query>
 select ?total/?years/365.242
@@ -2665,7 +2664,7 @@ select sum(xsd:decimal(?amount)) as ?total
 </answers>
 </query>
 </question>
-<question id="34" hybrid="false" statistical="true">
+<question id="34" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What was the total amount recieved by Yemen in 2010?</string>
 <query>
 select sum(xsd:decimal(?aid))
@@ -2679,7 +2678,7 @@ filter(year(?year)=2010).
 </answers>
 </query>
 </question>
-<question id="35" hybrid="false" statistical="true">
+<question id="35" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which countries got more than 1000000 € but less than 10000000 € in 2010?</string>
 <query>
 select ?country
@@ -2691,16 +2690,16 @@ filter(year(?year)=2010).
 }
 group by ?country
 having (sum(xsd:decimal(?aid))>1000000&amp;&amp;sum(xsd:decimal(?aid))&lt;10000000)<answers>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ht</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ye</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ht</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/bd</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/rs</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ps</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/zw</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/lk</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ba</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/la</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/na</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/xk</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ao</answer>
@@ -2717,15 +2716,15 @@ having (sum(xsd:decimal(?aid))>1000000&amp;&amp;sum(xsd:decimal(?aid))&lt;100000
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ge</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/sl</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/so</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/kg</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/so</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/id</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ug</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/br</answer>
 </answers>
 </query>
 </question>
-<question id="36" hybrid="false" statistical="true">
+<question id="36" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which countries got between 10000 € and 100000 € in 2011?</string>
 <query>
 select ?country
@@ -2740,10 +2739,10 @@ having (sum(xsd:decimal(?aid))>10000&amp;&amp;sum(xsd:decimal(?aid))&lt;100000)<
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/py</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ir</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/uz</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/gn</answer>
-<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</answer>
+<answer answerType="uri">https://openspending.org/finland-aid/recipient-country/cg</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/jm</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/sr</answer>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/ga</answer>
@@ -2757,7 +2756,7 @@ having (sum(xsd:decimal(?aid))>10000&amp;&amp;sum(xsd:decimal(?aid))&lt;100000)<
 </answers>
 </query>
 </question>
-<question id="37" hybrid="false" statistical="true">
+<question id="37" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money did Pyongyang receive for health education?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?result
@@ -2770,7 +2769,7 @@ select sum(xsd:decimal(?aid)) as ?result
 </answers>
 </query>
 </question>
-<question id="38" hybrid="false" statistical="true">
+<question id="38" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What types of aid did Mexico receive?</string>
 <query>
 select distinct(?result)
@@ -2783,7 +2782,7 @@ select distinct(?result)
 </answers>
 </query>
 </question>
-<question id="39" hybrid="false" statistical="true">
+<question id="39" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What types of aid did Belarus receive in 2011?</string>
 <query>
 select distinct(?result)
@@ -2799,7 +2798,7 @@ filter(year(?year)=2011).
 </answers>
 </query>
 </question>
-<question id="40" hybrid="false" statistical="true">
+<question id="40" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What types of aid did the Maldives receive in 2011 for Oil-fired power plants?</string>
 <query>
 select distinct(?result)
@@ -2814,7 +2813,7 @@ filter(year(?year)=2011).
 </answers>
 </query>
 </question>
-<question id="41" hybrid="false" statistical="true">
+<question id="41" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the total amount of Gambia in 2008?</string>
 <query>
 select sum(xsd:decimal(?aid)) as ?result
@@ -2828,7 +2827,7 @@ filter(year(?year)=2008).
 </answers>
 </query>
 </question>
-<question id="42" hybrid="false" statistical="true">
+<question id="42" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many countries had amounts of more than 1000000 € in 2010?</string>
 <query>
 select count(?country) as ?result
@@ -2847,8 +2846,8 @@ having sum(xsd:decimal(?aid))>1000000
 </answers>
 </query>
 </question>
-<question id="43" hybrid="false" statistical="true">
-<string>How many countries received more than 1000000 € for government administration 
+<question id="43" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
+<string>How many countries received more than 1000000 € for government administration
      in 2006?
 </string>
 <query>
@@ -2869,7 +2868,7 @@ having sum(xsd:decimal(?aid))>1000000
 </answers>
 </query>
 </question>
-<question id="44" hybrid="false" statistical="true">
+<question id="44" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much does Crisis Management Initiative spend on strengthening civil society compared to legal and judicial development?</string>
 <query>
 select sum(xsd:decimal(?society)) as ?society_total sum(xsd:decimal(?legal)) as ?legal_total
@@ -2892,14 +2891,14 @@ UNION
 </answers>
 </query>
 </question>
-<question id="45" hybrid="false" statistical="true">
+<question id="45" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money, does the UNDP spend on elections compared to post-conflict peace building?</string>
 <query>
 select sum(xsd:decimal(?elections)) as ?elections_total sum(xsd:decimal(?peace)) as ?peace_total
 {
 ?obs lso:finland-aid-channel-of-delivery-name "UNDP".
 {
-?obs lso:finland-aid-amount ?elections.         
+?obs lso:finland-aid-amount ?elections.
 ?obs lso:finland-aid-sector &lt;https://openspending.org/finland-aid/sector/15161>.
 }
 UNION
@@ -2915,7 +2914,7 @@ UNION
 </answers>
 </query>
 </question>
-<question id="46" hybrid="false" statistical="true">
+<question id="46" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the type of aid with the lowest total amount?</string>
 <query>
 select ?type
@@ -2929,7 +2928,7 @@ order by asc(sum(xsd:decimal(?amount))) limit 1
 </answers>
 </query>
 </question>
-<question id="47" hybrid="false" statistical="true">
+<question id="47" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What are the top 5 types of aid regarding the amount?</string>
 <query>
 select ?type
@@ -2947,7 +2946,7 @@ order by desc(sum(xsd:decimal(?amount))) limit 5<answers>
 </answers>
 </query>
 </question>
-<question id="48" hybrid="false" statistical="true">
+<question id="48" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What total amount did Zimbabwe get?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -2961,7 +2960,7 @@ select sum(xsd:decimal(?amount)) as ?result
 </answers>
 </query>
 </question>
-<question id="49" hybrid="false" statistical="true">
+<question id="49" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the average commitment for chemicals?</string>
 <query>
 select avg(xsd:decimal(?commitment)) as ?result
@@ -2975,7 +2974,7 @@ select avg(xsd:decimal(?commitment)) as ?result
 </answers>
 </query>
 </question>
-<question id="50" hybrid="false" statistical="true">
+<question id="50" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What was the largest aid for debt forgiveness in 2008?</string>
 <query>
 select max(xsd:decimal(?amount)) as ?result
@@ -2992,7 +2991,7 @@ filter(year(?year)=2008).
 </answers>
 </query>
 </question>
-<question id="51" hybrid="false" statistical="true">
+<question id="51" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much is the total aid amount by the World Health Organization?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -3006,7 +3005,7 @@ select sum(xsd:decimal(?amount)) as ?result
 </answers>
 </query>
 </question>
-<question id="52" hybrid="false" statistical="true">
+<question id="52" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much did Nepal receive for agricultural extension?
 </string>
 <query>
@@ -3022,8 +3021,8 @@ select sum(xsd:decimal(?amount)) as ?result
 </answers>
 </query>
 </question>
-<question id="53" hybrid="false" statistical="true">
-<string>How much did the Philippines receive in 2007?
+<question id="53" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
+<string>How much did the Philippines receive in the year of 2007?
 </string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -3038,7 +3037,7 @@ filter(year(?year)=2007).
 </answers>
 </query>
 </question>
-<question id="54" hybrid="false" statistical="true">
+<question id="54" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much was spent for strenthening civil society in 2007?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -3054,7 +3053,7 @@ filter(year(?year)=2007).
 </answers>
 </query>
 </question>
-<question id="55" hybrid="false" statistical="true">
+<question id="55" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the total amount given over the World Vision Colombia channel in 2007?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -3070,7 +3069,7 @@ filter(year(?year)=2007).
 </answers>
 </query>
 </question>
-<question id="56" hybrid="false" statistical="true">
+<question id="56" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the amount given to Tajikistan in 2007 for Rescheduling and refinancing?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -3087,7 +3086,7 @@ filter(year(?year)=2007).
 </answers>
 </query>
 </question>
-<question id="57" hybrid="false" statistical="true">
+<question id="57" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much was committed in total for Namibia over Martinus-säätiö for Basic health infrastructure?</string>
 <query>
 select sum(xsd:decimal(?c)) as ?result
@@ -3103,7 +3102,7 @@ select sum(xsd:decimal(?c)) as ?result
 </answers>
 </query>
 </question>
-<question id="58" hybrid="false" statistical="true">
+<question id="58" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What were the average extended amounts for Pakistan over Suomen Lähetysseura ry in 2009?</string>
 <query>
 select avg(xsd:decimal(?ae)) as ?result
@@ -3120,7 +3119,7 @@ filter(year(?year)=2009).
 </answers>
 </query>
 </question>
-<question id="59" hybrid="false" statistical="true">
+<question id="59" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What were the total commitments for Agricultural extension by the Embassy of Finland before 2010?</string>
 <query>
 select sum(xsd:decimal(?c)) as ?result
@@ -3138,7 +3137,7 @@ filter(year(?year)&lt;2010)
 </answers>
 </query>
 </question>
-<question id="60" hybrid="false" statistical="true">
+<question id="60" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What was the highest commitment for support to local and regional NGOs for Guatemala after 2005 and before 2010 given by the Embassy of Finland?</string>
 <query>
 select max(xsd:decimal(?c)) as ?result
@@ -3157,7 +3156,7 @@ filter(year(?year)>2005&amp;&amp;year(?year)&lt;2010)
 </answers>
 </query>
 </question>
-<question id="61" hybrid="false" statistical="true">
+<question id="61" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money does Uruguay get from Finnfund for forest industries?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?result
@@ -3173,7 +3172,7 @@ select sum(xsd:decimal(?amount)) as ?result
 </answers>
 </query>
 </question>
-<question id="62" hybrid="false" statistical="true">
+<question id="62" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many countries were aided by World Vision Peru?</string>
 <query>
 select count(distinct(?country))
@@ -3187,7 +3186,7 @@ select count(distinct(?country))
 </answers>
 </query>
 </question>
-<question id="63" hybrid="false" statistical="true">
+<question id="63" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many sectors does Kvaerner Tamturbine Ltd fund?</string>
 <query>
 select count(distinct(?sector))
@@ -3201,7 +3200,7 @@ select count(distinct(?sector))
 </answers>
 </query>
 </question>
-<question id="64" hybrid="false" statistical="true">
+<question id="64" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When was money committed for vocational training?</string>
 <query>
 select distinct(?date)
@@ -3222,7 +3221,7 @@ filter(xsd:decimal(?commitment>0))
 </answers>
 </query>
 </question>
-<question id="65" hybrid="false" statistical="true">
+<question id="65" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which year had the highest total commitment for agricultural research?</string>
 <query>
 select ?result
@@ -3239,7 +3238,7 @@ limit 1<answers>
 </answers>
 </query>
 </question>
-<question id="66" hybrid="false" statistical="true">
+<question id="66" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When was the highest commitment for agricultural research and what was its amount?</string>
 <query>
 select ?date xsd:decimal(?commitment) as ?total_commitment
@@ -3258,7 +3257,7 @@ limit 1<answers>
 </answers>
 </query>
 </question>
-<question id="67" hybrid="false" statistical="true">
+<question id="67" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When was money committed for supporting state-tribe dialogue in Yemen?</string>
 <query>
 select ?date
@@ -3275,7 +3274,7 @@ filter(xsd:decimal(?commitment)>0).
 </answers>
 </query>
 </question>
-<question id="68" hybrid="false" statistical="true">
+<question id="68" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>In which years was the total amount given for medical services higher than that for basic nutrition?</string>
 <query>
 select ?year
@@ -3302,7 +3301,7 @@ select ?year
 </answers>
 </query>
 </question>
-<question id="69" hybrid="false" statistical="true">
+<question id="69" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>In which years did Bhutan get aid?</string>
 <query>
 select ?year
@@ -3318,7 +3317,7 @@ select ?year
 </answers>
 </query>
 </question>
-<question id="70" hybrid="false" statistical="true">
+<question id="70" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many of the countries got more than 100000000 € in 2011?</string>
 <query>
 select count(distinct(?country))
@@ -3337,7 +3336,7 @@ having (sum(xsd:decimal(?amount)) > 1000000)
 </answers>
 </query>
 </question>
-<question id="71" hybrid="false" statistical="true">
+<question id="71" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many sectors per recipient country?</string>
 <query>
 select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?sector. ?obs lso:finland-aid-recipient-country ?country.} group by ?country<answers>
@@ -3362,11 +3361,11 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ga</country>
 <count_sector answerType="number">4</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ne</country>
-<count_sector answerType="number">3</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uz</country>
 <count_sector answerType="number">27</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ne</country>
+<count_sector answerType="number">3</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rs</country>
 <count_sector answerType="number">211</count_sector>
@@ -3386,23 +3385,23 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country>
 <count_sector answerType="number">166</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ph</country>
-<count_sector answerType="number">69</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/me</country>
 <count_sector answerType="number">14</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dz</country>
 <count_sector answerType="number">16</count_sector>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ph</country>
+<count_sector answerType="number">69</count_sector>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tz</country>
 <count_sector answerType="number">541</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</country>
-<count_sector answerType="number">26</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ni</country>
 <count_sector answerType="number">195</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/uy</country>
+<count_sector answerType="number">26</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bw</country>
 <count_sector answerType="number">36</count_sector>
@@ -3410,29 +3409,29 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/by</country>
 <count_sector answerType="number">36</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vc</country>
-<count_sector answerType="number">3</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mk</country>
 <count_sector answerType="number">24</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/vc</country>
+<count_sector answerType="number">3</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cl</country>
 <count_sector answerType="number">49</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mr</country>
-<count_sector answerType="number">13</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sz</country>
 <count_sector answerType="number">33</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tn</country>
-<count_sector answerType="number">31</count_sector>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mr</country>
+<count_sector answerType="number">13</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
+<count_sector answerType="number">36</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/fj</country>
 <count_sector answerType="number">4</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
-<count_sector answerType="number">36</count_sector>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tn</country>
+<count_sector answerType="number">31</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/za</country>
 <count_sector answerType="number">283</count_sector>
@@ -3470,14 +3469,14 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/eg</country>
 <count_sector answerType="number">120</count_sector>
 </answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bi</country>
+<count_sector answerType="number">34</count_sector>
+</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tg</country>
 <count_sector answerType="number">16</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cr</country>
 <count_sector answerType="number">9</count_sector>
-</answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bi</country>
-<count_sector answerType="number">34</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/do</country>
 <count_sector answerType="number">19</count_sector>
@@ -3494,11 +3493,11 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cv</country>
 <count_sector answerType="number">1</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/br</country>
-<count_sector answerType="number">132</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ls</country>
 <count_sector answerType="number">9</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/br</country>
+<count_sector answerType="number">132</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sy</country>
 <count_sector answerType="number">28</count_sector>
@@ -3521,11 +3520,11 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gt</country>
 <count_sector answerType="number">48</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dm</country>
-<count_sector answerType="number">2</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bz</country>
 <count_sector answerType="number">18</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/dm</country>
+<count_sector answerType="number">2</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/al</country>
 <count_sector answerType="number">40</count_sector>
@@ -3563,11 +3562,11 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/np</country>
 <count_sector answerType="number">453</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kn</country>
-<count_sector answerType="number">2</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/xk</country>
 <count_sector answerType="number">35</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kn</country>
+<count_sector answerType="number">2</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sr</country>
 <count_sector answerType="number">7</count_sector>
@@ -3581,11 +3580,11 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/la</country>
 <count_sector answerType="number">81</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mw</country>
-<count_sector answerType="number">74</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bj</country>
 <count_sector answerType="number">21</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mw</country>
+<count_sector answerType="number">74</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/bf</country>
 <count_sector answerType="number">16</count_sector>
@@ -3665,11 +3664,11 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/gw</country>
 <count_sector answerType="number">8</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/id</country>
-<count_sector answerType="number">118</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country>
 <count_sector answerType="number">56</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/id</country>
+<count_sector answerType="number">118</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/tj</country>
 <count_sector answerType="number">63</count_sector>
@@ -3707,11 +3706,11 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/er</country>
 <count_sector answerType="number">29</count_sector>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sl</country>
-<count_sector answerType="number">63</count_sector>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pg</country>
 <count_sector answerType="number">10</count_sector>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sl</country>
+<count_sector answerType="number">63</count_sector>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/na</country>
 <count_sector answerType="number">250</count_sector>
@@ -3722,7 +3721,7 @@ select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?se
 </answers>
 </query>
 </question>
-<question id="72" hybrid="false" statistical="true">
+<question id="72" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much money was given each country for Health education?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?sum_amount ?country
@@ -3731,20 +3730,20 @@ select sum(xsd:decimal(?amount)) as ?sum_amount ?country
  ?obs lso:finland-aid-recipient-country ?country.
  ?obs lso:finland-aid-amount ?amount.
 } group by ?country<answers>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
-<sum_amount answerType="number">638397</sum_amount>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/rs</country>
 <sum_amount answerType="number">112786</sum_amount>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/pe</country>
 <sum_amount answerType="number">0</sum_amount>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cn</country>
-<sum_amount answerType="number">396363</sum_amount>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kp</country>
+<sum_amount answerType="number">638397</sum_amount>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/my</country>
 <sum_amount answerType="number">26867</sum_amount>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cn</country>
+<sum_amount answerType="number">396363</sum_amount>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ao</country>
 <sum_amount answerType="number">800000</sum_amount>
@@ -3767,17 +3766,17 @@ select sum(xsd:decimal(?amount)) as ?sum_amount ?country
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/br</country>
 <sum_amount answerType="number">179662</sum_amount>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ps</country>
-<sum_amount answerType="number">116928</sum_amount>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/zw</country>
 <sum_amount answerType="number">232201</sum_amount>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/am</country>
-<sum_amount answerType="number">55049</sum_amount>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/ps</country>
+<sum_amount answerType="number">116928</sum_amount>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/hn</country>
 <sum_amount answerType="number">299103</sum_amount>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/am</country>
+<sum_amount answerType="number">55049</sum_amount>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/sd</country>
 <sum_amount answerType="number">245001</sum_amount>
@@ -3800,11 +3799,11 @@ select sum(xsd:decimal(?amount)) as ?sum_amount ?country
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/mm</country>
 <sum_amount answerType="number">301523</sum_amount>
 </answer>
-<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country>
-<sum_amount answerType="number">536630</sum_amount>
-</answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/cd</country>
 <sum_amount answerType="number">232845</sum_amount>
+</answer>
+<answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/lr</country>
+<sum_amount answerType="number">536630</sum_amount>
 </answer>
 <answer><country answerType="uri">https://openspending.org/finland-aid/recipient-country/kh</country>
 <sum_amount answerType="number">621530</sum_amount>
@@ -3842,7 +3841,7 @@ select sum(xsd:decimal(?amount)) as ?sum_amount ?country
 </answers>
 </query>
 </question>
-<question id="73" hybrid="false" statistical="true">
+<question id="73" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many sectors does WFP fund?</string>
 <query>
 select count(?sector) {?obs lso:finland-aid-sector ?sector. ?obs lso:finland-aid-channel-of-delivery-name "WFP".}<answers>
@@ -3850,7 +3849,7 @@ select count(?sector) {?obs lso:finland-aid-sector ?sector. ?obs lso:finland-aid
 </answers>
 </query>
 </question>
-<question id="74" hybrid="false" statistical="true">
+<question id="74" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much did the top 10 aided countries get in 2008?</string>
 <query>
 select sum(xsd:decimal(?amount)) as ?total ?country
@@ -3895,7 +3894,7 @@ limit 10<answers>
 </answers>
 </query>
 </question>
-<question id="75" hybrid="false" statistical="true">
+<question id="75" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many countries received aid in 2009?
 </string>
 <query>
@@ -3909,21 +3908,21 @@ select count(distinct(?country))
 </answers>
 </query>
 </question>
-<question id="76" hybrid="false" statistical="true">
+<question id="76" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which country received aid for the most sectors?</string>
 <query>
 select ?country
 {
    ?obs lso:finland-aid-sector ?sector.
    ?obs lso:finland-aid-recipient-country ?country
- } group by ?country 
+ } group by ?country
 order by desc(count(?sector))
 limit 1<answers>
 <answer answerType="uri">https://openspending.org/finland-aid/recipient-country/0</answer>
 </answers>
 </query>
 </question>
-<question id="77" hybrid="false" statistical="true">
+<question id="77" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When did Namibia get aid for basic health infrastructure?</string>
 <query>
 select ?date
@@ -3939,7 +3938,7 @@ select ?date
 </answers>
 </query>
 </question>
-<question id="78" hybrid="false" statistical="true">
+<question id="78" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When did Kenya receive aid in the year 2010?</string>
 <query>
 select distinct(?date)
@@ -3953,7 +3952,7 @@ select distinct(?date)
 </answers>
 </query>
 </question>
-<question id="79" hybrid="false" statistical="true">
+<question id="79" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When did Paraguy get money from the Finish Red Cross?</string>
 <query>
 select ?date
@@ -3967,7 +3966,7 @@ select ?date
 </answers>
 </query>
 </question>
-<question id="80" hybrid="false" statistical="true">
+<question id="80" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When was the earliest start date for agricultural extension aid in 2009?</string>
 <query>
 select distinct(?date)
@@ -3983,7 +3982,7 @@ limit 1<answers>
 </answers>
 </query>
 </question>
-<question id="81" hybrid="false" statistical="true">
+<question id="81" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the latest start date of disaster prevention and preparedness aid over the Suomen Punainen Risti channel?</string>
 <query>
 select distinct(?date)
@@ -3998,7 +3997,7 @@ limit 1<answers>
 </answers>
 </query>
 </question>
-<question id="82" hybrid="false" statistical="true">
+<question id="82" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When are the end dates of aid from Finnfund to Ethiopia for Energy policy and administrative management?</string>
 <query>
 select distinct(?date)
@@ -4014,7 +4013,7 @@ select distinct(?date)
 </answers>
 </query>
 </question>
-<question id="83" hybrid="false" statistical="true">
+<question id="83" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What are the titles of projects which teach basic life skills for youth and adults in Tanzania?</string>
 <query>
 select distinct(?title)
@@ -4034,7 +4033,7 @@ select distinct(?title)
 </answers>
 </query>
 </question>
-<question id="84" hybrid="false" statistical="true">
+<question id="84" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How much did UNDSS commit in 2006?</string>
 <query>
 select sum(xsd:decimal(?commit))
@@ -4049,7 +4048,7 @@ select sum(xsd:decimal(?commit))
 </answers>
 </query>
 </question>
-<question id="85" hybrid="false" statistical="true">
+<question id="85" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>In which countries was education on sexual and reproductive health in evening schools funded?</string>
 <query>
 select ?country
@@ -4061,7 +4060,7 @@ select ?country
 </answers>
 </query>
 </question>
-<question id="86" hybrid="false" statistical="true">
+<question id="86" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What types of aid were given to the Project to support the Geological Survey of Tanzania?</string>
 <query>
 select distinct(?type)
@@ -4075,7 +4074,7 @@ select distinct(?type)
 </answers>
 </query>
 </question>
-<question id="87" hybrid="false" statistical="true">
+<question id="87" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When were commitments made to the area of Lusaka and Ndola?</string>
 <query>
 select distinct ?date {?obs lso:finland-aid-geographical-target-area "Lusaka and Ndola". ?obs lso:refDate ?date.}<answers>
@@ -4086,7 +4085,7 @@ select distinct ?date {?obs lso:finland-aid-geographical-target-area "Lusaka and
 </answers>
 </query>
 </question>
-<question id="88" hybrid="false" statistical="true">
+<question id="88" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>When was the first start date of aid by the Crisis Management Initiative in Liberia?</string>
 <query>
 select ?date {?obs lso:finland-aid-channel-of-delivery-name "Finnish NGO, Crisis Management Initiative". ?obs lso:finland-aid-start-date ?date.
@@ -4095,7 +4094,7 @@ select ?date {?obs lso:finland-aid-channel-of-delivery-name "Finnish NGO, Crisis
 </answers>
 </query>
 </question>
-<question id="89" hybrid="false" statistical="true">
+<question id="89" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Did the Ukraine receive money in 2009?</string>
 <query>
 ask {?obs lso:finland-aid-recipient-country &lt;https://openspending.org/finland-aid/recipient-country/ua>. ?obs lso:refYear ?year. filter(year(?year)=2009).}<answers>
@@ -4103,7 +4102,7 @@ ask {?obs lso:finland-aid-recipient-country &lt;https://openspending.org/finland
 </answers>
 </query>
 </question>
-<question id="90" hybrid="false" statistical="true">
+<question id="90" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Was Ethiopia given money for primary education?</string>
 <query>
 ask {?obs lso:finland-aid-recipient-country &lt;https://openspending.org/finland-aid/recipient-country/et>. ?obs lso:finland-aid-sector &lt;https://openspending.org/finland-aid/sector/11220>.}<answers>
@@ -4111,7 +4110,7 @@ ask {?obs lso:finland-aid-recipient-country &lt;https://openspending.org/finland
 </answers>
 </query>
 </question>
-<question id="91" hybrid="false" statistical="true">
+<question id="91" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Did Finnish Church Aid give money to Somalia?</string>
 <query>
 ask {?obs lso:finland-aid-recipient-country &lt;https://openspending.org/finland-aid/recipient-country/so>. ?obs lso:finland-aid-channel-of-delivery-name "Finnish NGO, Finnish Church Aid".}<answers>
@@ -4119,7 +4118,7 @@ ask {?obs lso:finland-aid-recipient-country &lt;https://openspending.org/finland
 </answers>
 </query>
 </question>
-<question id="92" hybrid="false" statistical="true">
+<question id="92" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which countries got aid for human rights as well as for nuclear power plants?</string>
 <query>
 select distinct(?co) {
@@ -4132,7 +4131,7 @@ select distinct(?co) {
 </answers>
 </query>
 </question>
-<question id="93" hybrid="false" statistical="true">
+<question id="93" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the average number of full years between between the start and end date?</string>
 <query>
 select avg(year(?end)-year(?start)){
@@ -4143,7 +4142,7 @@ select avg(year(?end)-year(?start)){
 </answers>
 </query>
 </question>
-<question id="94" hybrid="false" statistical="true">
+<question id="94" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many countries recieved more aid in 2011 than in 2010?</string>
 <query>
 select count(?country)
@@ -4170,7 +4169,7 @@ having (sum(xsd:decimal(?amount1))&lt;sum(xsd:decimal(?amount2)))
 </answers>
 </query>
 </question>
-<question id="95" hybrid="false" statistical="true">
+<question id="95" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What are the 10 sectors with the highest total amount?</string>
 <query>
 select distinct ?sector
@@ -4193,7 +4192,7 @@ limit 10<answers>
 </answers>
 </query>
 </question>
-<question id="96" hybrid="false" statistical="true">
+<question id="96" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>How many countries recieve aid both in 2006 and in 2010?</string>
 <query>
 select count(?country)
@@ -4220,7 +4219,7 @@ having (sum(xsd:decimal(?amount1))>0&amp;&amp;sum(xsd:decimal(?amount2))>0)
 </answers>
 </query>
 </question>
-<question id="97" hybrid="false" statistical="true">
+<question id="97" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>What is the country with the lowest average aid amount?</string>
 <query>
 select ?country
@@ -4234,7 +4233,7 @@ limit 1<answers>
 </answers>
 </query>
 </question>
-<question id="98" hybrid="false" statistical="true">
+<question id="98" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which are the sectors of aid to the geographical area of Dhaka?</string>
 <query>
 select distinct(?sector)
@@ -4248,7 +4247,7 @@ select distinct(?sector)
 </answers>
 </query>
 </question>
-<question id="99" hybrid="false" statistical="true">
+<question id="99" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>In how many years did Sierra Leona recieve aid for malaria control?</string>
 <query>
 select count(distinct(?year))
@@ -4261,7 +4260,7 @@ select count(distinct(?year))
 </answers>
 </query>
 </question>
-<question id="100" hybrid="false" statistical="true">
+<question id="100" cubeuri="http://linkedspending.aksw.org/instance/finland-aid" hybrid="false" statistical="true">
 <string>Which sectors have Paraguay and the Central African Republic in common?</string>
 <query>
 select distinct ?sector
