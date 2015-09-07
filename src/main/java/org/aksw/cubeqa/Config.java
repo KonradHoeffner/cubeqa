@@ -34,7 +34,11 @@ public class Config
 
 	public boolean	removeStopWords = false;
 
-	public boolean	useDefaultAnswerProperty = false;
+	public boolean	useDefaultAnswerProperty = true;
+
+	/** For values which are only referenced by value, not by property name.
+	 Happens very often in practice (e.g. most people say "in 2010" and not "in the year of 2010") so I recommend to set the config parameter to true. */
+	public boolean	findNamelessReferences = true;
 
 //	@Option(name="-indexDoNonExactMatch")
 //	public boolean	indexDoNonExactMatch = true;

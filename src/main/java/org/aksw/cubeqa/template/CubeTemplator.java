@@ -8,6 +8,7 @@ import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
+import org.aksw.cubeqa.property.PropertyType;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
 import de.konradhoeffner.commons.Pair;
@@ -58,10 +59,13 @@ public class CubeTemplator
 		Pair<CubeTemplateFragment,String> detectResult = detect(noStop);
 		Tree root = StanfordNlp.parse(detectResult.b);
 		CubeTemplateFragment rootFragment = visitRecursive(root);
-		CubeTemplate finalTemplate = CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate();
+		CubeTemplate finalTemplate = CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate(eats).get();
 		// TODO move default aggregate from templator to cubetemplate or cubetemplatefragment
 		Set<String> orderLimitPatterns = finalTemplate.restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
-		if(finalTemplate.aggregates.isEmpty()&&orderLimitPatterns.isEmpty()) {finalTemplate.aggregates.add(Aggregate.SUM);}
+		// TODO for now only use default sum aggregate when no measure in the answer properties, for later makes this more elaborate
+		if(finalTemplate.aggregates.isEmpty()&&orderLimitPatterns.isEmpty()&&
+				!(finalTemplate.answerProperties.stream().filter(p->p.propertyType!=PropertyType.MEASURE).findAny().isPresent()))
+		{finalTemplate.aggregates.add(Aggregate.SUM);}
 		return finalTemplate;
 	}
 
@@ -96,7 +100,7 @@ public class CubeTemplator
 	}
 
 	/** The recursive algorithm. */
-	CubeTemplateFragment visitRecursive(String question, Tree tree)
+	CubeTemplateFragment visitRecursive(Tree tree)
 	{
 		while(/*!tree.isPreTerminal()&&*/tree.children().length==1)
 		{

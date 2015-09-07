@@ -15,8 +15,8 @@ class MatchResult
 {
 	/** A phrase contained in the question.*/
 	public final String phrase;
-	/** Character index of the start of the phrase in the original question. **/
-	public final int phraseIndex;
+//	/** Character index of the start of the phrase in the original question. **/
+//	public final int phraseIndex;
 	/** the estimated probability that the phrase refers to a property with a given property label */
 	public final Map<ComponentProperty,Double> nameRefs;
 	/** the estimated probability that the phrase refers to a property with a given property value*/
@@ -39,10 +39,10 @@ class MatchResult
 		return nameRefs.isEmpty()&&valueRefs.isEmpty();
 	}
 
-	public MatchResult(String phrase, int phraseIndex, Map<ComponentProperty,Double> nameRefs,  Map<ComponentProperty,ScoreResult> valueRefs)
+	public MatchResult(String phrase, /* int phraseIndex,*/ Map<ComponentProperty,Double> nameRefs,  Map<ComponentProperty,ScoreResult> valueRefs)
 	{
 		this.phrase = phrase;
-		this.phraseIndex=phraseIndex;
+//		this.phraseIndex=phraseIndex;
 		this.nameRefs = nameRefs;
 		this.valueRefs = valueRefs;
 		score = Math.max(nameRefs.values().stream().reduce(0.0,Double::max),

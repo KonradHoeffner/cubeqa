@@ -14,11 +14,11 @@ public class NumericScorer extends Scorer
 	public NumericScorer(ComponentProperty property)
 	{
 		super(property);
-		// sometimes returns NAN although the values are correct
+		// triggers Virtuoso bug https://github.com/openlink/virtuoso-opensource/issues/354 on some versions
 		String query = "select (min(xsd:double(?d)) as ?min) (max(xsd:double(?d)) as ?max) {?o a qb:Observation. ?o qb:dataSet <"+property.cube.uri+">."
 				+ "?o <"+property.uri+"> ?d.}";
 		QuerySolution qs = property.cube.sparql.select(query).next();
-
+//		System.out.println(query);
 		range = Range.closed(qs.get("min").asLiteral().getDouble(), qs.get("max").asLiteral().getDouble());
 	}
 

@@ -48,10 +48,10 @@ public class CubeTemplateFragment
 
 	public static CubeTemplateFragment combine(Collection<CubeTemplateFragment> fragments)
 	{
-//		fragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
+		//		fragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
 		if(fragments.isEmpty())
 		{throw new IllegalArgumentException("empty fragment set, can't combine");}
-//		{log.warn("empty fragment set, combination empty");}
+		//		{log.warn("empty fragment set, combination empty");}
 
 		// *** new sets are unions over all fragment sets **********************************************************
 		if(fragments.stream().map(f->f.cube.uri).collect(Collectors.toSet()).size()>1) {
@@ -118,26 +118,31 @@ public class CubeTemplateFragment
 		return fragment;
 	}
 
-	CubeTemplate toTemplate(EnumSet<AnswerType> expectedAnswerTypes)
+	/** Transforms the final fragment, which likely has undergone many combinations with other fragments in the tree-based algorithm, to a template.
+	 * There will be no further combining so all leftover matchresult values will have to be guessed where they fit or thrown away.
+	 * For each phrase there can be at most one match and each match represents another phrase so we for each match result we take at most one reference.
+	 * @param expectedAnswerTypes The expected answer types of the question based on its question word. Used to choose the answer property.
+	 * @return An optional containing the cube template or an empty optional, if no answer property could identified.
+	 */
+	Optional<CubeTemplate> toTemplate(EnumSet<AnswerType> expectedAnswerTypes)
 	{
-		// there will be no further combining so all leftover matchresult values will have to be guessed where they fit or thrown away
-
-		// for each phrase there can be at most one match and each match represents another phrase so we for each match result we take at most one reference
-
-		//		Set<ScoreResult> leftOverResults =  matchResults.stream().map(MatchResult::getValueRefs).map(Map::values).flatMap(Collection::stream).collect(Collectors.toSet());
-		// try to get more restrictions
-		for(MatchResult mr: matchResults)
+		// For values which are only referenced by value, not by property name.
+		// Happens very often in practice (e.g. most people say "in 2010" and not "in the year of 2010") so I recommend to set the config parameter to true.
+		if(Config.INSTANCE.findNamelessReferences)
 		{
-			// we only use those whose properties which are not already referred to
-			// as unreferredProperties() is called in each iteration, it is up to date with new restrictions from former iterations
-			mr.valueRefs.values().stream().filter(sr->unreferredProperties().contains(sr.property))
-			.filter(sr->sr.score>TO_TEMPLATE_VALUE_SCORE_THRESHOLD)
-			.max(Comparator.comparing(ScoreResult::getScore))
-			.ifPresent(scoreResult->
+			for(MatchResult mr: matchResults)
 			{
-				log.debug("toTemplate: adding restriction "+scoreResult.toRestriction()+" from score result "+scoreResult);
-				restrictions.add(scoreResult.toRestriction());
-			});
+				// we only use those whose properties which are not already referred to
+				// as unreferredProperties() is called in each iteration, it is up to date with new restrictions from former iterations
+				mr.valueRefs.values().stream().filter(sr->unreferredProperties().contains(sr.property))
+				.filter(sr->sr.score>TO_TEMPLATE_VALUE_SCORE_THRESHOLD)
+				.max(Comparator.comparing(ScoreResult::getScore))
+				.ifPresent(scoreResult->
+				{
+					log.debug("toTemplate: adding restriction "+scoreResult.toRestriction()+" from score result "+scoreResult);
+					restrictions.add(scoreResult.toRestriction());
+				});
+			}
 		}
 		// do we have leftover name refs? use them as per properties
 		Set<ComponentProperty> leftOverNamed = matchResults.stream().flatMap(mr->mr.nameRefs.keySet().stream()).collect(Collectors.toSet());
@@ -146,19 +151,47 @@ public class CubeTemplateFragment
 		// if no answer property, search in match results for property refs that are compatible with the answer types
 		if(answerProperties.isEmpty())
 		{
+			log.info("No answer properties defined, searching in unpaired property name references...");
 			Set<ComponentProperty> candidates = matchResults.stream()
-			.map(MatchResult::getNameRefs)
-			.map(Map::keySet)
-			.flatMap(Set::stream)
-			.collect(Collectors.toSet());
+					.map(MatchResult::getNameRefs)
+					.map(Map::keySet)
+					.flatMap(Set::stream)
+					.collect(Collectors.toSet());
+
+			if(candidates.isEmpty())
+			{
+				log.warn("no answer property candidate found...");
+				if(Config.INSTANCE.useDefaultAnswerProperty)
+				{
+					log.warn("...using default answer property: "+cube.getDefaultAnswerProperty());
+					answerProperties.add(cube.getDefaultAnswerProperty());
+				} else
+				{
+					Set<ComponentProperty> measures = cube.properties.values().stream().filter(p->p.propertyType==PropertyType.MEASURE).collect(Collectors.toSet());
+					if(measures.isEmpty())
+					{
+						log.warn("Cube does not contain any measures, cannot answer the question.");
+
+					} else
+					{
+						ComponentProperty measure = measures.iterator().next();
+						log.warn("...using any of the "+measures.size()+" measures, choosing "+measure);
+						answerProperties.add(measure);
+					}
+				}
+			}
 
 			Set<ComponentProperty> fittingAnswerType = candidates.stream()
 					.filter(c->expectedAnswerTypes.contains(c.answerType))
 					.collect(Collectors.toSet());
 
+
+			log.info(candidates.size()+" property name references found, "+fittingAnswerType+" with the right answer type.");
 			if(fittingAnswerType.size()==1)
 			{
-				answerProperties.add(fittingAnswerType.iterator().next());
+				ComponentProperty onlyProperty = fittingAnswerType.iterator().next();
+				answerProperties.add(onlyProperty);
+				log.info("only one reference with the correct answer type: "+onlyProperty+" with answer type "+onlyProperty.answerType);
 			} else if(fittingAnswerType.size()==0)
 			{
 				// TODO look at all candidates even if their types don't fit, maybe doing a count or something?
@@ -166,29 +199,17 @@ public class CubeTemplateFragment
 			{
 				// TODO multiple options, use the one with the highest value
 			}
+			//			matchResults.stream()
+			//			.map(MatchResult::getNameRefs)
+			//			.map(Map::entrySet)
+			//			.flatMap(Set::stream)
+			//			.filter(entry->entry.getKey().propertyType==PropertyType.MEASURE)
+			//			.max(Comparator.comparing(e->e.getValue()))
+			//			.ifPresent(e->answerProperties.add(e.getKey()));
 
-
-//			matchResults.stream()
-//			.map(MatchResult::getNameRefs)
-//			.map(Map::entrySet)
-//			.flatMap(Set::stream)
-//			.filter(entry->entry.getKey().propertyType==PropertyType.MEASURE)
-//			.max(Comparator.comparing(e->e.getValue()))
-//			.ifPresent(e->answerProperties.add(e.getKey()));
-			if(answerProperties.isEmpty()/*&&perProperties.isEmpty()*/)
-			{
-				log.debug("no answer property found, using default of "+cube.getDefaultAnswerProperty());
-				if(Config.INSTANCE.useDefaultAnswerProperty)
-				{
-					answerProperties.add(cube.getDefaultAnswerProperty());
-				} else
-				{
-				answerProperties.add(cube.properties.values().stream().filter(p->p.propertyType==PropertyType.MEASURE).findAny().get());
-				}
-			}
 		}
 
-		return new CubeTemplate(cube, restrictions, answerProperties, perProperties,aggregates);
+		return Optional.of(new CubeTemplate(cube, restrictions, answerProperties, perProperties,aggregates));
 	}
 
 	public boolean isEmpty()

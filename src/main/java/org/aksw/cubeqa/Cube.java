@@ -1,20 +1,17 @@
 package org.aksw.cubeqa;
 
-import java.io.*;
-import java.net.URL;
 import java.util.*;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import java.io.*;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.NopScorer;
-import org.apache.commons.collections15.MapUtils;
 import org.apache.commons.collections15.MultiMap;
 import org.apache.commons.collections15.multimap.MultiHashMap;
-import com.google.common.collect.Multimaps;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import de.konradhoeffner.commons.TSVReader;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /** Represents an RDF Data Cube with its component properties */
 @RequiredArgsConstructor
@@ -40,7 +37,7 @@ public class Cube implements Serializable
 
 	static public Cube finlandAid()
 	{
-		if(1==1) {throw new IllegalAccessError();}
+//		if(1==1) {throw new IllegalAccessError();}
 		return Cube.getInstance("finland-aid");
 	}
 
@@ -163,7 +160,9 @@ public class Cube implements Serializable
 
 	@Override public boolean equals(Object obj)
 	{
-		if(!(obj instanceof Cube)) return false;
+		if(!(obj instanceof Cube)) {
+			return false;
+		}
 		return this.uri.equals(((Cube)obj).uri);
 	}
 
