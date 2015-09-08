@@ -5,10 +5,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.aksw.cubeqa.*;
-import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.aksw.cubeqa.property.PropertyType;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
 import de.konradhoeffner.commons.Pair;
@@ -48,7 +46,6 @@ public class CubeTemplator
 			question = question.substring(questionWord.length());
 		}
 
-
 		String noStop = question;
 		if(Config.INSTANCE.removeStopWords)
 		{
@@ -63,9 +60,7 @@ public class CubeTemplator
 		// TODO move default aggregate from templator to cubetemplate or cubetemplatefragment
 		Set<String> orderLimitPatterns = finalTemplate.restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
 		// TODO for now only use default sum aggregate when no measure in the answer properties, for later makes this more elaborate
-		if(finalTemplate.aggregates.isEmpty()&&orderLimitPatterns.isEmpty()&&
-				!(finalTemplate.answerProperties.stream().filter(p->p.propertyType!=PropertyType.MEASURE).findAny().isPresent()))
-		{finalTemplate.aggregates.add(Aggregate.SUM);}
+
 		return finalTemplate;
 	}
 

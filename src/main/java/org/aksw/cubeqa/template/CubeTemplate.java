@@ -28,13 +28,10 @@ public class CubeTemplate
 		return !answerProperties.isEmpty();
 	}
 
+	/** Generates a SPARQL query out of the template.*/
 	public String sparqlQuery()
 	{
-		//		new ComponentPropertyTest().testVar();
-		//		System.out.println(Cube.FINLAND_AID().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
-		if(!isComplete()) {
-			throw new IllegalStateException("not complete");
-		}
+		if(!isComplete()) {throw new IllegalStateException("not complete");}
 		Set<String> wherePatterns = restrictions.stream().flatMap(r->r.wherePatterns().stream()).collect(Collectors.toSet());
 		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">. ?obs a qb:Observation.\n");
 
@@ -61,6 +58,11 @@ public class CubeTemplate
 		for(String pattern: wherePatterns) {sb.append(pattern);sb.append(" ");}
 		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
 		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
+		Set<ComponentProperty> otherProperties = restrictions.stream().map(Restriction::getProperty).collect(Collectors.toSet());
+		otherProperties.removeAll(answerProperties);
+		otherProperties.removeAll(perProperties);
+		for(ComponentProperty p: otherProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
+
 		sb.append("\n}");
 		if(!orderLimitPatterns.isEmpty())
 		{

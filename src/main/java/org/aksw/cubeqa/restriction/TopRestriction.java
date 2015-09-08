@@ -2,12 +2,12 @@ package org.aksw.cubeqa.restriction;
 
 import java.util.Collections;
 import java.util.Set;
-import lombok.EqualsAndHashCode;
 import org.aksw.cubeqa.property.ComponentProperty;
+import lombok.EqualsAndHashCode;
 
 /** Restriction for top n or bottom n items. */
 @EqualsAndHashCode(callSuper=true)
-public class TopRestriction extends RestrictionWithPhrase
+public class TopRestriction extends Restriction
 {
 	public enum OrderModifier {ASC,DESC};
 	final int n;
@@ -15,14 +15,12 @@ public class TopRestriction extends RestrictionWithPhrase
 
 	@Override public Set<String> orderLimitPatterns()
 	{
-//		System.out.println(property.var);
-//		System.out.println(property.cube.properties.ge);
 		return Collections.singleton("order by "+modifier.toString()+"(xsd:decimal(?"+property.var+")) limit "+n);
 	}
 
-	public TopRestriction(ComponentProperty property,String phrase, int n, OrderModifier modifier)
+	public TopRestriction(ComponentProperty property, int n, OrderModifier modifier)
 	{
-		super(property, phrase);
+		super(property);
 		this.n=n;
 		this.modifier=modifier;
 	}

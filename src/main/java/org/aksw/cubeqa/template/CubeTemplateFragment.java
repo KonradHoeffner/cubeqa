@@ -157,6 +157,7 @@ public class CubeTemplateFragment
 					.map(Map::keySet)
 					.flatMap(Set::stream)
 					.collect(Collectors.toSet());
+			candidates.removeAll(perProperties);
 
 			if(candidates.isEmpty())
 			{
@@ -208,6 +209,12 @@ public class CubeTemplateFragment
 			//			.ifPresent(e->answerProperties.add(e.getKey()));
 
 		}
+		// default sum aggregate when appropriate
+		Set<String> orderLimitPatterns = restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
+		if(aggregates.isEmpty()&&orderLimitPatterns.isEmpty()
+				&&(expectedAnswerTypes.contains(AnswerType.UNCOUNTABLE)||expectedAnswerTypes.contains(AnswerType.COUNTABLE))
+				&&!(answerProperties.stream().filter(p->p.propertyType!=PropertyType.MEASURE).findAny().isPresent()))
+		{aggregates.add(Aggregate.SUM);}
 
 		return Optional.of(new CubeTemplate(cube, restrictions, answerProperties, perProperties,aggregates));
 	}

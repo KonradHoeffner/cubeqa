@@ -1,16 +1,14 @@
 package org.aksw.cubeqa.benchmark;
 
 import static de.konradhoeffner.commons.Streams.stream;
-import java.io.*;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.io.*;
+import java.nio.charset.Charset;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-import lombok.*;
-import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.*;
 import org.apache.commons.csv.*;
 import org.apache.log4j.Level;
@@ -18,6 +16,8 @@ import org.w3c.dom.*;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import lombok.*;
+import lombok.extern.log4j.Log4j;
 
 /** Benchmark class with the evaluate function that is used for the papers.
  * Use {@link Benchmark#fromCsv(String)} and {@link Benchmark#fromQald(String)} to load a benchmark from a file.
@@ -121,7 +121,6 @@ public class Benchmark
 
 	public Performance evaluate(Algorithm algorithm, int questionNumber)
 	{
-		//		List<Pair<Double,Double>> precisionRecalls = new ArrayList<>();
 		log.setLevel(Level.ALL);
 		Question question = questions.get(questionNumber-1);
 		log.info("Question Number "+questionNumber+": Answering "+question.string);
@@ -173,8 +172,12 @@ public class Benchmark
 
 	static String nodeString(RDFNode node)
 	{
-		if(node.isLiteral()) return node.asLiteral().getLexicalForm();
-		if(node.isResource()) return node.asResource().getURI();
+		if(node.isLiteral()) {
+			return node.asLiteral().getLexicalForm();
+		}
+		if(node.isResource()) {
+			return node.asResource().getURI();
+		}
 		throw new IllegalArgumentException();
 	}
 
