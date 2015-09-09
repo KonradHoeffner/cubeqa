@@ -144,11 +144,7 @@ public class CubeTemplateFragment
 				});
 			}
 		}
-		// do we have leftover name refs? use them as per properties
-		Set<ComponentProperty> leftOverNamed = matchResults.stream().flatMap(mr->mr.nameRefs.keySet().stream()).collect(Collectors.toSet());
-		perProperties.addAll(leftOverNamed);
-
-		// if no answer property, search in match results for property refs that are compatible with the answer types
+		// if no answer property, search in match results for left over name refs that are compatible with the answer types
 		if(answerProperties.isEmpty())
 		{
 			log.info("No answer properties defined, searching in unpaired property name references...");

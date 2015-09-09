@@ -57,10 +57,6 @@ public class CubeTemplator
 		Tree root = StanfordNlp.parse(detectResult.b);
 		CubeTemplateFragment rootFragment = visitRecursive(root);
 		CubeTemplate finalTemplate = CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate(eats).get();
-		// TODO move default aggregate from templator to cubetemplate or cubetemplatefragment
-		Set<String> orderLimitPatterns = finalTemplate.restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
-		// TODO for now only use default sum aggregate when no measure in the answer properties, for later makes this more elaborate
-
 		return finalTemplate;
 	}
 

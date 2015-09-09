@@ -58,6 +58,7 @@ public class CubeTemplate
 		for(String pattern: wherePatterns) {sb.append(pattern);sb.append(" ");}
 		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
 		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
+		// those properties are used in order limit patterns and need to have their own triple pattern as well
 		Set<ComponentProperty> otherProperties = restrictions.stream().map(Restriction::getProperty).collect(Collectors.toSet());
 		otherProperties.removeAll(answerProperties);
 		otherProperties.removeAll(perProperties);
