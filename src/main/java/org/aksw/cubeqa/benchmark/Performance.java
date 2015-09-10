@@ -1,7 +1,6 @@
 package org.aksw.cubeqa.benchmark;
 
 import java.util.*;
-import weka.estimators.NormalEstimator;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
 
@@ -15,6 +14,7 @@ public class Performance
 	final double precision;
 	final double recall;
 	final boolean empty;
+	public String query = null;
 
 	public static final Performance performance(Set correct, Set found)
 	{
@@ -23,8 +23,12 @@ public class Performance
 
 	public static final Performance performance(Set<Map<String,Object>> correct, Set<Map<String,Object>> found, boolean alreadyNormalized)
 	{
-		if(correct.isEmpty()) throw new IllegalArgumentException("correct answer is empty");
-		if(found.isEmpty()) return new Performance(0,0,true);
+		if(correct.isEmpty()) {
+			throw new IllegalArgumentException("correct answer is empty");
+		}
+		if(found.isEmpty()) {
+			return new Performance(0,0,true);
+		}
 		// align maps so that the keys are named the same
 		// TODO: improve this, instanceofs are messy
 		Map<String,Object> firstCorrect = correct.iterator().next();
@@ -32,11 +36,15 @@ public class Performance
 		if(!alreadyNormalized&&!firstCorrect.containsKey(""))
 		{
 			Map<String,Object> firstFound = found.iterator().next();
-			if(firstFound.containsKey("")) return new Performance(0,0,true);
+			if(firstFound.containsKey("")) {
+				return new Performance(0,0,true);
+			}
 
 			// TODO this may fail on optionals
 			if(firstCorrect.size()!=firstFound.size()) {return new Performance(0,0,true);}// unequal dimension count
-			if(firstCorrect.size()>2) throw new RuntimeException("more than 2 answer dimensions not supported");
+			if(firstCorrect.size()>2) {
+				throw new RuntimeException("more than 2 answer dimensions not supported");
+			}
 			// TODO this is so ugly but it's late at night and deadline in 12 hours, improve later
 			Iterator it = firstCorrect.keySet().iterator();
 			String key1 = (String)it.next();
@@ -81,7 +89,9 @@ public class Performance
 			log.fatal("no correct answer");
 			return new Performance(0, 0,true);
 			}
-		if(found==0) return new Performance(0,0,true);
+		if(found==0) {
+			return new Performance(0,0,true);
+		}
 		return new Performance((double)correctFound/found,(double)correctFound/correct,false);
 	}
 
@@ -89,7 +99,9 @@ public class Performance
 
 	double fscore(double beta)
 	{
-		if(precision+recall==0) return 0;
+		if(precision+recall==0) {
+			return 0;
+		}
 		return (1+beta*beta)*(precision*recall)/(beta*beta*precision+recall);
 	}
 

@@ -1,10 +1,10 @@
 package org.aksw.cubeqa.property;
 
 import static de.konradhoeffner.commons.Streams.stream;
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.io.Serializable;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.property.scorer.*;
 import org.aksw.cubeqa.property.scorer.temporal.TemporalScorer;
@@ -196,15 +196,12 @@ public class ComponentProperty implements Serializable
 				if(range.equals(XSD.date.getURI())||range.equals(XSD.dateTime.getURI())) {return new Pair<>(TemporalScorer.dateScorer(this),AnswerType.TEMPORAL);}
 			} else
 			{
-				log.warn("unknown type and range "+range+". fetching values. "+this.uri);
+				log.debug("unknown type and range "+range+". fetching values. "+this.uri);
 				return new Pair<>(scorerFromValues(),AnswerType.ENTITY);
 			}
 		}
-		log.warn("unknown type and no range: fetching values for "+this.uri);
+		log.debug("unknown type and no range: fetching values for "+this.uri);
 		return new Pair<>(scorerFromValues(),AnswerType.ENTITY);
-
-//		throw new RuntimeException("no scorer found for component "+this+" with range "+range);
-		//		return scorer;
 	}
 
 	public static synchronized ComponentProperty getInstance(Cube cubeUri, String uri)//, String type)

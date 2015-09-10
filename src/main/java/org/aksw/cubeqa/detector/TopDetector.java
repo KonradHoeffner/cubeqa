@@ -4,7 +4,9 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.aksw.cubeqa.AnswerType;
 import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
 import org.aksw.cubeqa.restriction.TopRestriction;
@@ -81,10 +83,12 @@ public class TopDetector extends Detector
 				} else
 				{
 					ScoreResult max = results.stream().max(Comparator.comparing(ScoreResult::getScore)).get();
-					RestrictionWithPhrase restriction = null;
 
 					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
-					fragment.getRestrictions().add(new TopRestriction(max.property,n,e.getValue()));
+					ComponentProperty restrictionProperty = ((max.property.answerType==AnswerType.COUNTABLE)||(max.property.answerType==AnswerType.UNCOUNTABLE))?
+							max.property:cube.getDefaultAnswerProperty();
+					fragment.getRestrictions().add(new TopRestriction(restrictionProperty,n,e.getValue()));
+					fragment.getAnswerProperties().add(max.property);
 					fragments.add(fragment);
 					// TODO: check this function for the top 10 aided countries case
 					// TODO: make sure each part is matched only once

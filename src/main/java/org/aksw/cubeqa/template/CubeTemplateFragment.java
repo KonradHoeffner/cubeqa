@@ -1,6 +1,8 @@
 package org.aksw.cubeqa.template;
 
+import static org.aksw.cubeqa.AnswerType.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Aggregate;
@@ -144,75 +146,83 @@ public class CubeTemplateFragment
 				});
 			}
 		}
-		// if no answer property, search in match results for left over name refs that are compatible with the answer types
-		if(answerProperties.isEmpty())
-		{
-			log.info("No answer properties defined, searching in unpaired property name references...");
-			Set<ComponentProperty> candidates = matchResults.stream()
-					.map(MatchResult::getNameRefs)
-					.map(Map::keySet)
-					.flatMap(Set::stream)
-					.collect(Collectors.toSet());
-			candidates.removeAll(perProperties);
+		if(answerProperties.isEmpty()) {answerProperties.add(findAnswerProperty(expectedAnswerTypes));}
 
-			if(candidates.isEmpty())
-			{
-				log.warn("no answer property candidate found...");
-				if(Config.INSTANCE.useDefaultAnswerProperty)
-				{
-					log.warn("...using default answer property: "+cube.getDefaultAnswerProperty());
-					answerProperties.add(cube.getDefaultAnswerProperty());
-				} else
-				{
-					Set<ComponentProperty> measures = cube.properties.values().stream().filter(p->p.propertyType==PropertyType.MEASURE).collect(Collectors.toSet());
-					if(measures.isEmpty())
-					{
-						log.warn("Cube does not contain any measures, cannot answer the question.");
-
-					} else
-					{
-						ComponentProperty measure = measures.iterator().next();
-						log.warn("...using any of the "+measures.size()+" measures, choosing "+measure);
-						answerProperties.add(measure);
-					}
-				}
-			}
-
-			Set<ComponentProperty> fittingAnswerType = candidates.stream()
-					.filter(c->expectedAnswerTypes.contains(c.answerType))
-					.collect(Collectors.toSet());
-
-
-			log.info(candidates.size()+" property name references found, "+fittingAnswerType+" with the right answer type.");
-			if(fittingAnswerType.size()==1)
-			{
-				ComponentProperty onlyProperty = fittingAnswerType.iterator().next();
-				answerProperties.add(onlyProperty);
-				log.info("only one reference with the correct answer type: "+onlyProperty+" with answer type "+onlyProperty.answerType);
-			} else if(fittingAnswerType.size()==0)
-			{
-				// TODO look at all candidates even if their types don't fit, maybe doing a count or something?
-			} else
-			{
-				// TODO multiple options, use the one with the highest value
-			}
-			//			matchResults.stream()
-			//			.map(MatchResult::getNameRefs)
-			//			.map(Map::entrySet)
-			//			.flatMap(Set::stream)
-			//			.filter(entry->entry.getKey().propertyType==PropertyType.MEASURE)
-			//			.max(Comparator.comparing(e->e.getValue()))
-			//			.ifPresent(e->answerProperties.add(e.getKey()));
-
-		}
 		// default sum aggregate when appropriate
 		Set<String> orderLimitPatterns = restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
-		if(aggregates.isEmpty()&&orderLimitPatterns.isEmpty()
-				&&(expectedAnswerTypes.contains(AnswerType.UNCOUNTABLE)||expectedAnswerTypes.contains(AnswerType.COUNTABLE))
-				&&!(answerProperties.stream().filter(p->p.propertyType!=PropertyType.MEASURE).findAny().isPresent()))
+		if(aggregates.isEmpty()/*&&orderLimitPatterns.isEmpty()*/
+				&&((answerProperties.iterator().next().answerType==AnswerType.UNCOUNTABLE)||(answerProperties.iterator().next().answerType==AnswerType.COUNTABLE))
+//				&&(expectedAnswerTypes.contains(AnswerType.UNCOUNTABLE)||expectedAnswerTypes.contains(AnswerType.COUNTABLE))
+//				&&!(answerProperties.stream().filter(p->p.propertyType!=PropertyType.MEASURE).findAny().isPresent())
+				)
 		{aggregates.add(Aggregate.SUM);}
 
 		return Optional.of(new CubeTemplate(cube, restrictions, answerProperties, perProperties,aggregates));
+	}
+
+	private ComponentProperty findAnswerProperty(EnumSet<AnswerType> expectedAnswerTypes)
+	{
+		Set<ComponentProperty> candidates = matchResults.stream()
+				.map(MatchResult::getNameRefs)
+				.map(Map::keySet)
+				.flatMap(Set::stream)
+				.collect(Collectors.toSet());
+		candidates.removeAll(perProperties);
+
+		if(candidates.isEmpty())
+		{
+			log.warn("no answer property candidate found...");
+			if(Config.INSTANCE.useDefaultAnswerProperty)
+			{
+				log.warn("...using default answer property: "+cube.getDefaultAnswerProperty());
+				return cube.getDefaultAnswerProperty();
+			}
+			Set<ComponentProperty> measures = cube.properties.values().stream().filter(p->p.propertyType==PropertyType.MEASURE).collect(Collectors.toSet());
+			if(measures.isEmpty()) {throw new RuntimeException("Cube "+cube+" does not contain any measures, cannot answer the question.");}
+			ComponentProperty measure = measures.iterator().next();
+			log.warn("...using any of the "+measures.size()+" measures, choosing "+measure);
+			return measure;
+		}
+
+		Set<ComponentProperty> fittingAnswerType = candidates.stream().filter(c->expectedAnswerTypes.contains(c.answerType)).collect(Collectors.toSet());
+		log.info(candidates.size()+" property name references found, "+fittingAnswerType+" with the right answer type.");
+
+		if(fittingAnswerType.isEmpty())
+		{
+			// no property references with the right type, is it a count?
+			EnumSet<AnswerType> canBeCounted = EnumSet.of(ENTITY,TEMPORAL,LOCATION);
+			if(expectedAnswerTypes.contains(AnswerType.COUNT))
+			{
+				// TODO: is this stable? and can we select better?
+				Optional<ComponentProperty> ocp = candidates.stream().filter(c->canBeCounted.contains(c.answerType)).findFirst();
+				if(ocp.isPresent())
+				{
+					aggregates.add(Aggregate.COUNT);
+					return ocp.get();
+				}
+			}
+			// all our candidates have the wrong answer type but beggars can't be choosers, so use the best of them
+			return best(candidates);
+		}
+
+		ComponentProperty best = best(fittingAnswerType);
+		log.info("component property: "+best.uri+" with answer type "+best.answerType+" chosen out of "+fittingAnswerType.size()+ "candidates with the right answer type.");
+		return best;
+	}
+
+	/** @return the property with the highest score in the match results or any one if none occurr there. */
+	private ComponentProperty best(Set<ComponentProperty> properties)
+	{
+		return
+				matchResults.stream()
+				.map(MatchResult::getNameRefs)
+				.map(Map::entrySet)
+				.flatMap(Set::stream)
+				.filter(e->properties.contains(e.getKey()))
+				.max(Comparator.comparing(e->e.getValue()))
+				.map(Entry::getKey)
+				// can't determine highest scored, take any
+				.orElse(properties.iterator().next());
 	}
 
 	public boolean isEmpty()

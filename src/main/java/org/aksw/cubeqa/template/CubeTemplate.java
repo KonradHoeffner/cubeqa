@@ -3,7 +3,6 @@ package org.aksw.cubeqa.template;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.aksw.cubeqa.AnswerType;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -23,6 +22,7 @@ public class CubeTemplate
 	final Set<ComponentProperty> perProperties;
 	final Set<Aggregate> aggregates;
 
+	/** true, iff it contains at least one answer property */
 	boolean isComplete()
 	{
 		return !answerProperties.isEmpty();
@@ -47,9 +47,16 @@ public class CubeTemplate
 		//		System.out.println(answerProperties.iterator().next()==Cube.FINLAND_AID().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount"));
 		String resultDef;
 		ComponentProperty answerProperty = answerProperties.iterator().next();
-		resultDef = answerProperty.answerType==AnswerType.UNCOUNTABLE?
-				"xsd:decimal(?"+answerProperties.iterator().next().var+")"
-				: "?"+answerProperties.iterator().next().var+"";
+		switch(answerProperty.answerType)
+		{
+			case UNCOUNTABLE: resultDef = "xsd:decimal(?"+answerProperties.iterator().next().var+")";break;
+			case COUNTABLE: resultDef = "xsd:integer(?"+answerProperties.iterator().next().var+")";break;
+			case ENTITY:
+			case TEMPORAL:
+			resultDef = "distinct(?"+answerProperties.iterator().next().var+")";break;
+			default: resultDef = "distinct(?"+answerProperties.iterator().next().var+")";
+		}
+
 		if(!aggregates.isEmpty()) {resultDef = aggregates.iterator().next()+"("+resultDef+")";}
 		sb.append("select "+resultDef+" ");
 		perProperties.removeAll(answerProperties);
@@ -60,6 +67,7 @@ public class CubeTemplate
 		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
 		// those properties are used in order limit patterns and need to have their own triple pattern as well
 		Set<ComponentProperty> otherProperties = restrictions.stream().map(Restriction::getProperty).collect(Collectors.toSet());
+		// TODO remove temporal here also? seems to add too much
 		otherProperties.removeAll(answerProperties);
 		otherProperties.removeAll(perProperties);
 		for(ComponentProperty p: otherProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}

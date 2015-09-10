@@ -11,7 +11,7 @@ public class EvaluateQBench2
 	public static void main(String[] args)
 	{
 		long start = System.currentTimeMillis();
-		Benchmark.fromQald("qbench2").evaluate(new Algorithm(),6);
+		Benchmark.fromQald("qbench2").evaluate(new Algorithm(),1,100);
 		System.out.println(System.currentTimeMillis()-start+" ms");
 	}
 }

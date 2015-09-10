@@ -36,6 +36,12 @@ public class CubeTemplator
 
 	public CubeTemplate buildTemplate(String question)
 	{
+		String replaced = Replacer.replace(question);
+		if(!replaced.equals(question))
+		{
+			question=replaced;
+			log.info("Replacement: "+question);
+		}
 		Optional<Pair<String,EnumSet<AnswerType>>> oPair = AnswerType.eatAndQuestionWord(question);
 		EnumSet<AnswerType> eats = EnumSet.allOf(AnswerType.class);
 		if(!oPair.isPresent()) {log.warn("no question word found for question '"+question+"': no answer type restriction possible.");}

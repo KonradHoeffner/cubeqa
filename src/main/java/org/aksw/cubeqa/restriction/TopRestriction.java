@@ -15,7 +15,7 @@ public class TopRestriction extends Restriction
 
 	@Override public Set<String> orderLimitPatterns()
 	{
-		return Collections.singleton("order by "+modifier.toString()+"(xsd:decimal(?"+property.var+")) limit "+n);
+		return Collections.singleton("order by "+modifier.toString()+"(sum(xsd:decimal(?"+property.var+"))) limit "+n);
 	}
 
 	public TopRestriction(ComponentProperty property, int n, OrderModifier modifier)

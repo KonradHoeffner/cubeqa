@@ -22,6 +22,9 @@ public class Cube implements Serializable
 
 	public final String name;
 	public final String uri;
+	public final String label;
+	public final String comment;
+
 	//	public final Set<String> labels = new TreeSet<String>();
 	public final Map<String,ComponentProperty> properties;
 
@@ -82,6 +85,18 @@ public class Cube implements Serializable
 		}
 	}
 
+	/**	Finds a subset of candidate cubes that a question could be meant for. */
+	public static Set<Cube> findCube(String question,Set<Cube> cubes)
+	{
+		HashSet<Cube> candidates = new HashSet<>();
+		for(Cube cube: cubes)
+		{
+
+		}
+
+		return candidates;
+	}
+
 	public static synchronized Cube getInstance(String cubeName)
 	{
 		Cube c = instances.get(cubeName);
@@ -97,7 +112,14 @@ public class Cube implements Serializable
 					return c;
 				};
 			}
+			String uri = linkedSpendingUri(cubeName);
+
 			Map<String,ComponentProperty> properties = new HashMap<>();
+
+				String labelCommentQuery = "select * {<"+uri+"> rdfs:label ?label. <"+uri+"> rdfs:comment ?comment. ?c a qb:DataSet.}";
+				QuerySolution qsLcq = CubeSparql.getLinkedSpendingInstanceForName(cubeName).select(labelCommentQuery).nextSolution();
+				String cubeLabel = qsLcq.get("label").asLiteral().getLexicalForm();
+				String cubeComment = qsLcq.get("comment").asLiteral().getLexicalForm();
 
 			String query = "select distinct ?p "+// //?type ?label "+
 					"from <http://linkedspending.aksw.org/"+cubeName+"> "+
@@ -109,7 +131,7 @@ public class Cube implements Serializable
 					//					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
 			ResultSet rs = CubeSparql.getLinkedSpendingInstanceForName(cubeName).select(query);
-			String uri = linkedSpendingUri(cubeName);
+
 			MultiMap<String,String> manualLabels = new MultiHashMap<>();
 
 			InputStream labelStream = Cube.class.getClassLoader().getResourceAsStream(cubeName+"/manuallabels.tsv");
@@ -127,7 +149,7 @@ public class Cube implements Serializable
 				catch (IOException e) {throw new RuntimeException("Exception reading additional labels from tsv file.",e);}
 			}
 			// TODO: make the multi map unmodifiable
-			c = new Cube(cubeName,uri, properties,CubeSparql.getLinkedSpendingInstanceForUri(uri),manualLabels);
+			c = new Cube(cubeName,uri,cubeLabel,cubeComment, properties,CubeSparql.getLinkedSpendingInstanceForUri(uri),manualLabels);
 			instances.put(cubeName, c);
 			while(rs.hasNext())
 			{
@@ -170,5 +192,4 @@ public class Cube implements Serializable
 	{
 		return ComponentProperty.getInstance(this,"http://linkedspending.aksw.org/ontology/"+name+"-amount");
 	}
-
 }
