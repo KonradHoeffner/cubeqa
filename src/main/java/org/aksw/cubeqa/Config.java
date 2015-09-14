@@ -40,6 +40,9 @@ public class Config
 	 Happens very often in practice (e.g. most people say "in 2010" and not "in the year of 2010") so I recommend to set the config parameter to true. */
 	public boolean	findNamelessReferences = true;
 
+	/** True, iff datasets from the benchmark are predetermined (algorithm doesn't have to search for it based on the query). */
+	public boolean	givenDataSets= true;
+
 //	@Option(name="-indexDoNonExactMatch")
 //	public boolean	indexDoNonExactMatch = true;
 //

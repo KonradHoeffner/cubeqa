@@ -13,7 +13,7 @@ public class BenchmarkTest
 	{
 		Question q = Benchmark.completeQuestion(CubeSparql.finlandAid(), "some string","ask {?s ?p ?o.}");
 		assertTrue(q.answers.size()==1);
-		assertTrue(q.answerTypes.get("")==DataType.BOOLEAN);
+		assertTrue(q.dataTypes.get("")==DataType.BOOLEAN);
 		assertTrue(q.answers.iterator().next().get("").equals("true"));
 	}
 
@@ -37,7 +37,7 @@ public class BenchmarkTest
 		Benchmark b = Benchmark.fromQald("finland-aid");
 		assertTrue(b.questions.size()==100);
 		assertTrue(b.questions.get(0).string.equals("What was the average aid to environment per month in year 2010?"));
-		assertTrue(b.questions.get(0).answerTypes.get("")==DataType.NUMBER);
+		assertTrue(b.questions.get(0).dataTypes.get("")==DataType.NUMBER);
 		assertTrue(b.questions.get(0).answers.iterator().next().get("").toString().startsWith("262.6"));
 	}
 
@@ -53,7 +53,7 @@ public class BenchmarkTest
 			// to get more targeted debug output in case of inequalities
 			assertEquals(q.string,r.string);
 			assertEquals(q.query,r.query);
-			assertEquals(q.answerTypes,r.answerTypes);
+			assertEquals(q.dataTypes,r.dataTypes);
 			assertEquals(q.answers,r.answers);
 			assertEquals(q,r);
 		}

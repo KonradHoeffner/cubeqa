@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import org.aksw.cubeqa.*;
+import org.aksw.cubeqa.index.CubeIndex;
 import org.apache.commons.csv.*;
 import org.apache.log4j.Level;
 import org.w3c.dom.*;
@@ -34,6 +35,7 @@ public class Benchmark
 	public final List<Question> questions;
 	/**True, iff the answers to the correct SPARQL queries are precomputed.*/
 	public final boolean isComplete;
+
 
 	static Question completeQuestion(CubeSparql sparql,String string, String query)
 	{
@@ -91,11 +93,12 @@ public class Benchmark
 	@SneakyThrows
 	public void evaluate(Algorithm algorithm,int startQuestionNumber,int endQuestionNumber)
 	{
+		int emptyCount = 0;
+		int count = 0;
+		List<Performance> performances = new ArrayList<>();
+		log.info("Evaluating benchmark "+name+" with "+questions.size()+" questions, ["+startQuestionNumber+","+endQuestionNumber+"]");
 		try(CSVPrinter out = new CSVPrinter(new PrintWriter("benchmark/"+this.name+System.currentTimeMillis()+".csv"), CSVFormat.DEFAULT))
 		{
-			log.info("Evaluating benchmark "+name+" with "+questions.size()+" questions, ["+startQuestionNumber+","+endQuestionNumber+"]");
-			List<Performance> performances = new ArrayList<>();
-			int count = 0;
 			//		int unionCount = 0;
 			//		int subqueryCount = 0;
 			//		int askCount = 0;
@@ -112,16 +115,18 @@ public class Benchmark
 				count++;
 				Performance p = evaluate(algorithm,i);
 				performances.add(p);
+				if(p.empty) {emptyCount++;}
 				out.printRecord(i,Cube.linkedSpendingCubeName(q.cubeUri),q.string,q.query,p.query,p.precision,p.recall,p.fscore());
 			}
-			log.info(count+" questions processed");
+			log.info(count+" questions processed, "+emptyCount+" with no answers");
 			//		System.out.println(unionCount+ "union queries");
 			//		System.out.println(subqueryCount+ "sub queries");
 			//		System.out.println(askCount+ "ask queries");
 			log.info("Average precision "+ performances.stream().filter(p->!p.isEmpty()).mapToDouble(Performance::getPrecision).average());
 			log.info("Average recall "+ performances.stream().mapToDouble(Performance::getRecall).average());
 			//		log.info("f score")
-			log.info("Average f score "+ performances.stream().mapToDouble(Performance::fscore).average());
+			log.info("Average f score "+ performances.stream().filter(p->!p.isEmpty()).mapToDouble(Performance::fscore).average());
+			log.info(performances.stream().filter(Performance::isEmpty).count()+" empty datasets");
 		}
 	}
 
@@ -133,7 +138,16 @@ public class Benchmark
 		log.debug("correct query: "+question.query);
 		log.debug("correct answer: "+question.answers);
 
-		String cubeName = Cube.linkedSpendingCubeName(question.cubeUri);
+		String cubeName;
+		if(!Config.INSTANCE.givenDataSets)
+		{
+			List<String> uris = CubeIndex.INSTANCE.getCubeUris(question.string);;
+			if(uris.isEmpty()) {return new Performance(0, 0, true);}
+			cubeName = Cube.linkedSpendingCubeName(uris.get(0));
+		} else
+		{
+			cubeName = Cube.linkedSpendingCubeName(question.cubeUri);
+		}
 		Cube cube = Cube.getInstance(cubeName);
 		String query = algorithm.answer(cube.name,question.string).sparqlQuery();
 		Question found;
@@ -319,7 +333,7 @@ public class Benchmark
 						writer.writeStartElement("answer");
 						if(answer.containsKey(""))
 						{
-							writer.writeAttribute("answerType",question.answerTypes.get("").toString().toLowerCase());
+							writer.writeAttribute("answerType",question.dataTypes.get("").toString().toLowerCase());
 							writer.writeCharacters(answer.get("").toString());
 
 						} else
@@ -327,7 +341,7 @@ public class Benchmark
 							for(String tag: answer.keySet())
 							{
 								writer.writeStartElement(tag);
-								writer.writeAttribute("answerType",question.answerTypes.get(tag).toString().toLowerCase());
+								writer.writeAttribute("answerType",question.dataTypes.get(tag).toString().toLowerCase());
 								writer.writeCharacters(answer.get(tag).toString());
 								writer.writeEndElement();
 								writer.writeCharacters("\n");

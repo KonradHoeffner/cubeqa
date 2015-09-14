@@ -1,13 +1,10 @@
 package org.aksw.cubeqa.index;
 
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j;
+import java.io.File;
 import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.apache.log4j.Level;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
@@ -18,6 +15,8 @@ import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j;
 
 /** Lucene index reading and writing abstract superclass. */
 @Log4j
@@ -53,9 +52,9 @@ public abstract class Index
 		dir = FSDirectory.open(subFolder.toPath());
 	}
 
+	/** Replaces "&" with "and" and removes all [^A-Za-z0-9 ] characters.*/
 	static protected String normalize(String s)
 	{
-		// parser crashes on some special characters such as ? as they are interpreted as wild cards
 		return s.replace("&", "and").replaceAll("[^A-Za-z0-9 ]", "").toLowerCase().trim();
 	}
 

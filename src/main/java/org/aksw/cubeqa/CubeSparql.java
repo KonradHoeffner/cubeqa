@@ -43,8 +43,8 @@ public class CubeSparql implements Serializable
 				"http://linkedspending.aksw.org/ontology/",
 				"http://linkedspending.aksw.org/",
 				// local Virtuoso SPARQL endpoint has a NAN bug
-				//								"http://localhost:8890/sparql");
-				"http://linkedspending.aksw.org/sparql");
+												"http://localhost:8890/sparql");
+//				"http://linkedspending.aksw.org/sparql");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology/");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeUri.substring(cubeUri.lastIndexOf('/')+1));
 		return cs;

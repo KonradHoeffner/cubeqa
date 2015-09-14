@@ -12,10 +12,12 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import de.konradhoeffner.commons.TSVReader;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j;
 
 /** Represents an RDF Data Cube with its component properties */
 @RequiredArgsConstructor
-@ToString
+@ToString(of="uri")
+@Log4j
 public class Cube implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
@@ -40,7 +42,7 @@ public class Cube implements Serializable
 
 	static public Cube finlandAid()
 	{
-//		if(1==1) {throw new IllegalAccessError();}
+		//		if(1==1) {throw new IllegalAccessError();}
 		return Cube.getInstance("finland-aid");
 	}
 
@@ -116,10 +118,15 @@ public class Cube implements Serializable
 
 			Map<String,ComponentProperty> properties = new HashMap<>();
 
-				String labelCommentQuery = "select * {<"+uri+"> rdfs:label ?label. <"+uri+"> rdfs:comment ?comment. ?c a qb:DataSet.}";
+			String cubeLabel = "";
+			String cubeComment = "";
+			String labelCommentQuery = "select * {<"+uri+"> rdfs:label ?label. <"+uri+"> rdfs:comment ?comment.}";
+			try
+			{
 				QuerySolution qsLcq = CubeSparql.getLinkedSpendingInstanceForName(cubeName).select(labelCommentQuery).nextSolution();
-				String cubeLabel = qsLcq.get("label").asLiteral().getLexicalForm();
-				String cubeComment = qsLcq.get("comment").asLiteral().getLexicalForm();
+				cubeLabel = qsLcq.contains("label")?qsLcq.get("label").asLiteral().getLexicalForm():"";
+				cubeComment = qsLcq.contains("comment")?qsLcq.get("comment").asLiteral().getLexicalForm():"";
+			} catch(NoSuchElementException e) {throw new RuntimeException("Error with query: "+labelCommentQuery,e);}
 
 			String query = "select distinct ?p "+// //?type ?label "+
 					"from <http://linkedspending.aksw.org/"+cubeName+"> "+
@@ -135,7 +142,7 @@ public class Cube implements Serializable
 			MultiMap<String,String> manualLabels = new MultiHashMap<>();
 
 			InputStream labelStream = Cube.class.getClassLoader().getResourceAsStream(cubeName+"/manuallabels.tsv");
-//			if(labelStream==null) throw new RuntimeException("manual labels not found");// for testing
+			//			if(labelStream==null) throw new RuntimeException("manual labels not found");// for testing
 			if(labelStream!=null)
 			{
 				try(TSVReader reader = new TSVReader(labelStream))

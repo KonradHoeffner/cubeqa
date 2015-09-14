@@ -17,6 +17,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.XSD;
 import de.konradhoeffner.commons.Pair;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 
@@ -44,7 +45,7 @@ public class ComponentProperty implements Serializable
 	public final String uri;
 	//	public final Domain domain;
 
-	public final Set<String> labels;
+	@Getter public final Set<String> labels;
 	//	public final PropertyType type;
 
 	@NonNull public final Scorer scorer;
