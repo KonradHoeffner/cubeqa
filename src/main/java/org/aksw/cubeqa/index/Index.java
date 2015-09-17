@@ -3,7 +3,9 @@ package org.aksw.cubeqa.index;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.io.File;
+import org.aksw.commons.util.StopWatch;
 import org.aksw.cubeqa.Config;
+import org.aksw.cubeqa.StopWatches;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -78,6 +80,10 @@ public abstract class Index
 	@SneakyThrows
 	protected Map<String,Double> getIdWithScore(String s, String fieldName, double minScore)
 	{
+		StopWatch watch = StopWatches.INSTANCE.getWatch("indexread");
+		watch.start();
+		try
+		{
 		Map<String,Double> idWithScore = new HashMap<>();
 		String ns=normalize(s);
 		if(ns.isEmpty()) {return idWithScore;}
@@ -139,5 +145,7 @@ public abstract class Index
 		}
 		// only keep elements with a score of at least minScore
 		return idWithScore.keySet().stream().filter(id->idWithScore.get(id)>=minScore).collect(Collectors.toMap(id->id, id->idWithScore.get(id)));
+	} catch (Exception e) {throw new RuntimeException(e);}
+	finally {watch.stop();}
 	}
 }

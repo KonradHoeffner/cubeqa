@@ -12,9 +12,9 @@ public class FillCubeIndex
 	public static void main(String[] args)
 	{
 		System.out.println("type fillcube to continue");
-		if(!new Scanner(System.in).nextLine().equals("fillcube")) {System.out.println("wrong phrase. terminated.");return;}
+		try(Scanner in = new Scanner(System.in))
+		{if(!in.nextLine().equals("fillcube")) {System.out.println("wrong phrase. terminated.");return;}}
 		Set<Cube> cubes = Arrays.stream(cubeNames).map(Cube::getInstance).collect(Collectors.toSet());
 		CubeIndex.INSTANCE.fill(cubes);
 	}
-
 }

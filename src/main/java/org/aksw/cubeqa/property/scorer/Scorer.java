@@ -1,10 +1,9 @@
 package org.aksw.cubeqa.property.scorer;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
-import lombok.extern.log4j.Log4j;
+import java.io.Serializable;
 import org.aksw.cubeqa.CubeSparql;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.hp.hpl.jena.query.ResultSet;
@@ -15,7 +14,6 @@ import de.konradhoeffner.commons.Streams;
  * Scorers are used when a phrase does not match to a component property label.
  * Scorers return a similarity value in [0,1].
  */
-@Log4j
 public abstract class Scorer implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;

@@ -11,7 +11,7 @@ public class UriRestriction extends Restriction
 {
 	String uri;
 
-	public Set<String> wherePatterns()
+	@Override public Set<String> wherePatterns()
 	{
 		return Collections.singleton("?obs <"+property.uri+"> <"+uri+">.");
 	}

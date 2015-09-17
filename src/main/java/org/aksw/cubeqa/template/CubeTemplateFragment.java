@@ -4,6 +4,7 @@ import static org.aksw.cubeqa.AnswerType.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.aksw.commons.util.StopWatch;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -50,6 +51,8 @@ public class CubeTemplateFragment
 
 	public static CubeTemplateFragment combine(Collection<CubeTemplateFragment> fragments)
 	{
+		StopWatch fragmentCombineWatch = StopWatches.INSTANCE.getWatch("fragmentcombine");
+		fragmentCombineWatch.start();
 		//		fragments = fragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
 		if(fragments.isEmpty())
 		{throw new IllegalArgumentException("empty fragment set, can't combine");}
@@ -117,6 +120,7 @@ public class CubeTemplateFragment
 		//		Set<ComponentProperty> nameValue = this.nameRefs.keySet();
 		//		nameValue.retainAll(otherResult.valueRefs.keySet());
 
+		fragmentCombineWatch.stop();
 		return fragment;
 	}
 
@@ -148,8 +152,7 @@ public class CubeTemplateFragment
 		}
 		if(answerProperties.isEmpty()) {answerProperties.add(findAnswerProperty(expectedAnswerTypes));}
 
-		// default sum aggregate when appropriate
-		Set<String> orderLimitPatterns = restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
+		restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
 		if(aggregates.isEmpty()/*&&orderLimitPatterns.isEmpty()*/
 				&&((answerProperties.iterator().next().answerType==AnswerType.UNCOUNTABLE)||(answerProperties.iterator().next().answerType==AnswerType.COUNTABLE))
 //				&&(expectedAnswerTypes.contains(AnswerType.UNCOUNTABLE)||expectedAnswerTypes.contains(AnswerType.COUNTABLE))
@@ -160,6 +163,10 @@ public class CubeTemplateFragment
 		return Optional.of(new CubeTemplate(cube, restrictions, answerProperties, perProperties,aggregates));
 	}
 
+	/** @param expectedAnswerTypes the set of expected answer types possible for the question word
+	 * @return the most likely answer property based on those answer types.
+	 * Iff there is no property with the correct answer type or {@link Config#useAnswerTypes} is false, the most likely of all properties is checked.
+	 * Iff there are no candidates at all, a random measure is returned (or the default answer property iff {@link Config#useDefaultAnswerProperty} is true).*/
 	private ComponentProperty findAnswerProperty(EnumSet<AnswerType> expectedAnswerTypes)
 	{
 		Set<ComponentProperty> candidates = matchResults.stream()
@@ -185,6 +192,9 @@ public class CubeTemplateFragment
 		}
 
 		Set<ComponentProperty> fittingAnswerType = candidates.stream().filter(c->expectedAnswerTypes.contains(c.answerType)).collect(Collectors.toSet());
+
+		if(!Config.INSTANCE.useAnswerTypes) {return best(candidates);}
+
 		log.info(candidates.size()+" property name references found, "+fittingAnswerType+" with the right answer type.");
 
 		if(fittingAnswerType.isEmpty())

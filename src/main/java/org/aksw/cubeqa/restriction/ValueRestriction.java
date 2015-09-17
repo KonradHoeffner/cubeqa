@@ -2,10 +2,10 @@ package org.aksw.cubeqa.restriction;
 
 import java.util.Collections;
 import java.util.Set;
-import lombok.EqualsAndHashCode;
-import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.hp.hpl.jena.vocabulary.XSD;
+import lombok.EqualsAndHashCode;
+import lombok.extern.log4j.Log4j;
 
 /** Restriction on a literal value. **/
 @EqualsAndHashCode(callSuper=true)
@@ -14,7 +14,7 @@ public class ValueRestriction extends Restriction
 {
 	final String value;
 
-	public Set<String> wherePatterns()
+	@Override public Set<String> wherePatterns()
 	{
 		// TODO: add datatypes from range or somewhere else
 		String pattern;
@@ -26,22 +26,22 @@ public class ValueRestriction extends Restriction
 			if(range.equals(XSD.gYear.getURI()))
 			{
 				if(!value.matches("[0-9]+"))
-					{
+				{
 					//TODO readd exception
-//						throw new RuntimeException("'"+value+"' is not a valid year");
+					//						throw new RuntimeException("'"+value+"' is not a valid year");
 					log.fatal("'"+value+"' is not a valid year");
-					return Collections.EMPTY_SET;
-					}
+					return Collections.emptySet();
+				}
 				pattern = OBS_VAR+" <"+property.uri+"> "+uniqueVar+".\nfilter(year("+uniqueVar+")="+value+").";
 			}
 			else
-			if(range.equals(XSD.xstring.getURI()))
-			{
-				pattern = OBS_VAR+" <"+property.uri+"> \""+value+"\".";
-			} else
-			{
-				pattern = OBS_VAR+" <"+property.uri+"> \""+value+"\"^^<"+range+">.";
-			}
+				if(range.equals(XSD.xstring.getURI()))
+				{
+					pattern = OBS_VAR+" <"+property.uri+"> \""+value+"\".";
+				} else
+				{
+					pattern = OBS_VAR+" <"+property.uri+"> \""+value+"\"^^<"+range+">.";
+				}
 
 		return Collections.singleton(pattern);
 		//		String literal = "\""+value+"\"";

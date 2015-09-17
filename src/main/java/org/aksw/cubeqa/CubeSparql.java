@@ -3,6 +3,7 @@ package org.aksw.cubeqa;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
+import org.aksw.commons.util.StopWatch;
 import org.aksw.linkedspending.tools.DataModel;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
@@ -16,9 +17,6 @@ public class CubeSparql implements Serializable
 	static private CubeSparql finlandAid = null;
 	static public synchronized CubeSparql finlandAid()
 	{
-		if(1==1) {
-			throw new RuntimeException("should not be called by benchmark2");
-		}
 		if(finlandAid==null) {finlandAid = getLinkedSpendingInstanceForName("finland-aid");}
 		return finlandAid;
 	}
@@ -67,23 +65,26 @@ public class CubeSparql implements Serializable
 
 	public boolean ask(String query)
 	{
-		try
+		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
+		watch.start();
+		try(QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query))
 		{
-			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
 			defaultGraphs.forEach(qe::addDefaultGraph);
-
 			return qe.execAsk();
 		} catch(Exception e) {throw new RuntimeException("Error on SPARQL ASK on endpoint "+endpoint+" with query:\n"+query,e);}
+		finally {watch.stop();}
 	}
 
 	public ResultSet select(String query)
 	{
-		try
+		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
+		watch.start();
+		try(QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query))
 		{
-			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
-			//		qe.setDefaultGraphURIs(defaultGraphs);
+
 			return qe.execSelect();
 		} catch(Exception e) {throw new RuntimeException("Error on sparql select on endpoint "+endpoint+" with query:\n"+query,e);}
+		finally {watch.stop();}
 	}
 
 	public static String suffix(String uri)

@@ -45,14 +45,14 @@ public class Benchmark
 		if(query.startsWith("ask"))
 		{
 			tagTypes.put("",DataType.BOOLEAN);
-			Map<String,String> answer = new HashMap<String,String>();
+			Map<String,String> answer = new HashMap<>();
 			answer.put("",String.valueOf(sparql.ask(query)));
 			answers.add(Collections.unmodifiableMap(answer));
 		}
 		else if(query.startsWith("select"))
 		{
 			ResultSet rs = sparql.select(query);
-			Set<String> varNames = new TreeSet<String>();
+			Set<String> varNames = new TreeSet<>();
 			while(rs.hasNext())
 			{
 				Map<String,String> answer = new HashMap<>();
@@ -127,6 +127,7 @@ public class Benchmark
 			//		log.info("f score")
 			log.info("Average f score "+ performances.stream().filter(p->!p.isEmpty()).mapToDouble(Performance::fscore).average());
 			log.info(performances.stream().filter(Performance::isEmpty).count()+" empty datasets");
+			log.info("Runtime: "+StopWatches.INSTANCE.elapsedTimesMs());
 		}
 	}
 
@@ -171,7 +172,7 @@ public class Benchmark
 	/** CSV does not contain answers. file gets loaded from benchmark/name.csv. */
 	public static Benchmark fromCsv(String name) throws IOException
 	{
-		List<Question> questions = new LinkedList<Question>();
+		List<Question> questions = new LinkedList<>();
 		try(CSVParser parser = CSVParser.parse(new File(new File("benchmark"),name+".csv"),Charset.defaultCharset(),CSVFormat.DEFAULT))
 		{
 			for(CSVRecord record: parser)

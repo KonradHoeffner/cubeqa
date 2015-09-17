@@ -1,9 +1,7 @@
 package org.aksw.cubeqa.index;
 
 import static org.junit.Assert.*;
-import org.aksw.cubeqa.template.StanfordNlp;
 import org.junit.Test;
-import org.tartarus.snowball.ext.PorterStemmer;
 import edu.northwestern.at.utils.corpuslinguistics.stemmer.LancasterStemmer;
 
 public class StemmerTest

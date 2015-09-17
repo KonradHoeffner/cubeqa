@@ -29,7 +29,7 @@ public class Scorers
 	{
 		return
 				cube.properties.values().stream()
-				.map(p->new Pair<ComponentProperty,Double>(p, p.match(phrase)))
+				.map(p->new Pair<>(p, p.match(phrase)))
 				.filter(p->p.b>Config.INSTANCE.scorerPropertyNameMinScore)
 				.collect(Collectors.toMap(p->p.a, p->p.b));
 	}

@@ -8,11 +8,9 @@ import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.restriction.Restriction;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 
 /** Template for a data cube query. */
 @RequiredArgsConstructor
-@Log4j
 public class CubeTemplate
 {
 	final Cube cube;

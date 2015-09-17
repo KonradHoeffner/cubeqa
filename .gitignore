@@ -1,3 +1,5 @@
+/src/main/java/org/aksw/cubeqa/scripts/TestRandomStuff.java
+benchmark
 *.class
 *~
 # Mobile Tools for Java (J2ME)

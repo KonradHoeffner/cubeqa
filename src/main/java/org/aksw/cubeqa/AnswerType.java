@@ -33,7 +33,7 @@ public enum AnswerType
 	{
 		Optional<String> questionWord = ofQuestionWord.keySet().stream().filter(w->question.toLowerCase().startsWith(w)).findFirst();
 		if(!questionWord.isPresent()) {return Optional.empty();}
-		return Optional.of(new Pair<String, EnumSet<AnswerType>>(questionWord.get(), ofQuestionWord.get(questionWord.get())));
+		return Optional.of(new Pair<>(questionWord.get(), ofQuestionWord.get(questionWord.get())));
 	}
 
 }

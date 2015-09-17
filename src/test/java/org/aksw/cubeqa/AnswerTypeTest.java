@@ -2,7 +2,6 @@ package org.aksw.cubeqa;
 
 import static org.junit.Assert.*;
 import java.util.EnumSet;
-import org.aksw.cubeqa.benchmark.Benchmark;
 import org.junit.Test;
 
 public class AnswerTypeTest

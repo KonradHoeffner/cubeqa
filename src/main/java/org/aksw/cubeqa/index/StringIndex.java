@@ -1,19 +1,14 @@
 package org.aksw.cubeqa.index;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Stream;
-import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j;
+import java.io.IOException;
 import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.*;
+import lombok.SneakyThrows;
 
 /** Index for String scorer. */
-@Log4j
 public class StringIndex extends Index
 {
 	private static final Map<String,StringIndex> instances = new HashMap<>();
@@ -52,7 +47,9 @@ public class StringIndex extends Index
 
 	public void add(String s) throws IOException
 	{
-		if(indexWriter==null) throw new IllegalStateException("indexWriter is null, call startWrites() first.");
+		if(indexWriter==null) {
+			throw new IllegalStateException("indexWriter is null, call startWrites() first.");
+		}
 		Document doc = new Document();
 		doc.add(new Field("stringlabel", normalize(s), StringField.TYPE_STORED));
 		doc.add(new Field("textlabel", normalize(s), TextField.TYPE_STORED));

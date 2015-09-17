@@ -1,7 +1,6 @@
 package org.aksw.cubeqa.detector;
 
 import static org.junit.Assert.*;
-import java.util.regex.Pattern;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.detector.TopDetector;
 import org.junit.Test;

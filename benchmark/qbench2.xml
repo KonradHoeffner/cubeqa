@@ -45,10 +45,10 @@ select sum(xsd:decimal(?amount))  from &lt;http://linkedspending.aksw.org/town_o
 {
 ?obs qb:dataSet ls:town_of_cary_revenues.
 ?obs lso:refYear ?year.
-filter(year(?year)=2010).
+filter(year(?year)=2009).
 ?obs lso:town_of_cary_revenues-amount ?amount.
 }<answers>
-<answer answerType="number">118865908</answer>
+<answer answerType="number">116661346</answer>
 </answers>
 </query>
 </question>
@@ -61,7 +61,7 @@ select ?program  from &lt;http://linkedspending.aksw.org/town_of_cary_revenues>
 ?obs lso:town_of_cary_revenues-Program ?program.
 ?obs lso:town_of_cary_revenues-amount ?amount.
 }
-order by desc(sum(xsd:integer(?amount))) limit 1<answers>
+order by desc(sum(xsd:decimal(?amount))) limit 1<answers>
 <answer answerType="uri">https://openspending.org/town_of_cary_revenues/Program/1</answer>
 </answers>
 </query>
@@ -75,7 +75,7 @@ select ?dep from &lt;http://linkedspending.aksw.org/city-of-whiteacre-spending>
 ?obs lso:city-of-whiteacre-spending-to ?dep.
 ?obs lso:city-of-whiteacre-spending-amount ?amount.
 }
-order by desc(sum(xsd:integer(?amount))) limit 1<answers>
+order by desc(sum(xsd:decimal(?amount))) limit 1<answers>
 <answer answerType="uri">https://openspending.org/city-of-whiteacre-spending/to/954008</answer>
 </answers>
 </query>
@@ -92,7 +92,7 @@ select ?year sum(xsd:decimal(?amount)) from &lt;http://linkedspending.aksw.org/c
 ?obs lso:refYear ?year.
 }
 group by ?year
-order by desc(sum(xsd:integer(?amount))) limit 1<answers>
+order by desc(sum(xsd:decimal(?amount))) limit 1<answers>
 <answer><year answerType="year">2010-01-01+01:00</year>
 <callret-1 answerType="number">78478.5</callret-1>
 </answer>
@@ -143,7 +143,7 @@ select ?district from &lt;http://linkedspending.aksw.org/ministry_of_health>
 ?obs lso:refYear ?year.
 filter(year(?year)=2014).
 }
-order by desc(sum(xsd:integer(?amount))) limit 1<answers>
+order by desc(sum(xsd:decimal(?amount))) limit 1<answers>
 <answer answerType="string">Northern</answer>
 </answers>
 </query>
@@ -238,29 +238,19 @@ select sum(xsd:decimal(?amount)) as ?amount from &lt;http://linkedspending.aksw.
 </query>
 </question>
 <question id="16" cubeuri="http://linkedspending.aksw.org/instance/cheshire_west_and_chester_april_2013" hybrid="false" statistical="true">
-<string>How much money for the top 5 narratives in Cheshire West and Chester?</string>
+<string>What are the top 5 narratives in Cheshire West and Chester?</string>
 <query>
-select ?narrative sum(xsd:decimal(?amount)) as ?amount from &lt;http://linkedspending.aksw.org/cheshire_west_and_chester_april_2013>
+select distinct(?narrative) from &lt;http://linkedspending.aksw.org/cheshire_west_and_chester_april_2013>
 {
 ?obs qb:dataSet ls:cheshire_west_and_chester_april_2013.
 ?obs lso:cheshire_west_and_chester_april_2013-narrative ?narrative.
 ?obs lso:cheshire_west_and_chester_april_2013-amount ?amount.
-} order by desc(?amount) limit 5<answers>
-<answer><amount answerType="number">1922112.06</amount>
-<narrative answerType="string">Corporate Central Billing</narrative>
-</answer>
-<answer><amount answerType="number">1315058.9</amount>
-<narrative answerType="string">Winsford Academy</narrative>
-</answer>
-<answer><amount answerType="number">4616971.1</amount>
-<narrative answerType="string">Housing Benefits</narrative>
-</answer>
-<answer><amount answerType="number">1536842.09</amount>
-<narrative answerType="string">Insurance Costs</narrative>
-</answer>
-<answer><amount answerType="number">2523763</amount>
-<narrative answerType="string">Collection Fund</narrative>
-</answer>
+} order by desc(sum(xsd:decimal(?amount))) limit 5<answers>
+<answer answerType="string">Winsford Academy</answer>
+<answer answerType="string">Insurance Costs</answer>
+<answer answerType="string">Corporate Central Billing</answer>
+<answer answerType="string">Housing Benefits</answer>
+<answer answerType="string">Collection Fund</answer>
 </answers>
 </query>
 </question>
@@ -525,7 +515,7 @@ select ?area from &lt;http://linkedspending.aksw.org/iw-council-spending-2012-13
 <string>Which departments of the city of Springfield had a higher budget in 2005 then in 2006?</string>
 <query>
 select ?dep
-{
+{ 
  select ?dep sum(xsd:decimal(?amount5)) as ?sum5 sum(xsd:decimal(?amount6)) as ?sum6
  from &lt;http://linkedspending.aksw.org/city-of-springfield-budget>
  {
@@ -542,7 +532,7 @@ select ?dep
  ?obs lso:refYear ?year6.
  filter(year(?year6)=2006).
  }
- }
+ } 
 } group by ?dep having(?sum5>?sum6)<answers>
 <answer answerType="uri">https://openspending.org/city-of-springfield-budget/to/400-building</answer>
 <answer answerType="uri">https://openspending.org/city-of-springfield-budget/to/101-admin</answer>
@@ -578,7 +568,7 @@ from &lt;http://linkedspending.aksw.org/pscs_ca_cities>
 ?obs lso:pscs_ca_cities-gov-full-name "Fullerton".
 ?obs lso:pscs_ca_cities-amount ?fullerton.
 }
-union
+union 
 {
 ?obs lso:pscs_ca_cities-amount ?all.
 }
@@ -743,7 +733,7 @@ select distinct(?status) from &lt;http://linkedspending.aksw.org/iati_cordaid_af
 {
 ?obs qb:dataSet ls:iati_cordaid_af.
 ?obs lso:iati_cordaid_af-Unique &lt;https://openspending.org/iati_cordaid_af/Unique/195>.
-?obs lso:iati_cordaid_af-Activity_Status ?status.
+?obs lso:iati_cordaid_af-Activity_Status ?status. 
 }<answers>
 <answer answerType="string">Implementation</answer>
 </answers>
@@ -814,7 +804,7 @@ having (sum(xsd:decimal(?amount)) > 10000000)<answers>
 select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/ie_charity_exp>
 {
 ?obs qb:dataSet ls:ie_charity_exp.
-?obs lso:ie_charity_exp-Charity &lt;https://openspending.org/ie_charity_exp/Charity/15437>.
+?obs lso:ie_charity_exp-Charity &lt;https://openspending.org/ie_charity_exp/Charity/15437>. 
 ?obs lso:ie_charity_exp-amount ?amount.
 }<answers>
 <answer answerType="number">5184059</answer>
@@ -827,7 +817,7 @@ select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org
 select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/ie_charity_exp>
 {
 ?obs qb:dataSet ls:ie_charity_exp.
-?obs lso:ie_charity_exp-Charity &lt;https://openspending.org/ie_charity_exp/Charity/7556>.
+?obs lso:ie_charity_exp-Charity &lt;https://openspending.org/ie_charity_exp/Charity/7556>. 
 ?obs lso:ie_charity_exp-Level3 &lt;https://openspending.org/ie_charity_exp/Level3/b1-5100>.
 ?obs lso:ie_charity_exp-amount ?amount.
 }<answers>
@@ -1266,7 +1256,7 @@ select count(distinct(?entity)) from &lt;http://linkedspending.aksw.org/faith>
 select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/faith>
 {
 ?obs qb:dataSet ls:faith.
-?obs lso:faith-conduit &lt;https://openspending.org/faith/conduit/red-cross>.
+?obs lso:faith-conduit &lt;https://openspending.org/faith/conduit/red-cross>. 
 ?obs lso:faith-from &lt;https://openspending.org/faith/from/china>.
 ?obs lso:faith-amount ?amount.
 }<answers>
@@ -1684,6 +1674,8 @@ select  sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.or
 ?obs qb:dataSet ls:al_planned_budget_2007to2013.
 ?obs lso:al_planned_budget_2007to2013-cofog1 &lt;https://openspending.org/al_planned_budget_2007to2013/cofog1/public-order-and-safety>.
 ?obs lso:al_planned_budget_2007to2013-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2007).
 }
 <answers>
 <answer answerType="number">139476632344</answer>

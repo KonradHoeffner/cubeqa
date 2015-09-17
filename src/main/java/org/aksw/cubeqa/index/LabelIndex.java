@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.function.Function;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
-import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;

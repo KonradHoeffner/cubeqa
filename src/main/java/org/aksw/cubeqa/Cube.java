@@ -12,12 +12,10 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import de.konradhoeffner.commons.TSVReader;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.extern.log4j.Log4j;
 
 /** Represents an RDF Data Cube with its component properties */
 @RequiredArgsConstructor
 @ToString(of="uri")
-@Log4j
 public class Cube implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
@@ -87,18 +85,6 @@ public class Cube implements Serializable
 		}
 	}
 
-	/**	Finds a subset of candidate cubes that a question could be meant for. */
-	public static Set<Cube> findCube(String question,Set<Cube> cubes)
-	{
-		HashSet<Cube> candidates = new HashSet<>();
-		for(Cube cube: cubes)
-		{
-
-		}
-
-		return candidates;
-	}
-
 	public static synchronized Cube getInstance(String cubeName)
 	{
 		Cube c = instances.get(cubeName);
@@ -141,16 +127,21 @@ public class Cube implements Serializable
 
 			MultiMap<String,String> manualLabels = new MultiHashMap<>();
 
-			InputStream labelStream = Cube.class.getClassLoader().getResourceAsStream(cubeName+"/manuallabels.tsv");
-			//			if(labelStream==null) throw new RuntimeException("manual labels not found");// for testing
-			if(labelStream!=null)
+			if(Config.INSTANCE.useManualLabels)
 			{
-				try(TSVReader reader = new TSVReader(labelStream))
+				try(InputStream labelStream = Cube.class.getClassLoader().getResourceAsStream(cubeName+"/manuallabels.tsv"))
 				{
-					while(reader.hasNextTokens())
+					//			if(labelStream==null) throw new RuntimeException("manual labels not found");// for testing
+					if(labelStream!=null)
 					{
-						String[] tokens = reader.nextTokens();
-						Arrays.stream(tokens, 1, tokens.length).forEach(label->manualLabels.put(tokens[0], label));
+						try(TSVReader reader = new TSVReader(labelStream))
+						{
+							while(reader.hasNextTokens())
+							{
+								String[] tokens = reader.nextTokens();
+								Arrays.stream(tokens, 1, tokens.length).forEach(label->manualLabels.put(tokens[0], label));
+							}
+						}
 					}
 				}
 				catch (IOException e) {throw new RuntimeException("Exception reading additional labels from tsv file.",e);}

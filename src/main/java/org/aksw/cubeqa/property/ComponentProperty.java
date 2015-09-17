@@ -2,7 +2,6 @@ package org.aksw.cubeqa.property;
 
 import static de.konradhoeffner.commons.Streams.stream;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.io.Serializable;
 import org.aksw.cubeqa.*;
@@ -29,7 +28,6 @@ public class ComponentProperty implements Serializable
 {
 	//	{log.setLevel(Level.ALL);}
 	private static final long	serialVersionUID	= 5L;
-	private static final AtomicInteger id = new AtomicInteger(0);
 	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
 	private static final boolean MATCH_RANGE = true;
 	private static final double	RANGE_LABEL_MULTIPLIER	= 0.5; // range labels may be less specific then the property name and thus get a lower score
@@ -179,7 +177,7 @@ public class ComponentProperty implements Serializable
 		{
 			if(range.startsWith(XSD.getURI()))
 			{
-				Set<String> integers = Arrays.asList(XSD.xbyte,XSD.xint,XSD.xlong,XSD.integer,
+				Arrays.asList(XSD.xbyte,XSD.xint,XSD.xlong,XSD.integer,
 						XSD.xlong,XSD.negativeInteger,XSD.positiveInteger,XSD.nonNegativeInteger,XSD.nonPositiveInteger,XSD.positiveInteger,XSD.xshort,
 						XSD.unsignedLong,XSD.unsignedInt,XSD.unsignedShort,XSD.unsignedByte)
 						.stream().map(Resource::getURI).collect(Collectors.toSet());
@@ -208,7 +206,7 @@ public class ComponentProperty implements Serializable
 	public static synchronized ComponentProperty getInstance(Cube cubeUri, String uri)//, String type)
 	{
 		//		Pair<String,String> key = new Pair<String,String>(cubeUri.uri, uri);
-		Pair<String,String> key = new Pair<String,String>(uri, uri);
+		Pair<String,String> key = new Pair<>(uri, uri);
 		ComponentProperty instance = instances.get(key);
 		if(instance==null)
 		{

@@ -8,7 +8,6 @@ import org.aksw.cubeqa.AnswerType;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
-import org.aksw.cubeqa.restriction.RestrictionWithPhrase;
 import org.aksw.cubeqa.restriction.TopRestriction;
 import org.aksw.cubeqa.restriction.TopRestriction.OrderModifier;
 import org.aksw.cubeqa.template.CubeTemplateFragment;
@@ -38,7 +37,7 @@ public class TopDetector extends Detector
 
 	private static Set<Pattern> numberPatterns(String keyword)
 	{
-		Set<Pattern> patterns = new HashSet<Pattern>();
+		Set<Pattern> patterns = new HashSet<>();
 		final String PHRASE = "(\\w+(\\s\\w+)*)";
 		//		patterns.add(Pattern.compile("([+-]?\\d+([\\.,]\\d+)?)\\s+"+keyword+"\\s+(\\w+)"));
 		patterns.add(Pattern.compile("(\\d+)\\s+"+keyword+"\\s+"+PHRASE,Pattern.CASE_INSENSITIVE));
@@ -48,7 +47,7 @@ public class TopDetector extends Detector
 
 	private static Pattern noNumberPattern(String keyword)
 	{
-		Set<Pattern> patterns = new HashSet<Pattern>();
+		new HashSet<>();
 		final String PHRASE = "(\\w+(\\s\\w+)*)";
 		return Pattern.compile("[\\s,]+"+keyword+"[\\s,]+"+PHRASE,Pattern.CASE_INSENSITIVE);
 	}
@@ -111,8 +110,6 @@ public class TopDetector extends Detector
 				} else
 				{
 					ScoreResult max = results.stream().max(Comparator.comparing(ScoreResult::getScore)).get();
-					RestrictionWithPhrase restriction = null;
-
 					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
 					fragment.getRestrictions().add(new TopRestriction(max.property,1,e.getValue()));
 					fragments.add(fragment);

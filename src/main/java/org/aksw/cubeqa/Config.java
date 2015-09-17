@@ -30,11 +30,11 @@ public class Config
 
 	// change may require cache deletion to take effect
 	@Option(name="-useManualLabels")
-	public boolean useManualLabels = true;
+	public boolean useManualLabels = false;
 
 	public boolean	removeStopWords = false;
 
-	public boolean	useDefaultAnswerProperty = true;
+	public boolean	useDefaultAnswerProperty = false;
 
 	/** For values which are only referenced by value, not by property name.
 	 Happens very often in practice (e.g. most people say "in 2010" and not "in the year of 2010") so I recommend to set the config parameter to true. */
@@ -42,6 +42,8 @@ public class Config
 
 	/** True, iff datasets from the benchmark are predetermined (algorithm doesn't have to search for it based on the query). */
 	public boolean	givenDataSets= true;
+
+	public boolean	useAnswerTypes = true;
 
 //	@Option(name="-indexDoNonExactMatch")
 //	public boolean	indexDoNonExactMatch = true;

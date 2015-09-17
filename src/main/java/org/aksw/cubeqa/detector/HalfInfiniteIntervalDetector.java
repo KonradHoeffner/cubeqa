@@ -6,13 +6,12 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import lombok.*;
-import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
-import org.aksw.cubeqa.Stopwords;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.*;
 import org.aksw.cubeqa.template.CubeTemplateFragment;
+import lombok.*;
+import lombok.extern.log4j.Log4j;
 
 /**Detects numerical intervals with one infinite endpoint.*/
 @Log4j
@@ -52,7 +51,7 @@ public class HalfInfiniteIntervalDetector extends Detector
 
 	private static Set<Pattern> patterns(String keyword)
 	{
-		Set<Pattern> patterns = new HashSet<Pattern>();
+		Set<Pattern> patterns = new HashSet<>();
 		{
 		Pattern p = Pattern.compile(
 				keyword + "\\s+(\\d+)\\s+" + PHRASE_REGEX,
@@ -98,7 +97,7 @@ public class HalfInfiniteIntervalDetector extends Detector
 		public final int matchEnd;
 	}
 
-	public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
+	@Override public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
 	{
 		Set<CubeTemplateFragment> fragments = new HashSet<>();
 //		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);

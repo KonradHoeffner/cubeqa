@@ -4,6 +4,7 @@ import static org.aksw.cubeqa.Trees.phrase;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.aksw.commons.util.StopWatch;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -42,7 +43,10 @@ public class CubeTemplator
 			question=replaced;
 			log.info("Replacement: "+question);
 		}
+		StopWatch eatWatch = StopWatches.INSTANCE.getWatch("eat");
+		eatWatch.start();
 		Optional<Pair<String,EnumSet<AnswerType>>> oPair = AnswerType.eatAndQuestionWord(question);
+		eatWatch.stop();
 		EnumSet<AnswerType> eats = EnumSet.allOf(AnswerType.class);
 		if(!oPair.isPresent()) {log.warn("no question word found for question '"+question+"': no answer type restriction possible.");}
 		else
@@ -55,12 +59,18 @@ public class CubeTemplator
 		String noStop = question;
 		if(Config.INSTANCE.removeStopWords)
 		{
-			noStop = Stopwords.remove(noStop, Stopwords.FINLAND_AID_WORDS);
+			//			noStop = Stopwords.remove(noStop, Stopwords.FINLAND_AID_WORDS);
 			noStop = Stopwords.remove(noStop, Stopwords.PROPERTY_WORDS);
 		}
 		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
+		StopWatch detectWatch = StopWatches.INSTANCE.getWatch("detect");
+		detectWatch.start();
 		Pair<CubeTemplateFragment,String> detectResult = detect(noStop);
+		detectWatch.stop();
+		StopWatch parseWatch = StopWatches.INSTANCE.getWatch("parse");
+		parseWatch.start();
 		Tree root = StanfordNlp.parse(detectResult.b);
+		parseWatch.stop();
 		CubeTemplateFragment rootFragment = visitRecursive(root);
 		CubeTemplate finalTemplate = CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate(eats).get();
 		return finalTemplate;
@@ -179,14 +189,17 @@ public class CubeTemplator
 
 	public MatchResult identify(String phrase/*, int phraseIndex*/)
 	{
+		StopWatch scoreWatch = StopWatches.INSTANCE.getWatch("score");
+		scoreWatch.start();
 		Map<ComponentProperty,Double> nameRefs = Scorers.scorePhraseProperties(cube,phrase);
 		Map<ComponentProperty,ScoreResult> valueRefs = Scorers.scorePhraseValues(cube,phrase);
-//	System.out.println(">>> "+phrase);
-//		if(phrase.equals("countries"))
-//		{
-//			System.out.println(nameRefs);
-//			System.out.println(valueRefs);
-//		}
+		scoreWatch.stop();
+		//	System.out.println(">>> "+phrase);
+		//		if(phrase.equals("countries"))
+		//		{
+		//			System.out.println(nameRefs);
+		//			System.out.println(valueRefs);
+		//		}
 		return new MatchResult(phrase,/* phraseIndex, */nameRefs, valueRefs);
 	}
 

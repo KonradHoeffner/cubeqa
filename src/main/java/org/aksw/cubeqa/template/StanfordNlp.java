@@ -1,30 +1,26 @@
 package org.aksw.cubeqa.template;
 
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Properties;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-import lombok.extern.log4j.Log4j;
+import java.io.PrintStream;
 import edu.stanford.nlp.io.NullOutputStream;
-import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
-import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
-import edu.stanford.nlp.ling.*;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.log4j.Log4j;
 
 /** Stanford Core NLP utility class. */
 @Log4j
+@SuppressWarnings("resource")
 public class StanfordNlp
 {
 	static private final StanfordCoreNLP treeParser;
-//	static private final StanfordCoreNLP lemmatizer;
+	//	static private final StanfordCoreNLP lemmatizer;
 
 	@RequiredArgsConstructor
 	@ToString
@@ -41,15 +37,15 @@ public class StanfordNlp
 		PrintStream err = System.err;
 		System.setErr(new PrintStream(new NullOutputStream()));
 		{
-		Properties props = new Properties();
-		props.put("annotators", "tokenize, ssplit, pos, parse");
-		treeParser = new StanfordCoreNLP(props);
+			Properties props = new Properties();
+			props.put("annotators", "tokenize, ssplit, pos, parse");
+			treeParser = new StanfordCoreNLP(props);
 		}
-//		{
-//		Properties props = new Properties();
-//		props.put("annotators", "tokenize, ssplit, pos, lemma");
-//		lemmatizer = new StanfordCoreNLP(props);
-//		}
+		//		{
+		//		Properties props = new Properties();
+		//		props.put("annotators", "tokenize, ssplit, pos, lemma");
+		//		lemmatizer = new StanfordCoreNLP(props);
+		//		}
 		// enable logging
 		System.setErr(err);
 	}
@@ -61,23 +57,23 @@ public class StanfordNlp
 		treeParser.annotate(document);
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 		return sentences.get(0).get(TreeAnnotation.class);
-//		return new ParseResult(sentences.get(0).get(TreeAnnotation.class),document.get(PartOfSpeechAnnotation.class));
+		//		return new ParseResult(sentences.get(0).get(TreeAnnotation.class),document.get(PartOfSpeechAnnotation.class));
 	}
 
-//	public static String lemmatize(String text)
-//	{
-//		Annotation document = lemmatizer.process(text);
-//StringBuilder sb = new StringBuilder();
-//		for(CoreMap sentence: document.get(SentencesAnnotation.class))
-//		{
-//			for(CoreLabel token: sentence.get(TokensAnnotation.class))
-//			{
-//				String word = token.get(TextAnnotation.class);
-//				String lemma = token.get(LemmaAnnotation.class);
-////				System.out.println("lemmatized version :" + lemma);
-//				sb.append(" "+lemma);
-//			}
-//		}
-//		return sb.toString().substring(1);
-//	}
+	//	public static String lemmatize(String text)
+	//	{
+	//		Annotation document = lemmatizer.process(text);
+	//StringBuilder sb = new StringBuilder();
+	//		for(CoreMap sentence: document.get(SentencesAnnotation.class))
+	//		{
+	//			for(CoreLabel token: sentence.get(TokensAnnotation.class))
+	//			{
+	//				String word = token.get(TextAnnotation.class);
+	//				String lemma = token.get(LemmaAnnotation.class);
+	////				System.out.println("lemmatized version :" + lemma);
+	//				sb.append(" "+lemma);
+	//			}
+	//		}
+	//		return sb.toString().substring(1);
+	//	}
 }

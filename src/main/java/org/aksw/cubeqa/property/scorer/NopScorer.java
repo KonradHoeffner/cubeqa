@@ -1,7 +1,6 @@
 package org.aksw.cubeqa.property.scorer;
 
 import java.util.Optional;
-import org.aksw.cubeqa.property.ComponentProperty;
 
 /** No Operation Scorer used when no other Scorer could be identified.*/
 public final class NopScorer extends Scorer

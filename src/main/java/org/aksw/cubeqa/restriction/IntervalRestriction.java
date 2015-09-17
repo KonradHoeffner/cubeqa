@@ -16,7 +16,7 @@ public class IntervalRestriction extends RestrictionWithPhrase
 	double rightEndpoint;
 	boolean open;
 
-	public Set<String> wherePatterns()
+	@Override public Set<String> wherePatterns()
 	{
 		HashSet<String> terms = new HashSet<>();
 

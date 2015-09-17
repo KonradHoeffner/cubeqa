@@ -8,15 +8,12 @@ import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j;
 
 /** Finds the right cube for a query. Implemented as Lucene index. Modified copy of {@link Index}.*/
-@Log4j
 public class CubeIndex
 {
 	//	{log.setLevel(Level.ALL);}
@@ -24,7 +21,6 @@ public class CubeIndex
 	//	final public boolean isEmpty() {return !folder.exists();}
 
 	private static final Analyzer analyzer = new EnglishAnalyzer();
-	private static final QueryParser parser = new QueryParser("textlabel", analyzer);
 	private static final int	NUMBER_OF_HITS	= 3;
 
 	private IndexWriter indexWriter;
