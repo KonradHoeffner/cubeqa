@@ -78,6 +78,10 @@
 					<artifactId>jcl-over-slf4j</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>solr-core</artifactId>
+					<groupId>org.apache.solr</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -100,6 +104,14 @@
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jersey-container-grizzly2-http</artifactId>
+					<groupId>org.glassfish.jersey.containers</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jersey-media-moxy</artifactId>
+					<groupId>org.glassfish.jersey.media</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -158,18 +170,4 @@
 			<url>http://uk.maven.org/maven2</url>
 		</repository>
 	</repositories>
-	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<testSourceDirectory>test/main/java</testSourceDirectory>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
