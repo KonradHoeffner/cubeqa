@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
-import org.aksw.cubeqa.template.CubeTemplateFragment;
+import org.aksw.cubeqa.template.Fragment;
 import org.apache.log4j.Level;
 import de.konradhoeffner.commons.TSVReader;
 
@@ -42,14 +42,14 @@ public class AggregateDetector extends Detector
 				.filter(phrase::contains).map(INSTANCE.aggregateMap::get).collect(Collectors.toSet());
 	}
 
-	@Override public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
+	@Override public Set<Fragment> detect(Cube cube, String phrase)
 	{
-		Set<CubeTemplateFragment> fragments = new HashSet<>();
+		Set<Fragment> fragments = new HashSet<>();
 		// for now only return up to one aggregate
 		aggregateMap.keySet().stream().filter(phrase::contains).findFirst().ifPresent(s->
 		{
 			Aggregate aggregate = aggregateMap.get(s);
-			fragments.add(new CubeTemplateFragment(cube, s,
+			fragments.add(new Fragment(cube, s,
 					Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.singleton(aggregate), Collections.emptySet()));
 			log.debug("Found aggregate "+aggregate+ " in phrase '"+s+"'");
 		});

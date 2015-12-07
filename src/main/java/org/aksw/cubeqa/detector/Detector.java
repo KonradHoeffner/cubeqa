@@ -5,7 +5,7 @@ import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
-import org.aksw.cubeqa.template.CubeTemplateFragment;
+import org.aksw.cubeqa.template.Fragment;
 
 /**Abstract class for a Detector, which is called before scorers and transforms certain keyphrases into additional query modifiers, such as aggregates.
  * A detector can find several or no matches in a phrase.
@@ -13,7 +13,7 @@ import org.aksw.cubeqa.template.CubeTemplateFragment;
 public abstract class Detector
 {
 	/** Detection is supposed to not overlap in phrases.*/
-	public abstract Set<CubeTemplateFragment> detect(Cube cube, String phrase);
+	public abstract Set<Fragment> detect(Cube cube, String phrase);
 
 	// TODO: generalize this,as per time detector always uses finland aid as of now
 	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,PerTimeDetector.INSTANCE,AggregateDetector.INSTANCE);

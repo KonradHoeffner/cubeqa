@@ -26,7 +26,7 @@ public abstract class Scorer implements Serializable
 
 	/** @param phrase a word or phrase
 	 * @return 	the score result of that phrase */
-	abstract public Optional<ScoreResult> score(String value);
+	abstract public Optional<ScoreResult> score(String phrase);
 
 	protected ResultSet queryValues()
 	{

@@ -10,7 +10,7 @@ import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.TopRestriction;
 import org.aksw.cubeqa.restriction.TopRestriction.OrderModifier;
-import org.aksw.cubeqa.template.CubeTemplateFragment;
+import org.aksw.cubeqa.template.Fragment;
 import lombok.Data;
 
 /** Detects "highest n" or "lowest n" type phrases.
@@ -60,9 +60,9 @@ public class TopDetector extends Detector
 		Arrays.stream(keywords[1]).map(TopDetector::noNumberPattern).forEach(p->noNumberPatternModifier.put(p,OrderModifier.ASC));
 	}
 
-	@Override public Set<CubeTemplateFragment> detect(final Cube cube, final String phrase)
+	@Override public Set<Fragment> detect(final Cube cube, final String phrase)
 	{
-		Set<CubeTemplateFragment> fragments = new HashSet<>();
+		Set<Fragment> fragments = new HashSet<>();
 		String restPhrase = phrase;
 		// with numbers first as searching without numbers first would discard the numbers of the numbered ones
 		for(Entry<Pattern,OrderModifier> e: numberPatternModifier.entrySet())
@@ -76,14 +76,14 @@ public class TopDetector extends Detector
 				Set<ScoreResult> results = matchPart(cube, w);
 				if(results.isEmpty()) // unknown property, use default answer property
 				{
-					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0).replace(w, ""));
+					Fragment fragment =  new Fragment(cube, matcher.group(0).replace(w, ""));
 					fragment.getRestrictions().add(new TopRestriction(cube.getDefaultAnswerProperty(),n,e.getValue()));
 					fragments.add(fragment);
 				} else
 				{
 					ScoreResult max = results.stream().max(Comparator.comparing(ScoreResult::getScore)).get();
 
-					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
+					Fragment fragment =  new Fragment(cube, matcher.group(0));
 					ComponentProperty restrictionProperty = ((max.property.answerType==AnswerType.COUNTABLE)||(max.property.answerType==AnswerType.UNCOUNTABLE))?
 							max.property:cube.getDefaultAnswerProperty();
 					fragment.getRestrictions().add(new TopRestriction(restrictionProperty,n,e.getValue()));
@@ -104,13 +104,13 @@ public class TopDetector extends Detector
 				Set<ScoreResult> results = matchPart(cube, w);
 				if(results.isEmpty()) // unknown property, use default answer property
 				{
-					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0).replace(w, ""));
+					Fragment fragment =  new Fragment(cube, matcher.group(0).replace(w, ""));
 					fragment.getRestrictions().add(new TopRestriction(cube.getDefaultAnswerProperty(),1,e.getValue()));
 					fragments.add(fragment);
 				} else
 				{
 					ScoreResult max = results.stream().max(Comparator.comparing(ScoreResult::getScore)).get();
-					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0));
+					Fragment fragment =  new Fragment(cube, matcher.group(0));
 					fragment.getRestrictions().add(new TopRestriction(max.property,1,e.getValue()));
 					fragments.add(fragment);
 				}

@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 /** Template for a data cube query. */
 @RequiredArgsConstructor
-public class CubeTemplate
+public class Template
 {
 	final Cube cube;
 

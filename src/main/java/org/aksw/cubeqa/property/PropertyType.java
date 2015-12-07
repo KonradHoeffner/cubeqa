@@ -1,6 +1,6 @@
 package org.aksw.cubeqa.property;
 
-import org.aksw.linkedspending.tools.DataModel;
+import de.konradhoeffner.commons.rdf.DataCube;
 
 public enum PropertyType
 {
@@ -10,9 +10,9 @@ public enum PropertyType
 	{
 		switch(type)
 		{
-			case DataModel.DataCube.ATTRIBUTE_PROPERTY_URI:return ATTRIBUTE;
-			case DataModel.DataCube.DIMENSION_PROPERTY_URI:return DIMENSION;
-			case DataModel.DataCube.MEASURE_PROPERTY_URI:return MEASURE;
+			case DataCube.ATTRIBUTE_PROPERTY_URI:return ATTRIBUTE;
+			case DataCube.DIMENSION_PROPERTY_URI:return DIMENSION;
+			case DataCube.MEASURE_PROPERTY_URI:return MEASURE;
 			default:throw new IllegalArgumentException(type+" is not a subtype of qb:ComponentProperty");
 		}
 	}

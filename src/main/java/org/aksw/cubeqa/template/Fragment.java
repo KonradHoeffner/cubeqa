@@ -21,7 +21,7 @@ import lombok.extern.log4j.Log4j;
 @ToString(exclude="cube")
 /** Unfinished template for a data cube query.
  * Gets combined with other fragments and finally converted to a template. */
-public class CubeTemplateFragment
+public class Fragment
 {
 	private static final double TO_TEMPLATE_VALUE_SCORE_THRESHOLD = 0.2;
 	private static final double	MIN_COMBINED_SCORE	= 0.1;
@@ -33,7 +33,7 @@ public class CubeTemplateFragment
 	private final Set<ComponentProperty> answerProperties;
 	private final Set<ComponentProperty> perProperties;
 	private final Set<Aggregate> aggregates;
-	private final Set<MatchResult> matchResults;
+	private final Set<Match> matches;
 
 	private Set<ComponentProperty> unreferredProperties()
 	{
@@ -44,12 +44,12 @@ public class CubeTemplateFragment
 		return properties;
 	}
 
-	public CubeTemplateFragment(Cube cube, String phrase)
+	public Fragment(Cube cube, String phrase)
 	{
 		this(cube, phrase, new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>());
 	}
 
-	public static CubeTemplateFragment combine(Collection<CubeTemplateFragment> fragments)
+	public static Fragment combine(Collection<Fragment> fragments)
 	{
 		StopWatch fragmentCombineWatch = StopWatches.INSTANCE.getWatch("fragmentcombine");
 		fragmentCombineWatch.start();
@@ -67,7 +67,7 @@ public class CubeTemplateFragment
 		Set<ComponentProperty> answerProperties = new HashSet<>();
 		Set<ComponentProperty> perProperties = new HashSet<>();
 		Set<Aggregate> aggregates = new HashSet<>();
-		Set<MatchResult> matchResults = new HashSet<>();
+		Set<Match> matchResults = new HashSet<>();
 		fragments.forEach(f->
 		{
 			restrictions.addAll(f.restrictions);
@@ -76,15 +76,15 @@ public class CubeTemplateFragment
 			aggregates.addAll(f.aggregates);
 		});
 		// *** phrases are added in list order with space in between ***********************************************
-		String combinedPhrase = fragments.stream().map(CubeTemplateFragment::getPhrase).reduce("", (a,b)->a+" "+b).trim();
-		CubeTemplateFragment fragment = new CubeTemplateFragment(fragments.iterator().next().cube,combinedPhrase,
+		String combinedPhrase = fragments.stream().map(Fragment::getPhrase).reduce("", (a,b)->a+" "+b).trim();
+		Fragment fragment = new Fragment(fragments.iterator().next().cube,combinedPhrase,
 				restrictions, answerProperties, perProperties, aggregates,matchResults);
 
 		// *** combining match results *****************************************************************************
 		// **** get all properties that are not yet assigned but somewhere referenced both as name and as value
 		// strictly, they should be referenced in different matchresult objects but that calculation would be too complicated, sort that out later
 		Set<ComponentProperty> properties = fragment.unreferredProperties();
-		Set<MatchResult> fragmentsMatchResults = fragments.stream().map(CubeTemplateFragment::getMatchResults).map(Set::stream).flatMap(id->id).collect(Collectors.toSet());
+		Set<Match> fragmentsMatchResults = fragments.stream().map(Fragment::getMatches).map(Set::stream).flatMap(id->id).collect(Collectors.toSet());
 		properties.retainAll(fragmentsMatchResults.stream().map(mr->mr.nameRefs.keySet()).flatMap(Set::stream).collect(Collectors.toSet()));
 		properties.retainAll(fragmentsMatchResults .stream().map(mr->mr.valueRefs.keySet()).flatMap(Set::stream).collect(Collectors.toSet()));
 		for(ComponentProperty property: properties)
@@ -130,13 +130,13 @@ public class CubeTemplateFragment
 	 * @param expectedAnswerTypes The expected answer types of the question based on its question word. Used to choose the answer property.
 	 * @return An optional containing the cube template or an empty optional, if no answer property could identified.
 	 */
-	Optional<CubeTemplate> toTemplate(EnumSet<AnswerType> expectedAnswerTypes)
+	Optional<Template> toTemplate(EnumSet<AnswerType> expectedAnswerTypes)
 	{
 		// For values which are only referenced by value, not by property name.
 		// Happens very often in practice (e.g. most people say "in 2010" and not "in the year of 2010") so I recommend to set the config parameter to true.
 		if(Config.INSTANCE.findNamelessReferences)
 		{
-			for(MatchResult mr: matchResults)
+			for(Match mr: matches)
 			{
 				// we only use those whose properties which are not already referred to
 				// as unreferredProperties() is called in each iteration, it is up to date with new restrictions from former iterations
@@ -160,7 +160,7 @@ public class CubeTemplateFragment
 				)
 		{aggregates.add(Aggregate.SUM);}
 
-		return Optional.of(new CubeTemplate(cube, restrictions, answerProperties, perProperties,aggregates));
+		return Optional.of(new Template(cube, restrictions, answerProperties, perProperties,aggregates));
 	}
 
 	/** @param expectedAnswerTypes the set of expected answer types possible for the question word
@@ -169,8 +169,8 @@ public class CubeTemplateFragment
 	 * Iff there are no candidates at all, a random measure is returned (or the default answer property iff {@link Config#useDefaultAnswerProperty} is true).*/
 	private ComponentProperty findAnswerProperty(EnumSet<AnswerType> expectedAnswerTypes)
 	{
-		Set<ComponentProperty> candidates = matchResults.stream()
-				.map(MatchResult::getNameRefs)
+		Set<ComponentProperty> candidates = matches.stream()
+				.map(Match::getNameRefs)
 				.map(Map::keySet)
 				.flatMap(Set::stream)
 				.collect(Collectors.toSet());
@@ -224,8 +224,8 @@ public class CubeTemplateFragment
 	private ComponentProperty best(Set<ComponentProperty> properties)
 	{
 		return
-				matchResults.stream()
-				.map(MatchResult::getNameRefs)
+				matches.stream()
+				.map(Match::getNameRefs)
 				.map(Map::entrySet)
 				.flatMap(Set::stream)
 				.filter(e->properties.contains(e.getKey()))
@@ -238,6 +238,6 @@ public class CubeTemplateFragment
 	public boolean isEmpty()
 	{
 		return restrictions.isEmpty()&&answerProperties.isEmpty()&&perProperties.isEmpty()
-				&&aggregates.isEmpty()&&matchResults.isEmpty();
+				&&aggregates.isEmpty()&&matches.isEmpty();
 	}
 }

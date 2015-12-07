@@ -11,7 +11,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Getter
 @ToString
-class MatchResult
+class Match
 {
 	/** A phrase contained in the question.*/
 	public final String phrase;
@@ -24,7 +24,7 @@ class MatchResult
 
 	public final double score;
 
-	public void join(MatchResult otherResult)
+	public void join(Match otherResult)
 	{
 		Set<ComponentProperty> nameValue = this.nameRefs.keySet();
 		nameValue.retainAll(otherResult.valueRefs.keySet());
@@ -39,7 +39,7 @@ class MatchResult
 		return nameRefs.isEmpty()&&valueRefs.isEmpty();
 	}
 
-	public MatchResult(String phrase, /* int phraseIndex,*/ Map<ComponentProperty,Double> nameRefs,  Map<ComponentProperty,ScoreResult> valueRefs)
+	public Match(String phrase, /* int phraseIndex,*/ Map<ComponentProperty,Double> nameRefs,  Map<ComponentProperty,ScoreResult> valueRefs)
 	{
 		this.phrase = phrase;
 //		this.phraseIndex=phraseIndex;
@@ -49,9 +49,9 @@ class MatchResult
 				valueRefs.values().stream().mapToDouble(ScoreResult::getScore).max().orElse(0));
 	}
 
-	public CubeTemplateFragment toFragment(Cube cube)
+	public Fragment toFragment(Cube cube)
 	 {
-		return new CubeTemplateFragment(cube, phrase, new HashSet<>(), new HashSet<>(),new HashSet<>(),new HashSet<>(), Collections.singleton(this));
+		return new Fragment(cube, phrase, new HashSet<>(), new HashSet<>(),new HashSet<>(),new HashSet<>(), Collections.singleton(this));
 	 }
 
 

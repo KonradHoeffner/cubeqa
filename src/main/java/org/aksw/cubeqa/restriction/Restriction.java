@@ -3,8 +3,8 @@ package org.aksw.cubeqa.restriction;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import lombok.*;
 import org.aksw.cubeqa.property.ComponentProperty;
+import lombok.*;
 
 /** A restriction on the values of a component property.*/
 // subclasses must implement equals and hash code including those of this class (which compares the property)

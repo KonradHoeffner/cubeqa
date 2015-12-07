@@ -7,8 +7,6 @@ import java.io.Serializable;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.property.scorer.*;
 import org.aksw.cubeqa.property.scorer.temporal.TemporalScorer;
-import org.aksw.linkedspending.tools.DataModel;
-import org.aksw.linkedspending.tools.DataModel.Owl;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import com.hp.hpl.jena.query.ResultSet;
@@ -16,6 +14,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.XSD;
 import de.konradhoeffner.commons.Pair;
+import de.konradhoeffner.commons.rdf.DataCube;
+import de.konradhoeffner.commons.rdf.Owl;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
@@ -119,7 +119,7 @@ public class ComponentProperty implements Serializable
 		Set<String> types = new HashSet<>();
 		{
 			String typeQuery = "select distinct(?t) {<"+uri+"> a ?t."
-					+ "FILTER (?type != <"+RDF.Property.getURI()+"> && ?type != <"+DataModel.DataCube.ComponentProperty.getURI()+">)}";
+					+ "FILTER (?type != <"+RDF.Property.getURI()+"> && ?type != <"+DataCube.ComponentProperty.getURI()+">)}";
 			types.addAll(stream(cube.sparql.select(typeQuery))
 					.map(qs->qs.get("t").asResource().getURI()).collect(Collectors.toSet()));
 			// easiest and fastest way to determine type of values, but isn't always modelled
@@ -137,7 +137,7 @@ public class ComponentProperty implements Serializable
 			//			if(range.equals(XSD.xstring.getURI())) {range=null;}
 			//			else {range = guessRange();}
 			Pair<Scorer,AnswerType> sat = scorerAndType(types);
-			scorer = sat.a;
+			this.scorer = sat.a;
 			answerType = sat.b;
 		}
 

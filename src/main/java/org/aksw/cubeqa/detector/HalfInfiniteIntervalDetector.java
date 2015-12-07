@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.*;
-import org.aksw.cubeqa.template.CubeTemplateFragment;
+import org.aksw.cubeqa.template.Fragment;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
 
@@ -97,9 +97,9 @@ public class HalfInfiniteIntervalDetector extends Detector
 		public final int matchEnd;
 	}
 
-	@Override public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
+	@Override public Set<Fragment> detect(Cube cube, String phrase)
 	{
-		Set<CubeTemplateFragment> fragments = new HashSet<>();
+		Set<Fragment> fragments = new HashSet<>();
 //		phrase = Stopwords.remove(phrase,Stopwords.STOPWORDS);
 		Set<ScoredRestriction> srs = new HashSet<>();
 
@@ -139,7 +139,7 @@ public class HalfInfiniteIntervalDetector extends Detector
 					}
 // TODO what are scored restrictions good for?
 					srs.add(new ScoredRestriction(restriction, max.score, matcher.group(0),matcher.start(),matcher.end()));
-					CubeTemplateFragment fragment = new CubeTemplateFragment(cube, matcher.group(0));
+					Fragment fragment = new Fragment(cube, matcher.group(0));
 					fragment.getRestrictions().add(restriction);
 					fragments.add(fragment);
 					phrase = phrase.replace(matcher.group(0), "").replace("  "," ");

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 import org.aksw.commons.util.StopWatch;
-import org.aksw.linkedspending.tools.DataModel;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
+import de.konradhoeffner.commons.rdf.DataCube;
 
 /** Interface to SPARQL. */
 public class CubeSparql implements Serializable
@@ -58,7 +58,7 @@ public class CubeSparql implements Serializable
 		this.prefixes = "prefix dcterms: <"+DCTerms.getURI()
 		+">\n prefix : <"+prefixInstance
 		//					+">\n prefix lso: <"+prefixOntology
-		+">\n prefix qb: <"+DataModel.DataCube.BASE+">\n";
+		+">\n prefix qb: <"+DataCube.BASE+">\n";
 	}
 
 	String cubeUrl(String datasetName) {return prefixInstance+datasetName;}

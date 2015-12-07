@@ -18,7 +18,7 @@ import lombok.extern.log4j.Log4j;
 /** Generates the Cube Template. */
 @RequiredArgsConstructor
 @Log4j
-public class CubeTemplator
+public class Templator
 {
 	//	{log.setLevel(Level.ALL);}
 	private static final int	PHRASE_MIN_LENGTH	= 3;
@@ -27,7 +27,7 @@ public class CubeTemplator
 	private final Cube cube;
 
 	/** Sublist of trees that satisfiy the given predicate */
-	List<CubeTemplateFragment> fragments(List<Tree> trees, Predicate<CubeTemplateFragment> predicate)
+	List<Fragment> fragments(List<Tree> trees, Predicate<Fragment> predicate)
 	{
 		return trees.stream()
 				.map(this::visitRecursive)
@@ -35,7 +35,7 @@ public class CubeTemplator
 				.collect(Collectors.toList());
 	}
 
-	public CubeTemplate buildTemplate(String question)
+	public Template buildTemplate(String question)
 	{
 		String replaced = Replacer.replace(question);
 		if(!replaced.equals(question))
@@ -65,31 +65,31 @@ public class CubeTemplator
 		if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
 		StopWatch detectWatch = StopWatches.INSTANCE.getWatch("detect");
 		detectWatch.start();
-		Pair<CubeTemplateFragment,String> detectResult = detect(noStop);
+		Pair<Fragment,String> detectResult = detect(noStop);
 		detectWatch.stop();
 		StopWatch parseWatch = StopWatches.INSTANCE.getWatch("parse");
 		parseWatch.start();
 		Tree root = StanfordNlp.parse(detectResult.b);
 		parseWatch.stop();
-		CubeTemplateFragment rootFragment = visitRecursive(root);
-		CubeTemplate finalTemplate = CubeTemplateFragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate(eats).get();
+		Fragment rootFragment = visitRecursive(root);
+		Template finalTemplate = Fragment.combine(Arrays.asList(rootFragment,detectResult.a)).toTemplate(eats).get();
 		return finalTemplate;
 	}
 
 	/** @param question the full question used on all detectors
 	 * @return the combined detected fragment and the leftover phrase
 	 */
-	Pair<CubeTemplateFragment,String> detect(final String question)
+	Pair<Fragment,String> detect(final String question)
 	{
-		CubeTemplateFragment allDetectorFragment = null;
+		Fragment allDetectorFragment = null;
 
 		String reducedPhrase = question;
 		for(Detector detector: Detector.DETECTORS)
 		{
-			Set<CubeTemplateFragment> detectorResults = detector.detect(cube,reducedPhrase);
+			Set<Fragment> detectorResults = detector.detect(cube,reducedPhrase);
 			if(!detectorResults.isEmpty())
 			{
-				for(CubeTemplateFragment fragment: detectorResults)
+				for(Fragment fragment: detectorResults)
 				{
 					reducedPhrase = question.replace(fragment.phrase,"").replace("  ", " ");
 					if(reducedPhrase.equals(question)) {
@@ -99,15 +99,15 @@ public class CubeTemplator
 				}
 				// keep results from earlier used detectors
 				if(allDetectorFragment!=null) {detectorResults.add(allDetectorFragment);}
-				allDetectorFragment = CubeTemplateFragment.combine(new ArrayList<>(detectorResults));
+				allDetectorFragment = Fragment.combine(new ArrayList<>(detectorResults));
 			}
 		}
-		if(allDetectorFragment==null) {return new Pair<>(new CubeTemplateFragment(cube,""),reducedPhrase);}
+		if(allDetectorFragment==null) {return new Pair<>(new Fragment(cube,""),reducedPhrase);}
 		return new Pair<>(allDetectorFragment,reducedPhrase);
 	}
 
 	/** The recursive algorithm. */
-	CubeTemplateFragment visitRecursive(Tree tree)
+	Fragment visitRecursive(Tree tree)
 	{
 		while(/*!tree.isPreTerminal()&&*/tree.children().length==1)
 		{
@@ -118,7 +118,7 @@ public class CubeTemplator
 		if(phrase.length()<PHRASE_MIN_LENGTH)
 		{
 			log.trace("phrase less than "+PHRASE_MIN_LENGTH+" characters, skipped: "+phrase);
-			return new CubeTemplateFragment(cube, phrase);
+			return new Fragment(cube, phrase);
 		}
 
 		if(phrase.length()>PHRASE_MAX_LENGTH)
@@ -131,7 +131,7 @@ public class CubeTemplator
 			log.trace("Phrase \""+phrase+"\"...");
 			// either we detected nothing or only part of the phrase
 
-			MatchResult matchResult = identify(phrase);
+			Match matchResult = identify(phrase);
 			// whole phrase matched, subtrees skipped
 			if(!matchResult.isEmpty())
 			{
@@ -141,19 +141,19 @@ public class CubeTemplator
 		}
 		// either we didn't match because the phrase is too long or matching didn't find anything, so match subtrees separately
 		log.trace("unmatched, looking at subtrees");
-		List<CubeTemplateFragment> childFragments = fragments(tree.getChildrenAsList(),x->true);
+		List<Fragment> childFragments = fragments(tree.getChildrenAsList(),x->true);
 		if(childFragments.isEmpty()) {
-			return new CubeTemplateFragment(cube, phrase);
+			return new Fragment(cube, phrase);
 		}
-		List<CubeTemplateFragment> childFragmentsWithRefs = childFragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
-		List<CubeTemplateFragment> childFragmentsWithoutRefs = new LinkedList<>(childFragments);
+		List<Fragment> childFragmentsWithRefs = childFragments.stream().filter(f->!f.isEmpty()).collect(Collectors.toList());
+		List<Fragment> childFragmentsWithoutRefs = new LinkedList<>(childFragments);
 		childFragmentsWithoutRefs.removeAll(childFragmentsWithRefs);
 
-		List<CubeTemplateFragment> usefulChildFragments = new ArrayList<>(childFragmentsWithRefs);
+		List<Fragment> usefulChildFragments = new ArrayList<>(childFragmentsWithRefs);
 		// we could throw unmatched fragments away but we try to combine them into something useful first
 		if(!childFragmentsWithoutRefs.isEmpty())
 		{
-			String childFragmentsWithoutRefsPhrase = CubeTemplateFragment.combine(childFragmentsWithoutRefs).phrase;
+			String childFragmentsWithoutRefsPhrase = Fragment.combine(childFragmentsWithoutRefs).phrase;
 			// too small, throw away
 			if(childFragmentsWithoutRefsPhrase.length()<3)
 			{
@@ -163,7 +163,7 @@ public class CubeTemplator
 			else
 			{
 				// TODO check partial combinations too
-				MatchResult unmatchedResult = identify(childFragmentsWithoutRefsPhrase);
+				Match unmatchedResult = identify(childFragmentsWithoutRefsPhrase);
 				log.trace("unmatched fragments with phrase \""+unmatchedResult.phrase+"\"");
 				//				unmatchedFragments.stream().map(f->f.phrase).collect(Collectors.toList());
 
@@ -180,14 +180,14 @@ public class CubeTemplator
 		if(usefulChildFragments.isEmpty())
 		{
 			log.trace("no match found for phrase \"" +phrase+"\"");
-			return new CubeTemplateFragment(cube,phrase);
+			return new Fragment(cube,phrase);
 		} else
 		{
-			return CubeTemplateFragment.combine(usefulChildFragments);
+			return Fragment.combine(usefulChildFragments);
 		}
 	}
 
-	public MatchResult identify(String phrase/*, int phraseIndex*/)
+	public Match identify(String phrase/*, int phraseIndex*/)
 	{
 		StopWatch scoreWatch = StopWatches.INSTANCE.getWatch("score");
 		scoreWatch.start();
@@ -200,7 +200,7 @@ public class CubeTemplator
 		//			System.out.println(nameRefs);
 		//			System.out.println(valueRefs);
 		//		}
-		return new MatchResult(phrase,/* phraseIndex, */nameRefs, valueRefs);
+		return new Match(phrase,/* phraseIndex, */nameRefs, valueRefs);
 	}
 
 }

@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.aksw.cubeqa.template.CubeTemplateFragment;
+import org.aksw.cubeqa.template.Fragment;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -27,11 +27,11 @@ public class PerTimeDetector extends Detector
 	public static PerTimeDetector INSTANCE = new PerTimeDetector();
 	protected static transient StringDistance similarity = new NGramDistance();
 
-	@Override public Set<CubeTemplateFragment> detect(Cube cube, String phrase)
+	@Override public Set<Fragment> detect(Cube cube, String phrase)
 	{
 		List<TimeUnit> timeUnits = getTimeUnits(cube);
 
-		Set<CubeTemplateFragment> fragments = new HashSet<>();
+		Set<Fragment> fragments = new HashSet<>();
 		for(TimeUnit timeUnit: timeUnits)
 		{
 			for(Pattern pattern: timeUnit.patterns)
@@ -39,7 +39,7 @@ public class PerTimeDetector extends Detector
 				Matcher matcher = pattern.matcher(phrase);
 				while(matcher.find())
 				{
-					CubeTemplateFragment fragment =  new CubeTemplateFragment(cube, matcher.group(0).trim());
+					Fragment fragment =  new Fragment(cube, matcher.group(0).trim());
 					fragment.getPerProperties().add(timeUnit.property.get());
 					fragments.add(fragment);
 					phrase = phrase.replace(matcher.group(0), " ").replace("  "," ");
