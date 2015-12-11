@@ -177,8 +177,8 @@ public class ComponentProperty implements Serializable
 		{
 			if(range.startsWith(XSD.getURI()))
 			{
-				Arrays.asList(XSD.xbyte,XSD.xint,XSD.xlong,XSD.integer,
-						XSD.xlong,XSD.negativeInteger,XSD.positiveInteger,XSD.nonNegativeInteger,XSD.nonPositiveInteger,XSD.positiveInteger,XSD.xshort,
+				Set<String> integers = Arrays.asList(XSD.xbyte,XSD.xint,XSD.xlong,XSD.integer,
+						XSD.xlong,XSD.negativeInteger,XSD.positiveInteger,XSD.nonNegativeInteger,XSD.nonPositiveInteger,XSD.xshort,
 						XSD.unsignedLong,XSD.unsignedInt,XSD.unsignedShort,XSD.unsignedByte)
 						.stream().map(Resource::getURI).collect(Collectors.toSet());
 
@@ -187,7 +187,8 @@ public class ComponentProperty implements Serializable
 				//				Set<String> xsdTemporal = Arrays.asList(XSD.date,XSD.dateTime,XSD.gDay,XSD.gMonth,XSD.gMonthDay,XSD.gYear,XSD.gYearMonth)
 				//						.stream().map(Resource::getURI).collect(Collectors.toSet());
 				// TODO: ensure right parsing of all xsd temporal types
-
+				// TODO run the benchmark again and see if it is better with integers
+				if(integers.contains(range)) {return new Pair<>(new NumericScorer(this),AnswerType.COUNTABLE);}
 				if(floats.contains(range)) {return new Pair<>(new NumericScorer(this),AnswerType.UNCOUNTABLE);}
 				if(range.equals(XSD.xstring.getURI())) {return new Pair<>(new StringScorer(this),AnswerType.ENTITY);}
 				//					if(r.equals(XSD.xboolean.getURI())) {return new BooleanScorer(this);} // TODO investigate do we need a boolean scorer?

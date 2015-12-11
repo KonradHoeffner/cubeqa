@@ -67,8 +67,9 @@ public class CubeSparql implements Serializable
 	{
 		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
 		watch.start();
-		try(QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query))
+		try//()
 		{
+			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
 			defaultGraphs.forEach(qe::addDefaultGraph);
 			return qe.execAsk();
 		} catch(Exception e) {throw new RuntimeException("Error on SPARQL ASK on endpoint "+endpoint+" with query:\n"+query,e);}
@@ -79,9 +80,9 @@ public class CubeSparql implements Serializable
 	{
 		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
 		watch.start();
-		try(QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query))
+		try//() // try-with-resource not possible here, as it closes the result set which is not usable then 
 		{
-
+			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
 			return qe.execSelect();
 		} catch(Exception e) {throw new RuntimeException("Error on sparql select on endpoint "+endpoint+" with query:\n"+query,e);}
 		finally {watch.stop();}
