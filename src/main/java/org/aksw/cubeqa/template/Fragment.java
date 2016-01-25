@@ -136,11 +136,11 @@ public class Fragment
 		// Happens very often in practice (e.g. most people say "in 2010" and not "in the year of 2010") so I recommend to set the config parameter to true.
 		if(Config.INSTANCE.findNamelessReferences)
 		{
-			for(Match mr: matches)
+			for(Match m: matches)
 			{
 				// we only use those whose properties which are not already referred to
 				// as unreferredProperties() is called in each iteration, it is up to date with new restrictions from former iterations
-				mr.valueRefs.values().stream().filter(sr->unreferredProperties().contains(sr.property))
+				m.valueRefs.values().stream().filter(sr->unreferredProperties().contains(sr.property))
 				.filter(sr->sr.score>TO_TEMPLATE_VALUE_SCORE_THRESHOLD)
 				.max(Comparator.comparing(ScoreResult::getScore))
 				.ifPresent(scoreResult->

@@ -1,2 +1,2 @@
-/**General utility methods collection (not self developed). */
+/**General utility methods collection (not all self developed). */
 package de.konradhoeffner.commons;

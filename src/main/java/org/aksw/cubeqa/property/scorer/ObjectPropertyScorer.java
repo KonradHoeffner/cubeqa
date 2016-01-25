@@ -11,6 +11,7 @@ import de.konradhoeffner.commons.Streams;
 public class ObjectPropertyScorer extends MultiSetScorer
 {
 	transient LabelIndex index;
+	private static final double	THRESHOLD	= 0.4;
 
 	private synchronized void loadOrCreateIndex()
 	{
@@ -33,6 +34,7 @@ public class ObjectPropertyScorer extends MultiSetScorer
 		Map<String,Double> urisWithScore = index.getUrisWithScore(value,Config.INSTANCE.indexMinScore);
 
 		return urisWithScore.keySet().stream()
+				.filter(s->urisWithScore.get(s)>THRESHOLD)
 				.max(Comparator.comparing(urisWithScore::get))
 				.map(uri->new ScoreResult(property, uri, urisWithScore.get(uri)));
 	}

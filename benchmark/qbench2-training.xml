@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?><dataset id="qbench2"><question id="1" cubeuri="http://linkedspending.aksw.org/instance/town_of_cary_expenditures" hybrid="false" statistical="true">
+<?xml version='1.0' encoding='UTF-8'?><dataset id="qbench2-training"><question id="1" cubeuri="http://linkedspending.aksw.org/instance/town_of_cary_expenditures" hybrid="false" statistical="true">
 <string>How much was spent on public works and utilities by the Town of Cary in 2011?</string>
 <query>
 select sum(xsd:decimal(?amount)) from &lt;http://linkedspending.aksw.org/town_of_cary_expenditures>
@@ -26,10 +26,10 @@ select ?program from &lt;http://linkedspending.aksw.org/town_of_cary_expenditure
 <answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/50</answer>
 <answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/44</answer>
 <answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/43</answer>
-<answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/53</answer>
 <answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/42</answer>
-<answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/41</answer>
+<answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/53</answer>
 <answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/52</answer>
+<answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/41</answer>
 <answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/48</answer>
 <answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/47</answer>
 <answer answerType="uri">https://openspending.org/town_of_cary_expenditures/Program/46</answer>
@@ -74,6 +74,8 @@ select ?dep from &lt;http://linkedspending.aksw.org/city-of-whiteacre-spending>
 ?obs qb:dataSet ls:city-of-whiteacre-spending.
 ?obs lso:city-of-whiteacre-spending-to ?dep.
 ?obs lso:city-of-whiteacre-spending-amount ?amount.
+?obs lso:refYear ?year.
+filter (year(?year)=2010).
 }
 order by desc(sum(xsd:decimal(?amount))) limit 1<answers>
 <answer answerType="uri">https://openspending.org/city-of-whiteacre-spending/to/954008</answer>
@@ -93,7 +95,7 @@ select ?year sum(xsd:decimal(?amount)) from &lt;http://linkedspending.aksw.org/c
 }
 group by ?year
 order by desc(sum(xsd:decimal(?amount))) limit 1<answers>
-<answer><year answerType="year">2010-01-01+01:00</year>
+<answer><year answerType="year">2010</year>
 <callret-1 answerType="number">78478.5</callret-1>
 </answer>
 </answers>
@@ -149,7 +151,7 @@ order by desc(sum(xsd:decimal(?amount))) limit 1<answers>
 </query>
 </question>
 <question id="10" cubeuri="http://linkedspending.aksw.org/instance/ministry_of_health" hybrid="false" statistical="true">
-<string>What was the average Uganda health budget for each district in 2014?</string>
+<string>What was the average Uganda health budget over all districts in 2014?</string>
 <query>
 select avg(?sum) as ?sum
 {
@@ -294,23 +296,23 @@ select ?division sum(xsd:decimal(?amount)) as ?amount from &lt;http://linkedspen
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/805</division>
 <amount answerType="number">3159485.64</amount>
 </answer>
-<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/650</division>
-<amount answerType="number">2803001.56</amount>
-</answer>
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/20</division>
 <amount answerType="number">75767513.65</amount>
 </answer>
-<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/255</division>
-<amount answerType="number">36168370.95</amount>
+<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/650</division>
+<amount answerType="number">2803001.56</amount>
 </answer>
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/181</division>
 <amount answerType="number">5163929.05</amount>
 </answer>
-<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/601</division>
-<amount answerType="number">18016632.63</amount>
+<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/255</division>
+<amount answerType="number">36168370.95</amount>
 </answer>
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/625</division>
 <amount answerType="number">25877159.51</amount>
+</answer>
+<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/601</division>
+<amount answerType="number">18016632.63</amount>
 </answer>
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/550</division>
 <amount answerType="number">41585508.31</amount>
@@ -384,17 +386,17 @@ select ?division sum(xsd:decimal(?amount)) as ?amount from &lt;http://linkedspen
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/236</division>
 <amount answerType="number">6759708.65</amount>
 </answer>
-<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/182</division>
-<amount answerType="number">4329840.58</amount>
-</answer>
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/720</division>
 <amount answerType="number">139122.95</amount>
 </answer>
-<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/185</division>
-<amount answerType="number">6034243.93</amount>
+<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/182</division>
+<amount answerType="number">4329840.58</amount>
 </answer>
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/705</division>
 <amount answerType="number">6144030.44</amount>
+</answer>
+<answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/185</division>
+<amount answerType="number">6034243.93</amount>
 </answer>
 <answer><division answerType="uri">https://openspending.org/city-of-redacre-spending/to/501</division>
 <amount answerType="number">5999381.76</amount>
@@ -537,8 +539,8 @@ select ?dep
 <answer answerType="uri">https://openspending.org/city-of-springfield-budget/to/400-building</answer>
 <answer answerType="uri">https://openspending.org/city-of-springfield-budget/to/101-admin</answer>
 <answer answerType="uri">https://openspending.org/city-of-springfield-budget/to/410-engineering</answer>
-<answer answerType="uri">https://openspending.org/city-of-springfield-budget/to/130-it</answer>
 <answer answerType="uri">https://openspending.org/city-of-springfield-budget/to/200-police</answer>
+<answer answerType="uri">https://openspending.org/city-of-springfield-budget/to/130-it</answer>
 </answers>
 </query>
 </question>
@@ -643,10 +645,10 @@ select ?programme from &lt;http://linkedspending.aksw.org/big-lottery-fund-grant
 }
 group by ?programme
 having (sum(xsd:decimal(?amount))>1000000&amp;&amp;sum(xsd:decimal(?amount))&lt;10000000)<answers>
-<answer answerType="string">Community Asset Transfer Round 2</answer>
 <answer answerType="string">2014 Communities</answer>
-<answer answerType="string">Village SOS Active</answer>
+<answer answerType="string">Community Asset Transfer Round 2</answer>
 <answer answerType="string">Impact of Alcohol</answer>
+<answer answerType="string">Village SOS Active</answer>
 <answer answerType="string">Millennium Now</answer>
 <answer answerType="string">Awards for All Northern Ireland</answer>
 <answer answerType="string">Our Place</answer>
@@ -672,8 +674,8 @@ group by ?area
 having (sum(xsd:decimal(?amount))>1000000)<answers>
 <answer answerType="string">CACD</answer>
 <answer answerType="string">Communities and Infrastructure</answer>
-<answer answerType="string">Balance sheet</answer>
 <answer answerType="string">Enabling and Transition</answer>
+<answer answerType="string">Balance sheet</answer>
 <answer answerType="string">CYPD</answer>
 <answer answerType="string">Environment</answer>
 <answer answerType="string">Community Safety / Fire</answer>
@@ -783,13 +785,13 @@ having (sum(xsd:decimal(?amount)) > 10000000)<answers>
 <answer answerType="string">Toronto Building</answer>
 <answer answerType="string">Transportation Services</answer>
 <answer answerType="string">Toronto Zoo</answer>
-<answer answerType="string">TTC Conventional</answer>
 <answer answerType="string">theatres-sony centre</answer>
+<answer answerType="string">TTC Conventional</answer>
 <answer answerType="string">Toronto Police Service</answer>
 <answer answerType="string">Toronto Water</answer>
 <answer answerType="string">Toronto Public Health</answer>
-<answer answerType="string">Toronto Region Conserv. Auth</answer>
 <answer answerType="string">Toronto Environment Office</answer>
+<answer answerType="string">Toronto Region Conserv. Auth</answer>
 <answer answerType="string">Technical Services</answer>
 <answer answerType="string">TTC Wheel-Trans</answer>
 <answer answerType="string">Toronto Public Library</answer>
@@ -947,7 +949,7 @@ select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org
 ?obs lso:dc-vendors-contractors-to &lt;https://openspending.org/dc-vendors-contractors/to/vwr-international-llc>.
 ?obs lso:dc-vendors-contractors-amount ?amount.
 }<answers>
-<answer answerType="number">84223.01</answer>
+<answer answerType="number">119244.78</answer>
 </answers>
 </query>
 </question>
@@ -961,14 +963,14 @@ select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org
 ?obs lso:dc-vendors-contractors-to &lt;https://openspending.org/dc-vendors-contractors/to/the-riverside-publishing>.
 ?obs lso:dc-vendors-contractors-amount ?amount.
 }<answers>
-<answer answerType="number">44101.52</answer>
+<answer answerType="number">58035.86</answer>
 </answers>
 </query>
 </question>
 <question id="51" cubeuri="http://linkedspending.aksw.org/instance/cameroon_visualisation" hybrid="false" statistical="true">
 <string>What was the highest amount for materials and supplies used in Cameroon in 2008?</string>
 <query>
-select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/cameroon_visualisation>
+select max(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/cameroon_visualisation>
 {
 ?obs qb:dataSet ls:cameroon_visualisation.
 ?obs lso:cameroon_visualisation-head_account &lt;https://openspending.org/cameroon_visualisation/head_account/610-xxx>.
@@ -976,7 +978,7 @@ select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org
 ?obs lso:refYear ?year.
 filter(year(?year)=2008).
 }<answers>
-<answer answerType="number">52290566</answer>
+<answer answerType="number">7000000</answer>
 </answers>
 </query>
 </question>
@@ -1003,27 +1005,27 @@ select distinct(?date) from &lt;http://linkedspending.aksw.org/nominettrust_fund
 ?obs lso:nominettrust_funding-region &lt;https://openspending.org/nominettrust_funding/region/london>.
 ?obs lso:refDate ?date.
 }<answers>
-<answer answerType="date">2010-08-02+01:00</answer>
-<answer answerType="date">2013-02-26+01:00</answer>
-<answer answerType="date">2009-11-24+01:00</answer>
-<answer answerType="date">2012-05-10+01:00</answer>
-<answer answerType="date">2010-05-17+01:00</answer>
-<answer answerType="date">2013-04-19+01:00</answer>
-<answer answerType="date">2013-08-05+01:00</answer>
-<answer answerType="date">2011-05-16+01:00</answer>
-<answer answerType="date">2010-02-15+01:00</answer>
-<answer answerType="date">2009-05-21+01:00</answer>
-<answer answerType="date">2013-09-30+01:00</answer>
-<answer answerType="date">2012-11-20+01:00</answer>
-<answer answerType="date">2011-02-14+01:00</answer>
-<answer answerType="date">2010-11-15+01:00</answer>
-<answer answerType="date">2009-08-11+01:00</answer>
-<answer answerType="date">2011-11-14+01:00</answer>
-<answer answerType="date">2013-12-04+01:00</answer>
-<answer answerType="date">2012-02-13+01:00</answer>
-<answer answerType="date">2011-08-09+01:00</answer>
-<answer answerType="date">2012-07-30+01:00</answer>
-<answer answerType="date">2009-02-12+01:00</answer>
+<answer answerType="date">2011-05-16</answer>
+<answer answerType="date">2011-02-14</answer>
+<answer answerType="date">2010-11-15</answer>
+<answer answerType="date">2010-05-17</answer>
+<answer answerType="date">2010-02-15</answer>
+<answer answerType="date">2009-02-12</answer>
+<answer answerType="date">2013-02-26</answer>
+<answer answerType="date">2011-11-14</answer>
+<answer answerType="date">2012-11-20</answer>
+<answer answerType="date">2010-08-02</answer>
+<answer answerType="date">2009-05-21</answer>
+<answer answerType="date">2009-08-11</answer>
+<answer answerType="date">2013-04-19</answer>
+<answer answerType="date">2013-08-05</answer>
+<answer answerType="date">2012-07-30</answer>
+<answer answerType="date">2009-11-24</answer>
+<answer answerType="date">2013-09-30</answer>
+<answer answerType="date">2013-12-04</answer>
+<answer answerType="date">2012-05-10</answer>
+<answer answerType="date">2012-02-13</answer>
+<answer answerType="date">2011-08-09</answer>
 </answers>
 </query>
 </question>
@@ -1036,19 +1038,19 @@ select distinct(?date) from &lt;http://linkedspending.aksw.org/nominettrust_fund
 ?obs lso:nominettrust_funding-programme &lt;https://openspending.org/nominettrust_funding/programme/web-in-society>.
 ?obs lso:refDate ?date.
 }<answers>
-<answer answerType="date">2010-08-02+01:00</answer>
-<answer answerType="date">2009-11-24+01:00</answer>
-<answer answerType="date">2012-05-10+01:00</answer>
-<answer answerType="date">2010-05-17+01:00</answer>
-<answer answerType="date">2011-05-16+01:00</answer>
-<answer answerType="date">2009-05-21+01:00</answer>
-<answer answerType="date">2010-02-15+01:00</answer>
-<answer answerType="date">2011-02-14+01:00</answer>
-<answer answerType="date">2010-11-15+01:00</answer>
-<answer answerType="date">2011-11-14+01:00</answer>
-<answer answerType="date">2012-02-13+01:00</answer>
-<answer answerType="date">2011-08-09+01:00</answer>
-<answer answerType="date">2009-02-12+01:00</answer>
+<answer answerType="date">2011-05-16</answer>
+<answer answerType="date">2011-02-14</answer>
+<answer answerType="date">2010-11-15</answer>
+<answer answerType="date">2010-05-17</answer>
+<answer answerType="date">2009-02-12</answer>
+<answer answerType="date">2010-02-15</answer>
+<answer answerType="date">2011-11-14</answer>
+<answer answerType="date">2010-08-02</answer>
+<answer answerType="date">2009-05-21</answer>
+<answer answerType="date">2009-11-24</answer>
+<answer answerType="date">2012-05-10</answer>
+<answer answerType="date">2012-02-13</answer>
+<answer answerType="date">2011-08-09</answer>
 </answers>
 </query>
 </question>
@@ -1152,13 +1154,13 @@ select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org
 <string>What was the lowest amount for the veterinary service in the Fingal County Council expenditure budget?
 </string>
 <query>
-select max(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/fingal_exp_budget>
+select min(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/fingal_exp_budget>
 {
 ?obs qb:dataSet ls:fingal_exp_budget.
 ?obs lso:fingal_exp_budget-Service &lt;https://openspending.org/fingal_exp_budget/Service/g04>.
 ?obs lso:fingal_exp_budget-amount ?amount.
 }<answers>
-<answer answerType="number">226900</answer>
+<answer answerType="number">0</answer>
 </answers>
 </query>
 </question>
@@ -1222,17 +1224,17 @@ select distinct(year(?year)) as ?year from &lt;http://linkedspending.aksw.org/ug
 <answer answerType="number">2010</answer>
 <answer answerType="number">2009</answer>
 <answer answerType="number">1998</answer>
-<answer answerType="number">2008</answer>
 <answer answerType="number">1997</answer>
-<answer answerType="number">2007</answer>
+<answer answerType="number">2008</answer>
 <answer answerType="number">1996</answer>
+<answer answerType="number">2007</answer>
 <answer answerType="number">1995</answer>
-<answer answerType="number">1994</answer>
 <answer answerType="number">2005</answer>
+<answer answerType="number">1994</answer>
 <answer answerType="number">2004</answer>
 <answer answerType="number">2003</answer>
-<answer answerType="number">2013</answer>
 <answer answerType="number">2002</answer>
+<answer answerType="number">2013</answer>
 <answer answerType="number">1999</answer>
 </answers>
 </query>
@@ -1331,7 +1333,7 @@ select distinct(?date) from &lt;http://linkedspending.aksw.org/pbw-ct>
 ?obs lso:pbw-ct-Category &lt;https://openspending.org/pbw-ct/Category/upgrading-and-greening-in-ward-49>.
 ?obs lso:refDate ?date.
 }<answers>
-<answer answerType="date">2014-06-01+01:00</answer>
+<answer answerType="date">2014-06-01</answer>
 </answers>
 </query>
 </question>
@@ -1374,8 +1376,8 @@ select ?date from &lt;http://linkedspending.aksw.org/trends_in_civi_tech_open_go
 ?obs lso:trends_in_civi_tech_open_gov-from &lt;https://openspending.org/trends_in_civi_tech_open_gov/from/pew-charitable-trust>.
 ?obs lso:refDate ?date.
 }<answers>
-<answer answerType="date">2011-01-01+01:00</answer>
-<answer answerType="date">2012-01-01+01:00</answer>
+<answer answerType="date">2011-01-01</answer>
+<answer answerType="date">2012-01-01</answer>
 </answers>
 </query>
 </question>
@@ -1405,9 +1407,9 @@ select distinct(?admin) from &lt;http://linkedspending.aksw.org/e27f4ef760144679
 <answer answerType="uri">https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/from/105018</answer>
 <answer answerType="uri">https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/from/104016</answer>
 <answer answerType="uri">https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/from/104003</answer>
+<answer answerType="uri">https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/from/104013</answer>
 <answer answerType="uri">https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/from/105014</answer>
 <answer answerType="uri">https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/from/104002</answer>
-<answer answerType="uri">https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/from/104013</answer>
 <answer answerType="uri">https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/from/104021</answer>
 </answers>
 </query>
@@ -1669,16 +1671,16 @@ order by desc(sum(xsd:decimal(?amount))) limit 1
 <question id="95" cubeuri="http://linkedspending.aksw.org/instance/al_planned_budget_2007to2013" hybrid="false" statistical="true">
 <string>What was the Albania budget for public order and safety in 2007?</string>
 <query>
-select  sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/al_planned_budget_2007to2013>
+select sum(xsd:decimal(?amount)) as ?sum from &lt;http://linkedspending.aksw.org/al_planned_budget_2007to2013>
 {
 ?obs qb:dataSet ls:al_planned_budget_2007to2013.
 ?obs lso:al_planned_budget_2007to2013-cofog1 &lt;https://openspending.org/al_planned_budget_2007to2013/cofog1/public-order-and-safety>.
-?obs lso:al_planned_budget_2007to2013-amount ?amount.
 ?obs lso:refYear ?year.
 filter(year(?year)=2007).
+?obs lso:al_planned_budget_2007to2013-amount ?amount.
 }
 <answers>
-<answer answerType="number">139476632344</answer>
+<answer answerType="number">16847381000</answer>
 </answers>
 </query>
 </question>

@@ -39,7 +39,6 @@ public class CubeIndex
 		{
 			reader = DirectoryReader.open(dir);
 		}
-
 	}
 
 	@SneakyThrows
@@ -66,8 +65,7 @@ public class CubeIndex
 	}
 
 	/** You can fill the index only once right now.*/
-	@SneakyThrows
-	public void fill(Set<Cube> cubes)
+	@SneakyThrows public void fill(Set<Cube> cubes)
 	{
 		if(!DirectoryReader.indexExists(dir))
 		{

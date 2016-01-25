@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.Serializable;
 import org.aksw.commons.util.StopWatch;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFactory;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import de.konradhoeffner.commons.rdf.DataCube;
@@ -41,8 +42,9 @@ public class CubeSparql implements Serializable
 				"http://linkedspending.aksw.org/ontology/",
 				"http://linkedspending.aksw.org/",
 				// local Virtuoso SPARQL endpoint has a NAN bug
-												"http://localhost:8890/sparql");
+//												"http://localhost:8890/sparql");
 //				"http://linkedspending.aksw.org/sparql");
+			"http://cubeqa.aksw.org/sparql");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology/");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeUri.substring(cubeUri.lastIndexOf('/')+1));
 		return cs;
@@ -67,9 +69,8 @@ public class CubeSparql implements Serializable
 	{
 		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
 		watch.start();
-		try//()
-		{
-			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
+		try(QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);)
+		{			
 			defaultGraphs.forEach(qe::addDefaultGraph);
 			return qe.execAsk();
 		} catch(Exception e) {throw new RuntimeException("Error on SPARQL ASK on endpoint "+endpoint+" with query:\n"+query,e);}
@@ -80,10 +81,9 @@ public class CubeSparql implements Serializable
 	{
 		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
 		watch.start();
-		try//() // try-with-resource not possible here, as it closes the result set which is not usable then 
+		try(QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);) 
 		{
-			QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);
-			return qe.execSelect();
+			return ResultSetFactory.copyResults(qe.execSelect());
 		} catch(Exception e) {throw new RuntimeException("Error on sparql select on endpoint "+endpoint+" with query:\n"+query,e);}
 		finally {watch.stop();}
 	}
