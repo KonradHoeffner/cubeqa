@@ -310,7 +310,7 @@ filter(year(?year)=2009).
 group by ?country
 having sum(xsd:decimal(?aid))>1000000
 }"
-"How many countries received more than 1000000 € for government administration 
+"How many countries received more than 1000000 € for government administration
      in 2006?
 ","select count(?country) as ?result
 {
@@ -343,7 +343,7 @@ UNION
 {
 ?obs lso:finland-aid-channel-of-delivery-name ""UNDP"".
 {
-?obs lso:finland-aid-amount ?elections.         
+?obs lso:finland-aid-amount ?elections.
 ?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15161>.
 }
 UNION
@@ -408,7 +408,7 @@ How much is the total aid amount by the World Health Organization?,"select sum(x
 ?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/31166>.
 ?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/np>.
 }"
-"How much did the Philippines receive in 2007?
+"How much did the Philippines receive in the year of 2007?
 ","select sum(xsd:decimal(?amount)) as ?result
 {
 ?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
@@ -610,7 +610,7 @@ Which country received aid for the most sectors?,"select ?country
 {
    ?obs lso:finland-aid-sector ?sector.
    ?obs lso:finland-aid-recipient-country ?country
- } group by ?country 
+ } group by ?country
 order by desc(count(?sector))
 limit 1"
 When did Namibia get aid for basic health infrastructure?,"select ?date
