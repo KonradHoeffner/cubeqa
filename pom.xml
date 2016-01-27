@@ -5,18 +5,19 @@
 	<artifactId>cubeqa</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
- 		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<lucene.version>5.0.0</lucene.version>
+		<lucene.version>5.5.0</lucene.version>
+		<slf4j.version>1.7.18</slf4j.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>args4j</groupId>
 			<artifactId>args4j</artifactId>
-			<version>2.32</version>
+			<version>2.33</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -27,12 +28,12 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
-			<version>1.0</version>
+			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.6</version>
+			<version>2.9.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
@@ -52,7 +53,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>18.0</version>
+			<version>19.0</version>
 		</dependency>
 		<dependency>
 			<artifactId>algorithm-tbsl</artifactId>
@@ -84,60 +85,57 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.12.6</version>
+			<version>1.16.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>apache-jena-libs</artifactId>
 			<type>pom</type>
-			<version>2.12.0</version>
+			<version>3.0.1</version>
 		</dependency>
-<!-- 
-		<dependency>
-			<groupId>org.aksw</groupId>
-			<artifactId>openspending2rdf</artifactId>
-			<type>jar</type>
-			<version>0.0.1-SNAPSHOT</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jersey-container-grizzly2-http</artifactId>
-					<groupId>org.glassfish.jersey.containers</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jersey-media-moxy</artifactId>
-					<groupId>org.glassfish.jersey.media</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		 -->
+		<!-- <dependency> <groupId>org.aksw</groupId> <artifactId>openspending2rdf</artifactId> 
+			<type>jar</type> <version>0.0.1-SNAPSHOT</version> <exclusions> <exclusion> 
+			<artifactId>slf4j-api</artifactId> <groupId>org.slf4j</groupId> </exclusion> 
+			<exclusion> <artifactId>jersey-container-grizzly2-http</artifactId> <groupId>org.glassfish.jersey.containers</groupId> 
+			</exclusion> <exclusion> <artifactId>jersey-media-moxy</artifactId> <groupId>org.glassfish.jersey.media</groupId> 
+			</exclusion> </exclusions> </dependency> -->
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
-			<version>3.5.0</version>
+			<version>3.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
-			<version>3.5.0</version>
+			<version>3.6.0</version>
 			<classifier>models</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
 		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- to prevent "SLF4J: Class path contains multiple SLF4J bindings."
+			<!-- to prevent "SLF4J: Class path contains multiple SLF4J bindings." 
 				- everywhere the same version -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.7.10</version>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
 			</dependency>
 
-			<!-- to prevent "ClassCastException: java.lang.Long cannot be cast to
+			<!-- to prevent "ClassCastException: java.lang.Long cannot be cast to 
 				java.lang.Integer" -->
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>

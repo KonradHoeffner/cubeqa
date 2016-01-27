@@ -6,10 +6,10 @@ import org.aksw.cubeqa.property.ComponentProperty;
 import com.google.common.collect.Range;
 import com.hp.hpl.jena.datatypes.DatatypeFormatException;
 import com.hp.hpl.jena.query.QuerySolution;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 /** tests if a number is included in the range. */
-@Log4j
+@Slf4j
 public class NumericScorer extends Scorer
 {
 	final Range<Double> range;

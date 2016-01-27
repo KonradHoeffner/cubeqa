@@ -18,10 +18,10 @@ import org.apache.lucene.search.spell.StringDistance;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 /** Lucene index reading and writing abstract superclass. */
-@Log4j
+@Slf4j
 public abstract class Index
 {
 //	{log.setLevel(Level.ALL);}

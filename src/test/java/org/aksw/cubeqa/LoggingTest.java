@@ -2,9 +2,9 @@ package org.aksw.cubeqa;
 
 import org.apache.log4j.Priority;
 import org.junit.Test;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j
+@Slf4j
 public class LoggingTest
 {
 	@SuppressWarnings("deprecation")

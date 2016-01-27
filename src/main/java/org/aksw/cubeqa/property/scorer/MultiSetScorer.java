@@ -3,7 +3,7 @@ package org.aksw.cubeqa.property.scorer;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -11,7 +11,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
-@Log4j
+@Slf4j
 public abstract class MultiSetScorer extends Scorer
 {
 	final protected Multiset<String> values = HashMultiset.create();

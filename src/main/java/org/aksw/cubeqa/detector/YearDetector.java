@@ -6,7 +6,7 @@
 //import java.util.stream.Collectors;
 //import lombok.AccessLevel;
 //import lombok.AllArgsConstructor;
-//import lombok.extern.log4j.Log4j;
+//import lombok.extern.slf4j.Slf4j;
 //import org.aksw.cubeqa.Cube;
 //import org.aksw.cubeqa.property.ComponentProperty;
 //import org.aksw.cubeqa.template.CubeTemplateFragment;
@@ -16,7 +16,7 @@
 //import com.hp.hpl.jena.vocabulary.XSD;
 //
 ///** maps "year" to a restriction with all xsd:gYear properties.**/
-//@Log4j
+//@Slf4j
 //@AllArgsConstructor(access=AccessLevel.PRIVATE)
 //public class YearDetector extends Detector
 //{

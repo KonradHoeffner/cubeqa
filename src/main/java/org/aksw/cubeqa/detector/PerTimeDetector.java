@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.template.Fragment;
@@ -20,7 +20,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
  * maybe put in priority values for each detector and scorer? or detectors can be overwritten?
  * Or detectors should apply only once with find of regexes on whole phrase for faster runtime and easier program flow?
  **/
-@Log4j
+@Slf4j
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 public class PerTimeDetector extends Detector
 {

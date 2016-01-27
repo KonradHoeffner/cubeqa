@@ -5,11 +5,11 @@ import java.util.Set;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.hp.hpl.jena.vocabulary.XSD;
 import lombok.EqualsAndHashCode;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 /** Restriction on a literal value. **/
 @EqualsAndHashCode(callSuper=true)
-@Log4j
+@Slf4j
 public class ValueRestriction extends Restriction
 {
 	final String value;
@@ -29,7 +29,7 @@ public class ValueRestriction extends Restriction
 				{
 					//TODO readd exception
 					//						throw new RuntimeException("'"+value+"' is not a valid year");
-					log.fatal("'"+value+"' is not a valid year");
+					log.error("'"+value+"' is not a valid year");
 					return Collections.emptySet();
 				}
 				pattern = OBS_VAR+" <"+property.uri+"> "+uniqueVar+".\nfilter(year("+uniqueVar+")="+value+").";
