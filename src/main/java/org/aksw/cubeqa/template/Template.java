@@ -1,7 +1,6 @@
 package org.aksw.cubeqa.template;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.detector.Aggregate;
@@ -30,10 +29,11 @@ public class Template
 	public String sparqlQuery()
 	{
 		if(!isComplete()) {throw new IllegalStateException("not complete");}
-		Set<String> wherePatterns = restrictions.stream().flatMap(r->r.wherePatterns().stream()).collect(Collectors.toSet());
-		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">. ?obs a qb:Observation.\n");
+		List<String> wherePatterns = restrictions.stream().flatMap(r->r.wherePatterns().stream()).collect(Collectors.toList());
+		wherePatterns.add("?obs qb:dataSet <"+cube.uri+">.");
+		wherePatterns.add("?obs a qb:Observation.");
 
-		Set<String> orderLimitPatterns = restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toSet());
+		List<String> orderLimitPatterns = restrictions.stream().flatMap(r->r.orderLimitPatterns().stream()).collect(Collectors.toList());
 		if(orderLimitPatterns.size()>1) {
 			throw new IllegalArgumentException("more than one orderlimit pattern");
 		}
@@ -60,17 +60,16 @@ public class Template
 		perProperties.removeAll(answerProperties);
 		for(ComponentProperty p: perProperties) {sb.append(" ?"+p.var);}
 		sb.append("\n{\n");
-		for(String pattern: wherePatterns) {sb.append(pattern);sb.append(" ");}
-		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
-		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
+		for(String pattern: wherePatterns) {sb.append(pattern);sb.append("\n");}
+		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");sb.append("\n");}
+		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");sb.append("\n");}
 		// those properties are used in order limit patterns and need to have their own triple pattern as well
-		Set<ComponentProperty> otherProperties = restrictions.stream().map(Restriction::getProperty).collect(Collectors.toSet());
+		List<ComponentProperty> otherProperties = restrictions.stream().map(Restriction::getProperty).collect(Collectors.toList());
 		// TODO remove temporal here also? seems to add too much
 		otherProperties.removeAll(answerProperties);
 		otherProperties.removeAll(perProperties);
-		for(ComponentProperty p: otherProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");}
-
-		sb.append("\n}");
+		for(ComponentProperty p: otherProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");sb.append("\n");}
+		sb.append("}");
 		if(!orderLimitPatterns.isEmpty())
 		{
 			sb.append(orderLimitPatterns.iterator().next());
