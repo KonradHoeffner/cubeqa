@@ -8,12 +8,11 @@ import org.apache.commons.collections15.multimap.MultiHashMap;
 import lombok.ToString;
 
 @ToString
-public class StopWatches
+public enum  StopWatches
 {
+	INSTANCE;
+	
 	MultiMap<String, StopWatch> watches = new MultiHashMap<>();
-
-	private StopWatches() {};
-	public static StopWatches INSTANCE = new StopWatches();
 
 	public StopWatch getWatch(String category)
 	{

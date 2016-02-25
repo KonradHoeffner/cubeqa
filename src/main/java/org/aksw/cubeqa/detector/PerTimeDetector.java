@@ -20,10 +20,10 @@ import com.hp.hpl.jena.vocabulary.XSD;
  * Or detectors should apply only once with find of regexes on whole phrase for faster runtime and easier program flow?
  **/
 @Slf4j
-@AllArgsConstructor(access=AccessLevel.PRIVATE)
-public class PerTimeDetector extends Detector
+public enum PerTimeDetector implements Detector
 {
-	public static PerTimeDetector INSTANCE = new PerTimeDetector();
+	INSTANCE;
+	
 	protected static transient StringDistance similarity = new NGramDistance();
 
 	@Override public Set<Fragment> detect(Cube cube, String phrase)

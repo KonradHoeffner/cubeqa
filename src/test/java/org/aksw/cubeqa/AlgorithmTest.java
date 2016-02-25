@@ -1,7 +1,9 @@
 package org.aksw.cubeqa;
 
-import org.aksw.cubeqa.Algorithm;
+import static org.junit.Assert.*;
+import org.aksw.cubeqa.template.Template;
 import org.junit.Test;
+import com.hp.hpl.jena.query.ResultSet;
 
 public class AlgorithmTest
 {
@@ -16,7 +18,9 @@ public class AlgorithmTest
 	{
 		for(String question: questions)
 		{
-			new Algorithm().answer("finland-aid",question);
+			Template t = new Algorithm().template("finland-aid",question);
+			ResultSet rs = t.cube.sparql.select(t.sparqlQuery());
+			assertEquals(rs.next().get(rs.getResultVars().get(0)).asLiteral().getInt(),180000);
 		}
 	}
 

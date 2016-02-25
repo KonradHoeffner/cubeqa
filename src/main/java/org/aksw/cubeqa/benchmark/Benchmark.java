@@ -149,7 +149,7 @@ public class Benchmark
 			cubeName = Cube.linkedSpendingCubeName(question.cubeUri);
 		}
 		Cube cube = Cube.getInstance(cubeName);
-		String query = algorithm.answer(cube.name,question.string).sparqlQuery();
+		String query = algorithm.template(cube.name,question.string).sparqlQuery();
 		Question found;
 		try
 		{

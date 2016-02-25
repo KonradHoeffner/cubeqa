@@ -10,16 +10,16 @@ import org.aksw.cubeqa.template.Fragment;
 /**Abstract class for a Detector, which is called before scorers and transforms certain keyphrases into additional query modifiers, such as aggregates.
  * A detector can find several or no matches in a phrase.
  * */
-public abstract class Detector
+public interface Detector
 {
 	/** Detection is supposed to not overlap in phrases.*/
-	public abstract Set<Fragment> detect(Cube cube, String phrase);
+	public Set<Fragment> detect(Cube cube, String phrase);
 
 	// TODO: generalize this,as per time detector always uses finland aid as of now
 	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,PerTimeDetector.INSTANCE,AggregateDetector.INSTANCE);
 
-	static final protected String PHRASE_REGEX = "([a-zA-Züöäéèô'-]+(\\s[a-zA-Züöäéèô,'-]+)*)";
-	static final protected String WORD_REGEX = "([a-zA-Züöäéèô'-]+)";
+	static final String PHRASE_REGEX = "([a-zA-Züöäéèô'-]+(\\s[a-zA-Züöäéèô,'-]+)*)";
+	static final String WORD_REGEX = "([a-zA-Züöäéèô'-]+)";
 
 	static public Set<ScoreResult> matchPart(Cube cube, String phrase)
 	{

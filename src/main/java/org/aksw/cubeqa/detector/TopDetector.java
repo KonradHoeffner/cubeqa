@@ -17,9 +17,10 @@ import lombok.Data;
  *  Patterns: [keyword] [n] [measure] [dimension value]
  *  Example: [Top] [10] [aid receiving] [geographic areas]
  * */
-
-public class TopDetector extends Detector
+public enum TopDetector implements Detector
 {
+	INSTANCE;
+	
 	@Data
 	public static class TopDetectorResult
 	{
@@ -30,7 +31,6 @@ public class TopDetector extends Detector
 
 	final String[][] keywords = new String[][] {{"highest number","highest amount","top","most","highest","largest","biggest"},{"least","smallest","lowest"}};
 //	final String[][] keywords = new String[][] {{"highest"},{}};
-	public static final TopDetector INSTANCE = new TopDetector();
 
 	final Map<Pattern,OrderModifier> numberPatternModifier = new HashMap<>();
 	final Map<Pattern,OrderModifier> noNumberPatternModifier = new HashMap<>();
@@ -73,7 +73,7 @@ public class TopDetector extends Detector
 				restPhrase = phrase.replace(matcher.group(0), " ").replaceAll("\\s+"," ");
 				int n = Integer.parseInt(matcher.group(1));
 				String w = matcher.group(2);
-				Set<ScoreResult> results = matchPart(cube, w);
+				Set<ScoreResult> results = Detector.matchPart(cube, w);
 				if(results.isEmpty()) // unknown property, use default answer property
 				{
 					Fragment fragment =  new Fragment(cube, matcher.group(0).replace(w, ""));
@@ -101,7 +101,7 @@ public class TopDetector extends Detector
 			{
 				restPhrase = phrase.replace(matcher.group(0), " ").replaceAll("\\s+"," ");
 				String w = matcher.group(1);
-				Set<ScoreResult> results = matchPart(cube, w);
+				Set<ScoreResult> results = Detector.matchPart(cube, w);
 				if(results.isEmpty()) // unknown property, use default answer property
 				{
 					Fragment fragment =  new Fragment(cube, matcher.group(0).replace(w, ""));

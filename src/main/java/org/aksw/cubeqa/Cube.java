@@ -3,7 +3,6 @@ package org.aksw.cubeqa;
 import java.util.*;
 import java.io.*;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.aksw.cubeqa.property.scorer.NopScorer;
 import org.apache.commons.collections15.MultiMap;
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -157,11 +156,8 @@ public class Cube implements Serializable
 				String propertyUri = qs.get("p").asResource().getURI();
 
 				ComponentProperty property = ComponentProperty.getInstance(c, propertyUri);//, qs.get("type").asResource().getURI());
-				if(property.scorer!=NopScorer.INSTANCE)
-				{
 					// only properties with scorer are useful for us
 					properties.put(propertyUri, property);
-				}
 				//				if(qs.contains("label")) {property.labels.add(qs.get("label").asLiteral().getLexicalForm());}
 			}
 		}

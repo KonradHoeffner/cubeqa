@@ -2,8 +2,10 @@ package org.aksw.cubeqa;
 
 import org.kohsuke.args4j.Option;
 
-public class Config
+public enum Config
 {
+	INSTANCE;
+	
 	@Option(name="-intervalMinSimilarity",usage="Sets the minimum similarity for named entity detection in intervals")
 	public double intervalMinSimilarity = 0.3;
 
@@ -34,7 +36,7 @@ public class Config
 
 	public boolean	removeStopWords = false;
 
-	public boolean	useDefaultAnswerProperty = false;
+	public boolean	useDefaultAnswerProperty = true;
 
 	/** For values which are only referenced by value, not by property name.
 	 Happens very often in practice (e.g. most people say "in 2010" and not "in the year of 2010") so I recommend to set the config parameter to true. */
@@ -50,8 +52,4 @@ public class Config
 //
 //	@Option(name="-indexDoAnalyzedMatching")
 //	public boolean	indexDoAnalyzedMatching = true;
-
-	private Config() {}
-
-	public static final Config INSTANCE = new Config();
 }

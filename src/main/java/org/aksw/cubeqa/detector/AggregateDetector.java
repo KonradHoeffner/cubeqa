@@ -10,12 +10,11 @@ import org.apache.log4j.Level;
 import de.konradhoeffner.commons.TSVReader;
 
 @Slf4j
-@AllArgsConstructor(access=AccessLevel.PRIVATE)
-public class AggregateDetector extends Detector
+public enum AggregateDetector implements Detector
 {
+	INSTANCE;
+	
 	public final Map<String,Aggregate> aggregateMap;
-
-	public static final AggregateDetector INSTANCE = new AggregateDetector();
 
 	@SneakyThrows
 	private AggregateDetector()

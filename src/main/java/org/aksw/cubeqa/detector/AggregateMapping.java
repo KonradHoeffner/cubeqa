@@ -9,11 +9,11 @@ import lombok.SneakyThrows;
 import de.konradhoeffner.commons.TSVReader;
 
 /** Mapping from natural language phrase to SPARQL aggregate function.*/
-public class AggregateMapping
+public enum AggregateMapping
 {
+	INSTANCE;
+	
 	public final Map<String,Aggregate> aggregateMap;
-
-	public static final AggregateMapping INSTANCE = new AggregateMapping();
 
 	@SneakyThrows
 	private AggregateMapping()

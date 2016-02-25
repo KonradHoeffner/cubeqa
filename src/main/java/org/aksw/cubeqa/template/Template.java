@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Template
 {
-	final Cube cube;
+	public final Cube cube;
 
 	final Set<Restriction> restrictions;
 	final Set<ComponentProperty> answerProperties;
