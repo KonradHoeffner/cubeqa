@@ -18,10 +18,10 @@ import org.apache.lucene.search.spell.StringDistance;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 /** Lucene index reading and writing abstract superclass. */
-@Log4j
+@Slf4j
 public abstract class Index
 {
 //	{log.setLevel(Level.ALL);}
@@ -121,7 +121,7 @@ public abstract class Index
 				{
 					if(hit.score>=Config.INSTANCE.indexMinLuceneScore)
 					{
-						log.trace(searcher.explain(q, hit.doc));
+						log.trace(searcher.explain(q, hit.doc).toString());
 						Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3)
 						// even if transposed should have some minimal string distance
 						.filter(l->distance.getDistance(ns, normalize(l))>0.5)

@@ -5,9 +5,9 @@ import java.util.List;
 import org.aksw.cubeqa.benchmark.Benchmark;
 import org.aksw.cubeqa.benchmark.Question;
 import org.aksw.cubeqa.index.CubeIndex;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j
+@Slf4j
 public class EvaluateCubeIndex
 {
 	// assumes the index is already filled with the QBench2 cubes

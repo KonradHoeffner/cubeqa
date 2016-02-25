@@ -18,7 +18,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import lombok.*;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 /** Benchmark class with the evaluate function that is used for the papers.
  * Use {@link Benchmark#fromCsv(String)} and {@link Benchmark#fromQald(String)} to load a benchmark from a file.
@@ -27,7 +27,7 @@ import lombok.extern.log4j.Log4j;
  * CSV can be converted to QALD by using {@link Benchmark#fromCsv(String)}  and then {@link Benchmark#saveAsQald()} or {@link Benchmark#saveAsQald(File)}.
  * Call {@link Benchmark#evaluate(Algorithm)} to execute CubeQA and write precision and recall to the log.*/
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@Log4j
+@Slf4j
 public class Benchmark
 {
 	/**Identifier used as filename for serialization.*/
@@ -133,7 +133,6 @@ public class Benchmark
 
 	public Performance evaluate(Algorithm algorithm, int questionNumber)
 	{
-		log.setLevel(Level.ALL);
 		Question question = questions.get(questionNumber-1);
 		log.info("Question Number "+questionNumber+": Answering "+question.string);
 		log.debug("correct query: "+question.query);
@@ -165,7 +164,7 @@ public class Benchmark
 		log.debug("found answer: "+found.answers);
 		Performance p = Performance.performance(question.answers, found.answers);
 		p.query = found.query;
-		log.info(p);
+		log.info(p.toString());
 		return p;
 	}
 

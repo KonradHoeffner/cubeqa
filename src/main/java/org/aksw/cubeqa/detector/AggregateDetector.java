@@ -3,17 +3,16 @@ package org.aksw.cubeqa.detector;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.template.Fragment;
 import org.apache.log4j.Level;
 import de.konradhoeffner.commons.TSVReader;
 
-@Log4j
+@Slf4j
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 public class AggregateDetector extends Detector
 {
-	{log.setLevel(Level.ALL);}
 	public final Map<String,Aggregate> aggregateMap;
 
 	public static final AggregateDetector INSTANCE = new AggregateDetector();

@@ -12,12 +12,12 @@ import org.aksw.cubeqa.property.PropertyType;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.Restriction;
 import lombok.*;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode
 @Getter
-@Log4j
+@Slf4j
 @ToString(exclude="cube")
 /** Unfinished template for a data cube query.
  * Gets combined with other fragments and finally converted to a template. */

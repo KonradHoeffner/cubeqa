@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
@@ -17,7 +17,7 @@ import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
 /** Scorer for temporal intervals. */
-@Log4j
+@Slf4j
 public class TemporalScorer extends Scorer
 {
 	private static final long	MS_PER_DAY	= 24*3600*1000;

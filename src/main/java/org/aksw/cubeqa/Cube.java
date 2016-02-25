@@ -40,7 +40,6 @@ public class Cube implements Serializable
 
 	static public Cube finlandAid()
 	{
-		//		if(1==1) {throw new IllegalAccessError();}
 		return Cube.getInstance("finland-aid");
 	}
 
@@ -124,7 +123,7 @@ public class Cube implements Serializable
 					//					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
 			ResultSet rs = CubeSparql.getLinkedSpendingInstanceForName(cubeName).select(query);
-
+			
 			MultiMap<String,String> manualLabels = new MultiHashMap<>();
 
 			if(Config.INSTANCE.useManualLabels)
@@ -147,6 +146,7 @@ public class Cube implements Serializable
 				catch (IOException e) {throw new RuntimeException("Exception reading additional labels from tsv file.",e);}
 			}
 			// TODO: make the multi map unmodifiable
+			// at this point, the properties are not yet initialized. This is done afterwards as the cube instance is needed for some ComponentProperty.getInstance()
 			c = new Cube(cubeName,uri,cubeLabel,cubeComment, properties,CubeSparql.getLinkedSpendingInstanceForUri(uri),manualLabels);
 			instances.put(cubeName, c);
 			while(rs.hasNext())

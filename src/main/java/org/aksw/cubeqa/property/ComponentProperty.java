@@ -18,12 +18,12 @@ import de.konradhoeffner.commons.rdf.DataCube;
 import de.konradhoeffner.commons.rdf.Owl;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 /** Represents a component property of a RDF Data Cube.
  * Implements the Multiton Pattern, with the key being the combination of cube name and uri, because information about values is safed.
  * Immutable except for the labels.*/
-@Log4j
+@Slf4j
 public class ComponentProperty implements Serializable
 {
 	//	{log.setLevel(Level.ALL);}

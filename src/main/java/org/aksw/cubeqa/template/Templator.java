@@ -13,11 +13,11 @@ import org.aksw.cubeqa.property.scorer.Scorers;
 import de.konradhoeffner.commons.Pair;
 import edu.stanford.nlp.trees.Tree;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 /** Generates the Cube Template. */
 @RequiredArgsConstructor
-@Log4j
+@Slf4j
 public class Templator
 {
 	//	{log.setLevel(Level.ALL);}

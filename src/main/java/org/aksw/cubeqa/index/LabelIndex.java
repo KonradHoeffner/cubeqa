@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
 
 /** Lucene index for labels, used by ObjectPropertyScorer.
  */
-@Log4j
+@Slf4j
 public class LabelIndex extends Index
 {
 	private static final Map<String,LabelIndex> instances = new HashMap<>();

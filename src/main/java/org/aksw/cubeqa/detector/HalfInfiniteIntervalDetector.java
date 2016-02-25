@@ -11,10 +11,10 @@ import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.*;
 import org.aksw.cubeqa.template.Fragment;
 import lombok.*;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 /**Detects numerical intervals with one infinite endpoint.*/
-@Log4j
+@Slf4j
 @AllArgsConstructor(access=AccessLevel.PRIVATE)
 public class HalfInfiniteIntervalDetector extends Detector
 {

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -15,7 +15,7 @@ import com.google.common.collect.Multiset.Entry;
 
 /** Parses string value using a given function.
  * @param <T> The type the string gets parsed to.*/
-@Log4j
+@Slf4j
 public class ParseScorer<T> extends DatatypePropertyScorer
 {
 	final Multiset<T> parsed = HashMultiset.create();
