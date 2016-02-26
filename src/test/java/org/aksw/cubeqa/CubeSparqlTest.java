@@ -1,7 +1,6 @@
 package org.aksw.cubeqa;
 
 import static org.junit.Assert.*;
-import org.aksw.cubeqa.CubeSparql;
 import org.junit.Test;
 
 public class CubeSparqlTest
@@ -14,9 +13,16 @@ public class CubeSparqlTest
 
 		int countBlackBudget = sparql.select(query).nextSolution().get("count").asLiteral().getInt();
 		int countAll = CubeSparql.finlandAid().select(query).nextSolution().get("count").asLiteral().getInt();
-
 		assertTrue(countBlackBudget==5);
 		assertTrue(countAll>10);
 	}
+
+	@Test public void testPageSize()
+	{		
+		String query = "select ?s {?s ?p ?o.} limit 1000";
+		assertEquals(1000,Cube.finlandAid().sparql.select(query).size(),0);
+	}
+
+	
 
 }

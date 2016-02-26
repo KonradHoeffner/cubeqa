@@ -14,6 +14,7 @@ public class Scorers
 	/** Score the given phrase with every property's scorer and returns all obtained results.
 	 * For some properties the score may be 0 or below a threshold, in that case no result
 	 * for that property is contained in the returned map.*/
+	// Could have returned Set<ComponentProperty> as well as ScoreResult contains a property reference but this way it is easier to use
 	public static Map<ComponentProperty,ScoreResult> scorePhraseValues(Cube cube, String phrase)
 	{
 		return

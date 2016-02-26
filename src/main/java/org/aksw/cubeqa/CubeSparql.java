@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 import org.aksw.commons.util.StopWatch;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFactory;
+import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import de.konradhoeffner.commons.rdf.DataCube;
@@ -77,7 +76,7 @@ public class CubeSparql implements Serializable
 		finally {watch.stop();}
 	}
 
-	public ResultSet select(String query)
+	public ResultSetRewindable select(String query)
 	{
 		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
 		watch.start();

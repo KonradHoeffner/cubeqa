@@ -36,7 +36,6 @@ public class Benchmark
 	/**True, iff the answers to the correct SPARQL queries are precomputed.*/
 	public final boolean isComplete;
 
-
 	static Question completeQuestion(CubeSparql sparql,String string, String query)
 	{
 		Set<Map<String,String>> answers = new HashSet<>();

@@ -33,7 +33,6 @@ public class Cube implements Serializable
 	/** manually created additional labels in case the original labels are not good enough*/
 	public final MultiMap<String,String> manualLabels;
 
-	static boolean USE_CACHE = false;
 	static private File cacheFolder = new File("cache");
 	static {cacheFolder.mkdir();}
 
@@ -88,7 +87,7 @@ public class Cube implements Serializable
 		Cube c = instances.get(cubeName);
 		if(c==null)
 		{
-			if(USE_CACHE)
+			if(Config.INSTANCE.USE_CUBE_CACHE)
 			{
 				Optional<Cube> loadedCube = loadCube(cubeName);
 				if(loadedCube.isPresent())
