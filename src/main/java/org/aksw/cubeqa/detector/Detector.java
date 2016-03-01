@@ -16,7 +16,7 @@ public interface Detector
 	public Set<Fragment> detect(Cube cube, String phrase);
 
 	// TODO: generalize this,as per time detector always uses finland aid as of now
-	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,PerTimeDetector.INSTANCE,AggregateDetector.INSTANCE);
+	public static final List<Detector> DETECTORS = Arrays.asList(HalfInfiniteIntervalDetector.INSTANCE,TopDetector.INSTANCE,PerTimeDetector.INSTANCE,InYearDetector.INSTANCE,AggregateDetector.INSTANCE);
 
 	static final String PHRASE_REGEX = "([a-zA-Züöäéèô'-]+(\\s[a-zA-Züöäéèô,'-]+)*)";
 	static final String WORD_REGEX = "([a-zA-Züöäéèô'-]+)";
