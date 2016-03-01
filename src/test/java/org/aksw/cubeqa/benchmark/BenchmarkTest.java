@@ -6,6 +6,8 @@ import java.io.IOException;
 import org.aksw.cubeqa.Algorithm;
 import org.aksw.cubeqa.CubeSparql;
 import org.junit.Test;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 public class BenchmarkTest
 {
@@ -19,26 +21,29 @@ public class BenchmarkTest
 
 	@Test public void testEvaluate()
 	{
-		Benchmark.fromQald("finland-aid").evaluate(new Algorithm(),0);
+		// TODO: choose a faster example, 10 s is too long for a test
+		Benchmark.fromQald("qald6t3-train").evaluate(new Algorithm(),6);
 	}
 
-	@Test public void testFromCsv()
+	@Test public void testFromCsv() throws IOException
 	{
-		fail("Not yet implemented");
+		assertEquals(Benchmark.fromCsv("qald6t3-train").questions.get(0).string,"How much was spent on public works and utilities by the Town of Cary in 2011?");
 	}
 
 	@Test public void testNodeString()
 	{
-		fail("Not yet implemented");
+		System.out.println(Benchmark.nodeString(RDF.type));
+		assertEquals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type",Benchmark.nodeString(RDF.type));
+		assertEquals("hello world",Benchmark.nodeString(ResourceFactory.createLangLiteral("hello world", "en")));
 	}
 
 	@Test public void testFromQald()
 	{
 		Benchmark b = Benchmark.fromQald("finland-aid");
 		assertTrue(b.questions.size()==100);
-		assertTrue(b.questions.get(0).string.equals("What was the average aid to environment per month in year 2010?"));
-		assertTrue(b.questions.get(0).dataTypes.get("")==DataType.NUMBER);
-		assertTrue(b.questions.get(0).answers.iterator().next().get("").toString().startsWith("262.6"));
+		assertEquals("What was the average aid committed per month in year 2010?",b.questions.get(0).string);
+		assertEquals(DataType.NUMBER,b.questions.get(0).dataTypes.get(""));
+		assertTrue(b.questions.get(0).answers.iterator().next().get("").toString().startsWith("134145226.83"));
 	}
 
 	@Test public void testSaveAndLoadQald() throws IOException

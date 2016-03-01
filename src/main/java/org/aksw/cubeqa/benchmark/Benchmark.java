@@ -36,7 +36,6 @@ public class Benchmark
 	/**True, iff the answers to the correct SPARQL queries are precomputed.*/
 	public final boolean isComplete;
 
-
 	static Question completeQuestion(CubeSparql sparql,String string, String query)
 	{
 		Set<Map<String,String>> answers = new HashSet<>();
@@ -133,7 +132,6 @@ public class Benchmark
 
 	public Performance evaluate(Algorithm algorithm, int questionNumber)
 	{
-//		log.setLevel(Level.ALL);
 		Question question = questions.get(questionNumber-1);
 		log.info("Question Number "+questionNumber+": Answering "+question.string);
 		log.debug("correct query: "+question.query);
@@ -150,7 +148,7 @@ public class Benchmark
 			cubeName = Cube.linkedSpendingCubeName(question.cubeUri);
 		}
 		Cube cube = Cube.getInstance(cubeName);
-		String query = algorithm.answer(cube.name,question.string).sparqlQuery();
+		String query = algorithm.template(cube.name,question.string).sparqlQuery();
 		Question found;
 		try
 		{

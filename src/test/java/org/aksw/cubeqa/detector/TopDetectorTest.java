@@ -14,7 +14,7 @@ public class TopDetectorTest
 		{
 			String ds = TopDetector.INSTANCE.detect(cube,"10 highest amounts").toString();
 //			assertTrue(Pattern.matches("(?i).*order by DESC\\(\\?v[0-9]+\\) limit 5.*", ds));
-			assertTrue(ds.contains("http://linkedspending.aksw.org/ontology/finland-aid-amount "));
+			assertTrue(ds.contains("http://linkedspending.aksw.org/ontology/finland-aid-amount"));
 		}
 //		{
 //			String ds = TopDetector.INSTANCE.detect(cube,"top 5 amounts").toString();

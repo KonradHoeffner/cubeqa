@@ -12,8 +12,7 @@ import de.konradhoeffner.commons.Streams;
 
 /** Scorers match phrases or words to component property values.
  * Scorers are used when a phrase does not match to a component property label.
- * Scorers return a similarity value in [0,1].
- */
+ * Scorers return a similarity value in [0,1].*/
 public abstract class Scorer implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;

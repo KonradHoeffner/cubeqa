@@ -3,7 +3,6 @@ package org.aksw.cubeqa;
 import java.util.*;
 import java.io.*;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.aksw.cubeqa.property.scorer.NopScorer;
 import org.apache.commons.collections15.MultiMap;
 import org.apache.commons.collections15.multimap.MultiHashMap;
 import com.hp.hpl.jena.query.QuerySolution;
@@ -34,13 +33,11 @@ public class Cube implements Serializable
 	/** manually created additional labels in case the original labels are not good enough*/
 	public final MultiMap<String,String> manualLabels;
 
-	static boolean USE_CACHE = false;
 	static private File cacheFolder = new File("cache");
 	static {cacheFolder.mkdir();}
 
 	static public Cube finlandAid()
 	{
-		//		if(1==1) {throw new IllegalAccessError();}
 		return Cube.getInstance("finland-aid");
 	}
 
@@ -90,7 +87,7 @@ public class Cube implements Serializable
 		Cube c = instances.get(cubeName);
 		if(c==null)
 		{
-			if(USE_CACHE)
+			if(Config.INSTANCE.USE_CUBE_CACHE)
 			{
 				Optional<Cube> loadedCube = loadCube(cubeName);
 				if(loadedCube.isPresent())
@@ -124,7 +121,7 @@ public class Cube implements Serializable
 					//					" OPTIONAL {?p rdfs:label ?label}"+
 					"}";
 			ResultSet rs = CubeSparql.getLinkedSpendingInstanceForName(cubeName).select(query);
-
+			
 			MultiMap<String,String> manualLabels = new MultiHashMap<>();
 
 			if(Config.INSTANCE.useManualLabels)
@@ -147,6 +144,7 @@ public class Cube implements Serializable
 				catch (IOException e) {throw new RuntimeException("Exception reading additional labels from tsv file.",e);}
 			}
 			// TODO: make the multi map unmodifiable
+			// at this point, the properties are not yet initialized. This is done afterwards as the cube instance is needed for some ComponentProperty.getInstance()
 			c = new Cube(cubeName,uri,cubeLabel,cubeComment, properties,CubeSparql.getLinkedSpendingInstanceForUri(uri),manualLabels);
 			instances.put(cubeName, c);
 			while(rs.hasNext())
@@ -157,11 +155,8 @@ public class Cube implements Serializable
 				String propertyUri = qs.get("p").asResource().getURI();
 
 				ComponentProperty property = ComponentProperty.getInstance(c, propertyUri);//, qs.get("type").asResource().getURI());
-				if(property.scorer!=NopScorer.INSTANCE)
-				{
 					// only properties with scorer are useful for us
 					properties.put(propertyUri, property);
-				}
 				//				if(qs.contains("label")) {property.labels.add(qs.get("label").asLiteral().getLexicalForm());}
 			}
 		}

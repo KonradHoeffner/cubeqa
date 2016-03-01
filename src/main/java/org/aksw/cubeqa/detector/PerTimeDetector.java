@@ -4,9 +4,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.template.Fragment;
@@ -14,6 +11,8 @@ import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.XSD;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**  manages phrases like "per month" or "per year", "a year".
  * Program flow needs to be adapted because time units can also be dimensions and year which should get preferential treatment.
@@ -21,10 +20,10 @@ import com.hp.hpl.jena.vocabulary.XSD;
  * Or detectors should apply only once with find of regexes on whole phrase for faster runtime and easier program flow?
  **/
 @Slf4j
-@AllArgsConstructor(access=AccessLevel.PRIVATE)
-public class PerTimeDetector extends Detector
+public enum PerTimeDetector implements Detector
 {
-	public static PerTimeDetector INSTANCE = new PerTimeDetector();
+	INSTANCE;
+	
 	protected static transient StringDistance similarity = new NGramDistance();
 
 	@Override public Set<Fragment> detect(Cube cube, String phrase)
@@ -51,6 +50,7 @@ public class PerTimeDetector extends Detector
 	}
 
 	/** unit of time, such as day, month or year */
+	@ToString
 	static class TimeUnit
 	{
 		public final Cube cube;
@@ -66,11 +66,11 @@ public class PerTimeDetector extends Detector
 		{
 			if(label==null) throw new IllegalArgumentException("label is null" );
 			this.cube=cube;
-			List<String> prePatterns = Arrays.asList("per "+label,label+"ly");
+			List<String> prePatterns = Arrays.asList("per "+label,label.replaceAll("y$","i")+"ly");
 			for(String prePattern: prePatterns)
 			{
 				patterns.add(Pattern.compile("(?i)(^|[\\s,])"+prePattern+"($|[\\s.])"));
-//				patterns.add(Pattern.compile("(?i)[^\\s,]"+prePattern+"[\\s,.$]"));
+				//				patterns.add(Pattern.compile("(?i)[^\\s,]"+prePattern+"[\\s,.$]"));
 			}
 			Set<ComponentProperty> candidates = cube.properties.values().stream().filter(p->dataType.getURI().equals(p.range)).collect(Collectors.toSet());
 			if(candidates.isEmpty())
@@ -99,12 +99,18 @@ public class PerTimeDetector extends Detector
 		List<TimeUnit> timeUnits = cubeToTimeUnits.get(cube);
 		if(timeUnits==null)
 		{
-			timeUnits = Arrays.asList(
-					new TimeUnit(cube,"day",XSD.gDay),
-					new TimeUnit(cube,"month",XSD.gMonth),
-					new TimeUnit(cube,"year",XSD.gYear)
-					).stream().filter(tu->tu.property.isPresent()).collect(Collectors.toList());
-			cubeToTimeUnits.put(cube, timeUnits);
+			synchronized(cube)
+			{
+				if(timeUnits==null) {
+					timeUnits = Arrays.asList(
+							new TimeUnit(cube,"day",XSD.gDay),
+							new TimeUnit(cube,"day",XSD.date),
+							new TimeUnit(cube,"month",XSD.gMonth),
+							new TimeUnit(cube,"year",XSD.gYear)
+							).stream().filter(tu->tu.property.isPresent()).collect(Collectors.toList());
+					cubeToTimeUnits.put(cube, timeUnits);
+				}
+			}
 		}
 		return timeUnits;
 	}

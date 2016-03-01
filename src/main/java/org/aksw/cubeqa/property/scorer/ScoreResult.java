@@ -8,6 +8,7 @@ import lombok.*;
 /** Result of a scoring operation with property, value and score. */
 @RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode
 @ToString
 public class ScoreResult implements Serializable
 {

@@ -11,6 +11,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<lucene.version>5.5.0</lucene.version>
 		<slf4j.version>1.7.18</slf4j.version>
+<!-- 		<lucene.version>5.4.1</lucene.version> -->
 	</properties>
 
 	<dependencies>
@@ -114,10 +115,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -129,12 +126,6 @@
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>log4j-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-
 			<!-- to prevent "ClassCastException: java.lang.Long cannot be cast to 
 				java.lang.Integer" -->
 			<dependency>

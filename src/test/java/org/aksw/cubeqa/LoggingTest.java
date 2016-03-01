@@ -1,21 +1,20 @@
 package org.aksw.cubeqa;
 
-import org.apache.log4j.Priority;
 import org.junit.Test;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LoggingTest
 {
-	@SuppressWarnings("deprecation")
+
 	@Test
 	public void test()
 	{
-		for(Priority priority: Priority.getAllPossiblePriorities())
-		{
-			log.log(priority, "testing log."+priority);
-		}
-
+		log.trace("testing log trace");
+		log.debug("testing log debug");
+		log.info("testing log info");
+		log.warn("testing log warn");
+		log.error("testing log error");
 	}
 
 }

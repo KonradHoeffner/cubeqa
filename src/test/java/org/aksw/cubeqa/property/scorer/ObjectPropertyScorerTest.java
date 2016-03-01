@@ -31,8 +31,14 @@ public class ObjectPropertyScorerTest
 
 		Scorer scorer = cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-sector").scorer;
 		assertTrue(scorer.getClass().equals(ObjectPropertyScorer.class));
+		{
 		ScoreResult score = scorer.score("Strengthening civil society").get();
 		assertTrue(score.value.equals("https://openspending.org/finland-aid/sector/15150")&&score.score==1);
+		}
+		{
+		ScoreResult score = scorer.score("strengthen civil society").get();
+		assertTrue(score.value.equals("https://openspending.org/finland-aid/sector/15150")&&score.score==1);
+		}
 		// not possible to match with levensthein automaton of with less than 3 max edit distance
 //		score = scorer.score("Strengthen civil society").get();
 //		assertTrue(score.value.equals("https://openspending.org/finland-aid/sector/15150")&&score.score<1&&score.score>0.6);

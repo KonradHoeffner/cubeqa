@@ -15,10 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**Detects numerical intervals with one infinite endpoint.*/
 @Slf4j
-@AllArgsConstructor(access=AccessLevel.PRIVATE)
-public class HalfInfiniteIntervalDetector extends Detector
+public enum HalfInfiniteIntervalDetector implements Detector
 {
-	public static final HalfInfiniteIntervalDetector		INSTANCE		= new HalfInfiniteIntervalDetector();
+	INSTANCE;
 
 	private static final double	MIN_SIMILARITY	= 0.3;
 	final static String[][]							KEYWORDS		= new String[][] { { ">", "more than", "larger than" },
@@ -114,7 +113,7 @@ public class HalfInfiniteIntervalDetector extends Detector
 				int n = Integer.parseInt(matcher.group(NUMBER_GROUP.get(pattern)));
 				String w = matcher.group(PHRASE_GROUP.get(pattern));
 
-				Set<ScoreResult> results = matchPart(
+				Set<ScoreResult> results = Detector.matchPart(
 						cube,
 						w).stream().filter(sr->sr.getScore()>=MIN_SIMILARITY).collect(Collectors.toSet());
 				if (!results.isEmpty())

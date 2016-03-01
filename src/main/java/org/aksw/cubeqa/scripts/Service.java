@@ -23,7 +23,7 @@ public class Service
 		{
 			ResultSetFormatter.outputAsJSON(out,
 					Cube.getInstance(cubeName).sparql.select(
-							new Algorithm().answer(cubeName, question).sparqlQuery()
+							new Algorithm().template(cubeName, question).sparqlQuery()
 							));
 			return out.toString();
 		}

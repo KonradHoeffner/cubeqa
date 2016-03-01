@@ -121,7 +121,7 @@ public abstract class Index
 				{
 					if(hit.score>=Config.INSTANCE.indexMinLuceneScore)
 					{
-						log.trace(searcher.explain(q, hit.doc));
+						log.trace(searcher.explain(q, hit.doc).toString());
 						Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3)
 						// even if transposed should have some minimal string distance
 						.filter(l->distance.getDistance(ns, normalize(l))>0.5)

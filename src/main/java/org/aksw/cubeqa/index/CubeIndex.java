@@ -14,20 +14,16 @@ import org.apache.lucene.store.FSDirectory;
 import lombok.SneakyThrows;
 
 /** Finds the right cube for a query. Implemented as Lucene index. Modified copy of {@link Index}.*/
-public class CubeIndex
+public enum CubeIndex
 {
-	//	{log.setLevel(Level.ALL);}
-	//	protected static StringDistance distance = new NGramDistance();
-	//	final public boolean isEmpty() {return !folder.exists();}
-
+	INSTANCE;
+	
 	private static final Analyzer analyzer = new EnglishAnalyzer();
 	private static final int	NUMBER_OF_HITS	= 3;
 
 	private IndexWriter indexWriter;
 	private final Directory dir;
 	private IndexReader reader;
-
-	public static CubeIndex INSTANCE = new CubeIndex();
 
 	@SneakyThrows
 	private CubeIndex()
