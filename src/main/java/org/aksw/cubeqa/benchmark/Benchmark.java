@@ -12,7 +12,6 @@ import javax.xml.stream.XMLStreamWriter;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.index.CubeIndex;
 import org.apache.commons.csv.*;
-import org.apache.log4j.Level;
 import org.w3c.dom.*;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;

@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.template.Fragment;
-import org.apache.log4j.Level;
 import de.konradhoeffner.commons.TSVReader;
 
 @Slf4j
