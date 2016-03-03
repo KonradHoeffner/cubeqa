@@ -69,7 +69,7 @@ public class ComponentProperty implements Serializable
 	public double match(final String phrase)
 	{
 		String noStop = Stopwords.remove(phrase, Stopwords.PROPERTY_WORDS);
-//		if(uri.contains("finland-aid-recipient-country")) System.out.println(phrase+" "+labels);
+		//		if(uri.contains("finland-aid-recipient-country")) System.out.println(phrase+" "+labels);
 		OptionalDouble pLabelOpt = labels.stream().mapToDouble(l->similarity.getDistance(Stopwords.remove(l,Stopwords.PROPERTY_WORDS),noStop)).max();
 		double pLabel = pLabelOpt.isPresent()?pLabelOpt.getAsDouble():0;
 		log.trace("p label for "+noStop+": "+pLabel);
@@ -162,15 +162,15 @@ public class ComponentProperty implements Serializable
 	{
 		boolean datatypeProperty = false;
 		forloop:
-		for(String type: types)
-		{
-			switch(type)
+			for(String type: types)
 			{
-				case Owl.OBJECT_PROPERTY_URI:return new Pair<>(new ObjectPropertyScorer(this),AnswerType.ENTITY);
-				case Owl.DATATYPE_PROPERTY_URI:datatypeProperty=true;break forloop;
-				default:
+				switch(type)
+				{
+					case Owl.OBJECT_PROPERTY_URI:return new Pair<>(new ObjectPropertyScorer(this),AnswerType.ENTITY);
+					case Owl.DATATYPE_PROPERTY_URI:datatypeProperty=true;break forloop;
+					default:
+				}
 			}
-		}
 		if(!datatypeProperty) {log.trace("property "+this.uri+" is neither object nor datatype property");}
 
 		if(range!=null)

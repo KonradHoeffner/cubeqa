@@ -28,7 +28,7 @@ public enum Config
 
 
 	@Option(name="-boostDate")
-	public double boostDate = 0.99;
+	public double boostTemporal = 0.99;
 	@Option(name="-boostNumeric")
 	public double boostNumeric = 0.98;
 	@Option(name="-boostString")
@@ -49,7 +49,7 @@ public enum Config
 	 Happens very often in practice (e.g. most people say "in 2010" and not "in the year of 2010") so I recommend to set the config parameter to true. */
 	public boolean	findNamelessReferences = true;
 
-	/** True, iff datasets from the benchmark are predetermined (algorithm doesn't have to search for it based on the query). */
+	/** True, iff datasets from the benchmark are predetermined (algorithm doesn't have to search for it based on the query, leading to higher performance). */
 	public boolean	givenDataSets= true;
 
 	public boolean	useAnswerTypes = true;

@@ -124,7 +124,7 @@ public class Benchmark
 			log.info("Average recall "+ performances.stream().mapToDouble(Performance::getRecall).average());
 			//		log.info("f score")
 			log.info("Average f score "+ performances.stream().filter(p->!p.isEmpty()).mapToDouble(Performance::fscore).average());
-			log.info(performances.stream().filter(Performance::isEmpty).count()+" empty datasets");
+			log.info(performances.stream().filter(Performance::isEmpty).count()+" empty answers");
 			log.info("Runtime: "+StopWatches.INSTANCE.elapsedTimesMs());
 		}
 	}

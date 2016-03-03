@@ -3,14 +3,12 @@ package org.aksw.cubeqa.detector;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.aksw.cubeqa.*;
+import java.util.stream.Collectors;
+import org.aksw.cubeqa.Config;
+import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.aksw.cubeqa.property.scorer.ScoreResult;
-import org.aksw.cubeqa.restriction.TopRestriction;
 import org.aksw.cubeqa.restriction.ValueRestriction;
 import org.aksw.cubeqa.template.Fragment;
-
 import com.hp.hpl.jena.vocabulary.XSD;
 
 /** Detects phrases like "in 2009" with the year ranging from 1000 to 2999. **/
@@ -18,29 +16,34 @@ public enum InYearDetector implements Detector
 {
 	INSTANCE;
 
-	Pattern pattern = Pattern.compile("in ([1-2][0-9]{3})");
+	String regex = "in (?:(?:the )?year (?:of )?)?([1-2][0-9]{3})";
+	Pattern pattern = Pattern.compile(regex);
 
 	@Override public Set<Fragment> detect(final Cube cube, final String phrase)
 	{
 		Set<Fragment> fragments = new HashSet<>();
 		String restPhrase = phrase;
-		Matcher matcher = pattern.matcher(phrase);
-		while(matcher.find())
-		{
-			restPhrase = phrase.replace(matcher.group(0), " ").replaceAll("\\s+"," ");
-			String year = matcher.group(1);
-			cube.properties.values().stream().filter(p->p.range.equals(XSD.gYear)).forEach(p->
+		List<ComponentProperty> yearProperties = cube.properties.values().stream().filter(p->XSD.gYear.getURI().equals(p.range)).collect(Collectors.toList());
+		if(!yearProperties.isEmpty())
+		{		
+			Matcher matcher = pattern.matcher(phrase);
+			while(matcher.find())
 			{
-				if(p.scorer.score(year).get().score==Config.INSTANCE.boostDate)
+				restPhrase = phrase.replace(matcher.group(0), " ").replaceAll("\\s+"," ");
+				String year = matcher.group(1);				
+				for(ComponentProperty p: yearProperties)
 				{
-				Fragment fragment =  new Fragment(cube, matcher.group(0));
-				fragment.getRestrictions().add(new ValueRestriction(p,year));
-				fragments.add(fragment);
-				// TODO: test
+					if(p.scorer.score(year).get().score>=Config.INSTANCE.boostTemporal)
+					{
+						Fragment fragment =  new Fragment(cube, matcher.group(0));
+						fragment.getRestrictions().add(new ValueRestriction(p,year));
+						fragments.add(fragment);
+						break;
+					}
 				}
-			});
+			}
 		}
-		fragments.add(new Fragment(cube, restPhrase));
+//		fragments.add(new Fragment(cube, restPhrase));
 		return fragments;
 	}
 

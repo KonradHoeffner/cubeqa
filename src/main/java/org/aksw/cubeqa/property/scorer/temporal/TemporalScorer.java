@@ -68,8 +68,8 @@ public class TemporalScorer extends Scorer
 		{
 			if(interval.equals(questionInterval)||questionInterval.contains(interval))
 			{
-				double score = 1;
-				if(property.range.equals("http://www.w3.org/2001/XMLSchema#date")) score = Config.INSTANCE.boostDate;
+				double score = Config.INSTANCE.boostTemporal;
+				//if(property.range.equals("http://www.w3.org/2001/XMLSchema#date")) 
 				return Optional.of(new ScoreResult(property, value, score));
 			}
 		}
