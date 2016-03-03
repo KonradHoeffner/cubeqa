@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
+import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.ValueRestriction;
 import org.aksw.cubeqa.template.Fragment;
 import com.hp.hpl.jena.vocabulary.XSD;
@@ -33,7 +34,8 @@ public enum InYearDetector implements Detector
 				String year = matcher.group(1);				
 				for(ComponentProperty p: yearProperties)
 				{
-					if(p.scorer.score(year).get().score>=Config.INSTANCE.boostTemporal)
+					Optional<ScoreResult> res = p.scorer.score(year);
+					if(res.isPresent()&&res.get().score>=Config.INSTANCE.boostTemporal)
 					{
 						Fragment fragment =  new Fragment(cube, matcher.group(0));
 						fragment.getRestrictions().add(new ValueRestriction(p,year));
