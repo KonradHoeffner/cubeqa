@@ -82,6 +82,7 @@ public class CubeSparql implements Serializable
 		watch.start();
 		try(QueryEngineHTTP qe = new QueryEngineHTTP(endpoint, prefixes+query);) 
 		{
+			qe.setDefaultGraphURIs(defaultGraphs);
 			return ResultSetFactory.copyResults(qe.execSelect());
 		} catch(Exception e) {throw new RuntimeException("Error on sparql select on endpoint "+endpoint+" with query:\n"+query,e);}
 		finally {watch.stop();}

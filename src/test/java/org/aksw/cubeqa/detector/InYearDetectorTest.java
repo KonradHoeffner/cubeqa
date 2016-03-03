@@ -21,7 +21,7 @@ public class InYearDetectorTest
 		for(int i=0;i<q.length;i++)
 		{
 			Set<Fragment> fragments = InYearDetector.INSTANCE.detect(Cube.finlandAid(),q[i][0]);
-			assertEquals(2,fragments.size());
+			assertEquals(1,fragments.size());
 			Fragment f = fragments.stream().filter(ff->ff.getRestrictions().size()==1).findFirst().get();
 			Restriction r = f.getRestrictions().iterator().next(); // there should be only one
 			assertEquals(ValueRestriction.class,r.getClass()); // temporal restrictions are value restrictions with a filter

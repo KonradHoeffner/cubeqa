@@ -29,7 +29,7 @@ public abstract class Scorer implements Serializable
 
 	protected ResultSet queryValues()
 	{
-		String query = "select ?value (count(?value) as ?cnt)"
+		String query = "select distinct ?value (count(?value) as ?cnt)"
 				+ "{?obs a qb:Observation. ?obs <"+property.uri+"> ?value. } group by ?value";
 		ResultSet rs = CubeSparql.getLinkedSpendingInstanceForName(property.cube.name).select(query);
 		return rs;

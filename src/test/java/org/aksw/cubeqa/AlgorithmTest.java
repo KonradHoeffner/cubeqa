@@ -22,9 +22,8 @@ public class AlgorithmTest
 			Template t = new Algorithm().template("finland-aid",question);
 			ResultSet rs = t.cube.sparql.select(t.sparqlQuery());
 			assertTrue(rs.hasNext());	
-			System.out.println(t.sparqlQuery());
-			System.out.println(rs.getResultVars().get(0));
-			System.out.println(rs.next().get(rs.getResultVars().get(0)));
+//			System.out.println(t.sparqlQuery());
+//			System.out.println(rs.getResultVars().get(0));
 			assertEquals(rs.next().get(rs.getResultVars().get(0)).asLiteral().getInt(),180000);
 		}
 	}

@@ -26,8 +26,8 @@ public enum InYearDetector implements Detector
 		List<ComponentProperty> yearProperties = cube.properties.values().stream().filter(p->XSD.gYear.getURI().equals(p.range)).collect(Collectors.toList());
 		if(!yearProperties.isEmpty())
 		{		
-			Matcher matcher = pattern.matcher(phrase);
-			while(matcher.find())
+			Matcher matcher;
+			while((matcher = pattern.matcher(restPhrase)).find())
 			{
 				restPhrase = phrase.replace(matcher.group(0), " ").replaceAll("\\s+"," ");
 				String year = matcher.group(1);				

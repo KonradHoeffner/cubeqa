@@ -18,6 +18,8 @@ public enum Config
 	@Option(name="-indexMinScore")
 	public double indexMinScore = 0.4;
 
+	public double placeMinScore = 0.7;
+	
 	@Option(name="-scorerPropertyNameMinScore")
 	public double scorerPropertyNameMinScore	= 0.6;
 
@@ -25,7 +27,6 @@ public enum Config
 
 	@Option(name="-indexQueries")
 	public IndexQueries indexQueries = IndexQueries.BOTH;
-
 
 	@Option(name="-boostDate")
 	public double boostTemporal = 0.99;

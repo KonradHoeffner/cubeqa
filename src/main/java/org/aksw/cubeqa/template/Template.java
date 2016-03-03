@@ -61,13 +61,17 @@ public class Template
 		for(ComponentProperty p: perProperties) {sb.append(" ?"+p.var);}
 		sb.append("\n{\n");
 		for(String pattern: wherePatterns) {sb.append(pattern);sb.append("\n");}
+		// all properties that are referenced in a where pattern
+		Set<ComponentProperty> whereProperties = cube.properties.values().stream().filter(p->
+		wherePatterns.stream().reduce((a,b)->a+b).get()
+		.contains(p.uri)).collect(Collectors.toSet());
 		for(ComponentProperty p: answerProperties)				{sb.append("?obs <"+p.uri+"> ?"+p.var+".");sb.append("\n");}
 		for(ComponentProperty p: perProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");sb.append("\n");}
 		// those properties are used in order limit patterns and need to have their own triple pattern as well
 		List<ComponentProperty> otherProperties = restrictions.stream().map(Restriction::getProperty).collect(Collectors.toList());
-		// TODO remove temporal here also? seems to add too much
-		otherProperties.removeAll(answerProperties);
+//		otherProperties.removeAll(answerProperties);
 		otherProperties.removeAll(perProperties);
+		otherProperties.removeAll(whereProperties);
 		for(ComponentProperty p: otherProperties)					{sb.append("?obs <"+p.uri+"> ?"+p.var+".");sb.append("\n");}
 		sb.append("}");
 		if(!orderLimitPatterns.isEmpty())

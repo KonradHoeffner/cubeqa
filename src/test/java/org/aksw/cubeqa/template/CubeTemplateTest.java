@@ -21,11 +21,14 @@ public class CubeTemplateTest
 		ComponentProperty amount = cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount");
 		Set<Restriction> restrictions = new HashSet<>();
 
-//		ComponentProperty receipientCountry = new ComponentProperty("finland-aid", "http://linkedspending.aksw.org/ontology/finland-aid-recipient-country-spec",null);
+		//		ComponentProperty receipientCountry = new ComponentProperty("finland-aid", "http://linkedspending.aksw.org/ontology/finland-aid-recipient-country-spec",null);
 		restrictions.add(new UriRestriction(receipientCountry,"https://openspending.org/finland-aid/recipient-country/cn"));
-		Template ct = new Template(cube,restrictions,Collections.singleton(amount),Collections.emptySet(),Collections.singleton(Aggregate.SUM));
-		ct.perProperties.add(ComponentProperty.getInstance(cube, "http://linkedspending.aksw.org/ontology/finland-aid-reporting-year"));
-		System.out.println(ct.sparqlQuery());
+		Template ct = new Template(cube,restrictions,
+				Collections.singleton(amount),
+				Collections.singleton(ComponentProperty.getInstance(cube, "http://linkedspending.aksw.org/ontology/refYear")),
+				Collections.singleton(Aggregate.SUM));		
+		//		System.out.println(ct.sparqlQuery());
+		// TODO check the query
 	}
 
 }
