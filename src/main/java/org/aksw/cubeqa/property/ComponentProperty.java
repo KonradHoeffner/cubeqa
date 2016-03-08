@@ -69,7 +69,6 @@ public class ComponentProperty implements Serializable
 	public double match(final String phrase)
 	{
 		String noStop = Stopwords.remove(phrase, Stopwords.PROPERTY_WORDS);
-		//		if(uri.contains("finland-aid-recipient-country")) System.out.println(phrase+" "+labels);
 		OptionalDouble pLabelOpt = labels.stream().mapToDouble(l->similarity.getDistance(Stopwords.remove(l,Stopwords.PROPERTY_WORDS),noStop)).max();
 		double pLabel = pLabelOpt.isPresent()?pLabelOpt.getAsDouble():0;
 		log.trace("p label for "+noStop+": "+pLabel);

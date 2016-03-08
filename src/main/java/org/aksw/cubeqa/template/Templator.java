@@ -194,12 +194,6 @@ public class Templator
 		Map<ComponentProperty,Double> nameRefs = Scorers.scorePhraseProperties(cube,phrase);
 		Map<ComponentProperty,ScoreResult> valueRefs = Scorers.scorePhraseValues(cube,phrase);
 		scoreWatch.stop();
-		//	System.out.println(">>> "+phrase);
-		//		if(phrase.equals("countries"))
-		//		{
-		//			System.out.println(nameRefs);
-		//			System.out.println(valueRefs);
-		//		}
 		return new Match(phrase,/* phraseIndex, */nameRefs, valueRefs);
 	}
 

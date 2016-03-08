@@ -5,6 +5,9 @@ import org.aksw.cubeqa.template.Template;
 import org.junit.Test;
 import com.hp.hpl.jena.query.ResultSet;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AlgorithmTest
 {
 	final String[] questions =
@@ -24,8 +27,8 @@ public class AlgorithmTest
 			Template t = new Algorithm().template("finland-aid",question);
 			ResultSet rs = t.cube.sparql.select(t.sparqlQuery());
 			assertTrue(rs.hasNext());	
-			System.out.println(t.sparqlQuery());
-			System.out.println(rs.getResultVars().get(0));
+			log.debug(t.sparqlQuery());
+			log.debug(rs.getResultVars().get(0));
 			if(question==questions[0]) assertEquals(rs.next().get(rs.getResultVars().get(0)).asLiteral().getInt(),180000);
 		}
 	}

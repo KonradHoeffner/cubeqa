@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /** Stanford Core NLP utility class. */
 @Slf4j
-@SuppressWarnings("resource")
 public class StanfordNlp
 {
 	static private final StanfordCoreNLP treeParser;
@@ -70,7 +69,6 @@ public class StanfordNlp
 	//			{
 	//				String word = token.get(TextAnnotation.class);
 	//				String lemma = token.get(LemmaAnnotation.class);
-	////				System.out.println("lemmatized version :" + lemma);
 	//				sb.append(" "+lemma);
 	//			}
 	//		}

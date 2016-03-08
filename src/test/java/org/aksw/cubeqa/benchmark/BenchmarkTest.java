@@ -32,7 +32,6 @@ public class BenchmarkTest
 
 	@Test public void testNodeString()
 	{
-		System.out.println(Benchmark.nodeString(RDF.type));
 		assertEquals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type",Benchmark.nodeString(RDF.type));
 		assertEquals("hello world",Benchmark.nodeString(ResourceFactory.createLangLiteral("hello world", "en")));
 	}

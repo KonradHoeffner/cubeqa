@@ -12,8 +12,10 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 /** Finds the right cube for a query. Implemented as Lucene index. Modified copy of {@link Index}.*/
+@Slf4j
 public enum CubeIndex
 {
 	INSTANCE;
@@ -103,10 +105,10 @@ public enum CubeIndex
 		ScoreDoc[] hits = collector.topDocs().scoreDocs;
 		for(ScoreDoc hit: hits)
 		{
-			//			System.out.println(searcher.doc(hit.doc).get("uri"));
-			//			System.out.println(searcher.doc(hit.doc).get("label"));
-			//			System.out.println(searcher.doc(hit.doc).get("comment"));
-			//			System.out.println(searcher.doc(hit.doc).get("properties"));
+			log.debug("{}",searcher.doc(hit.doc).get("uri"));
+			log.debug("{}",searcher.doc(hit.doc).get("label"));
+			log.debug("{}",searcher.doc(hit.doc).get("comment"));
+			log.debug("{}",searcher.doc(hit.doc).get("properties"));
 			cubes.add(searcher.doc(hit.doc).get("uri"));
 		}
 		return cubes;

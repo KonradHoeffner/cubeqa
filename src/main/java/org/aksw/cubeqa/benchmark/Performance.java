@@ -71,8 +71,8 @@ public class Performance
 //			throw new RuntimeException("its a map");
 		}
 		Set<Object> correctFound = new HashSet<>(found);
-		System.out.println(correct);
-		System.out.println(found);
+		log.info("{}",correct);
+		log.info("{}",found);
 		correctFound.retainAll(correct);
 		return performance(correct.size(),found.size(),correctFound.size());
 	}

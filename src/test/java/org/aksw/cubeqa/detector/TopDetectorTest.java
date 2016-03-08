@@ -6,6 +6,9 @@ import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.restriction.Restriction;
 import org.junit.Test;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class TopDetectorTest
 {
 	/** uses CubeTemplateFragment.toString to test more easily, may break if CubeTemplateFragment.toString changes*/
@@ -14,7 +17,7 @@ public class TopDetectorTest
 		Cube cube = Cube.finlandAid();
 		{
 			Restriction r = TopDetector.INSTANCE.detect(cube,"10 highest amounts").iterator().next().getRestrictions().iterator().next();
-			System.out.println(r);
+			log.debug("{}",r);
 			assertTrue(Pattern.matches("(?i).*order by DESC\\(.*\\) limit 10.*", r.orderLimitPatterns().iterator().next()));
 			assertEquals("http://linkedspending.aksw.org/ontology/finland-aid-amount",r.getProperty().uri);			
 		}
@@ -25,7 +28,7 @@ public class TopDetectorTest
 		Cube cube = Cube.finlandAid();
 		{
 			Restriction r = TopDetector.INSTANCE.detect(cube,"5 lowest amounts").iterator().next().getRestrictions().iterator().next();
-			System.out.println(r);
+			log.debug("{}",r);
 			assertTrue(Pattern.matches("(?i).*order by ASC\\(.*\\) limit 5.*", r.orderLimitPatterns().iterator().next()));
 			assertEquals("http://linkedspending.aksw.org/ontology/finland-aid-amount",r.getProperty().uri);			
 		}
@@ -36,7 +39,7 @@ public class TopDetectorTest
 			Cube cube = Cube.finlandAid();
 			{
 				Restriction r = TopDetector.INSTANCE.detect(cube,"top 10 aided countries").iterator().next().getRestrictions().iterator().next();
-				System.out.println(r);
+				log.debug("{}",r);
 				assertTrue(Pattern.matches("(?i).*order by DESC\\(.*\\) limit 10.*", r.orderLimitPatterns().iterator().next()));
 				assertEquals("http://linkedspending.aksw.org/ontology/finland-aid-amount",r.getProperty().uri);			
 			}

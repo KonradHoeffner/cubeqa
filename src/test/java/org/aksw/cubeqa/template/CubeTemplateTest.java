@@ -27,7 +27,7 @@ public class CubeTemplateTest
 				Collections.singleton(amount),
 				Collections.singleton(ComponentProperty.getInstance(cube, "http://linkedspending.aksw.org/ontology/refYear")),
 				Collections.singleton(Aggregate.SUM));		
-		//		System.out.println(ct.sparqlQuery());
+		//		log.debug(ct.sparqlQuery());
 		// TODO check the query
 	}
 

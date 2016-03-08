@@ -5,6 +5,9 @@ import java.io.File;
 import org.aksw.cubeqa.Cube;
 import org.junit.Test;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CubeTest
 {
 
@@ -12,8 +15,8 @@ public class CubeTest
 	{
 		Cube cube = Cube.getInstance("finland-aid");
 		assertTrue(new File("cache/finland-aid.ser").exists());
-		System.out.println(cube.properties.size());
-		System.out.println(cube.properties);
+		log.debug("{}",cube.properties.size());
+		log.debug("{}",cube.properties);
 	}
 
 }

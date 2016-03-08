@@ -1,13 +1,19 @@
 package org.aksw.cubeqa.detector;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Set;
+
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.restriction.Restriction;
 import org.aksw.cubeqa.restriction.UriRestriction;
 import org.aksw.cubeqa.template.Fragment;
 import org.junit.Test;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class InPlaceDetectorTest
 {
 	// TODO: add multi word places like "the United States of America".
@@ -21,7 +27,7 @@ public class InPlaceDetectorTest
 		for(int i=0;i<q.length;i++)
 		{
 			Set<Fragment> fragments = InPlaceDetector.INSTANCE.detect(Cube.finlandAid(),q[i][0]);
-			System.out.println(fragments);
+			log.debug("{}",fragments);
 			assertEquals(1,fragments.size());
 			Fragment f = fragments.stream().filter(ff->ff.getRestrictions().size()==1).findFirst().get();
 			Restriction r = f.getRestrictions().iterator().next(); // there should be only one

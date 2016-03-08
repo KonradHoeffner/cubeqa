@@ -97,19 +97,19 @@ public class Benchmark
 		log.info("Evaluating benchmark "+name+" with "+questions.size()+" questions, ["+startQuestionNumber+","+endQuestionNumber+"]");
 		try(CSVPrinter out = new CSVPrinter(new PrintWriter("benchmark/"+this.name+System.currentTimeMillis()+".csv"), CSVFormat.DEFAULT))
 		{
-			//		int unionCount = 0;
-			//		int subqueryCount = 0;
-			//		int askCount = 0;
+			int unionCount = 0;
+			int subqueryCount = 0;
+			int askCount = 0;
 			for(int i=startQuestionNumber;i<=endQuestionNumber;i++)
 			{
 				//			if(i==74) {performances.add(new Performance(0,0,true));continue;} // q 74 gets wrongly positively evaluated // removed as for old benchmark
 				Question q = questions.get(i-1);
 				//			// remove questions with unions
-				//			if(q.query.toLowerCase().contains("union")) {unionCount++;continue;}
+				if(q.query.toLowerCase().contains("union")) {unionCount++;continue;}
 				//			//			// remove questions with subqueries
-				//			if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
+				if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
 				//			//			// remove ask queries
-				//			if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
+				if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
 				count++;
 				Performance p = evaluate(algorithm,i);
 				performances.add(p);
@@ -117,9 +117,9 @@ public class Benchmark
 				out.printRecord(i,Cube.linkedSpendingCubeName(q.cubeUri),q.string,q.query,p.query,p.precision,p.recall,p.fscore());
 			}
 			log.info(count+" questions processed, "+emptyCount+" with no answers");
-			//		System.out.println(unionCount+ "union queries");
-			//		System.out.println(subqueryCount+ "sub queries");
-			//		System.out.println(askCount+ "ask queries");
+			log.debug(unionCount+ "union queries");
+			log.debug(subqueryCount+ "sub queries");
+			log.debug(askCount+ "ask queries");
 			log.info("Average precision "+ performances.stream().filter(p->!p.isEmpty()).mapToDouble(Performance::getPrecision).average());
 			log.info("Average recall "+ performances.stream().mapToDouble(Performance::getRecall).average());
 			//		log.info("f score")

@@ -39,10 +39,6 @@ public class Template
 		}
 
 		StringBuilder sb = new StringBuilder();
-		//		System.out.println(Cube.FINLAND_AID().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
-		//		answerProperties.forEach(action)
-		//		System.out.println(answerProperties.iterator().next());
-		//		System.out.println(answerProperties.iterator().next()==Cube.FINLAND_AID().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount"));
 		String resultDef;
 		ComponentProperty answerProperty = answerProperties.iterator().next();
 		switch(answerProperty.answerType)

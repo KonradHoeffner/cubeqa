@@ -21,7 +21,7 @@ public class NumericScorer extends Scorer
 		String query = "select (min(xsd:double(?d)) as ?min) (max(xsd:double(?d)) as ?max) {?o a qb:Observation. ?o qb:dataSet <"+property.cube.uri+">."
 				+ "?o <"+property.uri+"> ?d.}";
 		QuerySolution qs = property.cube.sparql.select(query).next();
-		//		System.out.println(query);
+		log.trace(query);
 		Range<Double> range2;
 		try {range2 = Range.closed(qs.get("min").asLiteral().getDouble(), qs.get("max").asLiteral().getDouble());}
 		// virtuoso bug

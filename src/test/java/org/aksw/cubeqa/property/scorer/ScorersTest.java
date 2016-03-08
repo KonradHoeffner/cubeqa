@@ -5,13 +5,14 @@ import java.util.Collection;
 import java.util.Comparator;
 import org.aksw.cubeqa.Cube;
 import org.junit.Test;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ScorersTest
 {
-	void test(String s)
+	private void test(String s)
 	{
-		System.out.println(Scorers.scorePhraseProperties(Cube.finlandAid(),s));
-//		System.out.println(Scorers.scorePhraseValues(Cube.FINLAND_AID(),s));
+		log.debug("{}",Scorers.scorePhraseProperties(Cube.finlandAid(),s));
 	}
 
 	/** @param expected either a uri (objectproperty) or a label lexical form (datatypeproperty) */
@@ -29,6 +30,6 @@ public class ScorersTest
 		test("Environmental policy and administrative management");
 		test("Nepal","https://openspending.org/finland-aid/recipient-country/np");
 		test("Rescheduling and financing","https://openspending.org/finland-aid/sector/60040");
-		test("Finland Embassy","Embassy of Finland");
+		test("Finland Embassy","Embassy of Finland");		
 	}
 }

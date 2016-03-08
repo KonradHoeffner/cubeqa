@@ -1,6 +1,7 @@
 <configuration>
 
  <logger name="edu.stanford.nlp" level="WARN" />
+ <logger name="org.apache" level="WARN" />
 
 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<File>cubeqa.log</File>
@@ -15,10 +16,9 @@
 	
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<Target>System.out</Target>
-		<encoder>
-			<pattern>%m%n</pattern>
-		</encoder>
+		<encoder><pattern>%c %.-1level %m%n</pattern></encoder>
 	</appender>
+	
 	<root level="INFO">
 		<appender-ref ref="file" />
 		<appender-ref ref="stdout" />
