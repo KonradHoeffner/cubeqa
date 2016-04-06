@@ -1,5 +1,5 @@
 /src/main/java/org/aksw/cubeqa/scripts/TestRandomStuff.java
-/src/main/java/org/aksw/cubeqa/scripts/Csv2Qald.java
+src/main/java/org/aksw/cubeqa/scripts/Csv2Qald.java
 benchmark
 *.class
 *~
