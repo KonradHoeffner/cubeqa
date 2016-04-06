@@ -8,6 +8,8 @@ import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.template.Fragment;
 import de.konradhoeffner.commons.TSVReader;
 
+/** Detects SPARQL Aggregates COUNT, SUM, AVG.
+ * MAX and MIN are also supported but should be handled by ORDER LIMIT instead in an entity with that property is searched for (e.g. the department with the highest budget).*/
 @Slf4j
 public enum AggregateDetector implements Detector
 {

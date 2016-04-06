@@ -18,7 +18,6 @@ public class AnswerTypeTest
 		assertEquals(ofQuestion(question),EnumSet.of(type));
 	}
 
-	@Ignore
 	@Test public void testOfQuestion()
 	{
 		// TODO: recheck all with the table from the paper
@@ -27,7 +26,7 @@ public class AnswerTypeTest
 		test("How much money Nepal receives for Environmental policy and administrative management?",UNCOUNTABLE);
 		test("Top 10 aid receiving geographic areas in south east and central asia?",EnumSet.of(UNCOUNTABLE,COUNTABLE, TEMPORAL,LOCATION, ENTITY));
 		test("Which country has the lowest amount of commitments?",EnumSet.of(TEMPORAL,LOCATION, ENTITY));
-		test("How many countries had amounts of more than 1000000 € in 2010?",COUNTABLE);
+		test("How many countries had amounts of more than 1000000 € in 2010?",EnumSet.of(COUNTABLE,COUNT));
 		test("Where is the biggest aid for medical services?",LOCATION);
 		test("When did Paraguy get money from the Finish Red Cross?",TEMPORAL);
 		test("Did the Ukraine receive money in 2009?",AFFIRMATIVE);
