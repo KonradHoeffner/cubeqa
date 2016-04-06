@@ -121,10 +121,10 @@ public abstract class Index
 				{
 					if(hit.score>=Config.INSTANCE.indexMinLuceneScore)
 					{
-						log.trace(searcher.explain(q, hit.doc).toString());
+						log.trace(searcher.explain(q, hit.doc).toString());				
 						Arrays.stream(doc.getValues("originallabel")).filter(l->l.length()>3)
-						// even if transposed should have some minimal string distance
-						.filter(l->distance.getDistance(ns, normalize(l))>0.5)
+						// even if transposed should have some minimal string distance // update: no id doesn't, goes as low as 0.05
+//						.filter(l->distance.getDistance(ns, normalize(l))>0.5)
 						// original label is the document from lucene which can be much longer than our string so we make sure they are not too dissimilar in length
 						.filter(l->ns.length()*2>normalize(l).length())
 						.forEach(

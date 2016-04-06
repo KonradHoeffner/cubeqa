@@ -18,7 +18,7 @@ public class StringScorerTest
 		Cube cube = Cube.getInstance("finland-aid");
 		Scorer scorer = cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-channel-of-delivery-name").scorer;
 		assertEquals(StringScorer.class,scorer.getClass());
-//		test(scorer.score("Finnish Red Cross").get(),"Finnish Red Cross");
+//		test(scorer.score("Finnish Red Cross").get(),"Finnish Red Cross");		
 		test(scorer.score("Finland Embassy").get(),"Embassy of Finland");
 	}
 }
