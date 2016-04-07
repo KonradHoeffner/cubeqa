@@ -5,14 +5,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.io.Serializable;
 import org.aksw.cubeqa.*;
+import org.aksw.cubeqa.index.Similarity;
 import org.aksw.cubeqa.property.scorer.*;
 import org.aksw.cubeqa.property.scorer.temporal.TemporalScorer;
-import org.apache.lucene.search.spell.NGramDistance;
-import org.apache.lucene.search.spell.StringDistance;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.XSD;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.simmetrics.StringMetric;
+import org.simmetrics.metrics.StringMetrics;
+import org.tartarus.snowball.ext.PorterStemmer;
 import de.konradhoeffner.commons.Pair;
 import de.konradhoeffner.commons.rdf.DataCube;
 import de.konradhoeffner.commons.rdf.Owl;
@@ -31,8 +35,6 @@ public class ComponentProperty implements Serializable
 	private static final Map<Pair<String,String>,ComponentProperty> instances = new HashMap<>();
 	private static final boolean MATCH_RANGE = true;
 	private static final double	RANGE_LABEL_MULTIPLIER	= 0.5; // range labels may be less specific then the property name and thus get a lower score
-
-	protected static transient StringDistance similarity = new NGramDistance();
 
 	public final String var;
 
@@ -68,11 +70,16 @@ public class ComponentProperty implements Serializable
 	/** How probably is the phrase referring to this property? */
 	public double match(final String phrase)
 	{
-		String noStop = Stopwords.remove(phrase, Stopwords.PROPERTY_WORDS);
-		OptionalDouble pLabelOpt = labels.stream().mapToDouble(l->similarity.getDistance(Stopwords.remove(l,Stopwords.PROPERTY_WORDS),noStop)).max();
+		String noStop = Stopwords.remove(phrase, Stopwords.PROPERTY_WORDS).toLowerCase();
+		OptionalDouble pLabelOpt = labels.stream().mapToDouble(l->Similarity.similarity(Stopwords.remove(l,Stopwords.PROPERTY_WORDS).toLowerCase(),noStop)).max();
 		double pLabel = pLabelOpt.isPresent()?pLabelOpt.getAsDouble():0;
 		log.trace("p label for "+noStop+": "+pLabel);
-		OptionalDouble pRangeOpt = MATCH_RANGE? rangeLabels.stream().mapToDouble(l->similarity.getDistance(l,noStop)).max():OptionalDouble.of(0);
+		if(phrase.contains("agencies"))
+		{
+			System.out.println(phrase+": "+this.labels+" "+pLabel);
+		}
+
+		OptionalDouble pRangeOpt = MATCH_RANGE? rangeLabels.stream().mapToDouble(l->Similarity.similarity(l,noStop)).max():OptionalDouble.of(0);
 		// we only want objectproperties, so exclude xsd
 		double pRange = (pRangeOpt.isPresent()&&!range.startsWith(XSD.getURI()))?pRangeOpt.getAsDouble()*RANGE_LABEL_MULTIPLIER:0;
 		log.trace("p range for "+noStop+": "+pRange);

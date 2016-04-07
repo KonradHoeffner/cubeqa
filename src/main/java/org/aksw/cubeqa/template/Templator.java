@@ -95,7 +95,7 @@ public class Templator
 					if(reducedPhrase.equals(question)) {
 						throw new IllegalArgumentException("fragment phrase '"+fragment.phrase+"' not found in whole phrase "+question);
 					}
-					log.debug("Detector "+detector.getClass().getSimpleName()+" matched part: '"+fragment.phrase+"', left over phrase: "+question);
+					log.debug("Detector "+detector.getClass().getSimpleName()+" matched part: '"+fragment.phrase+"', left over phrase: "+reducedPhrase);
 				}
 				// keep results from earlier used detectors
 				if(allDetectorFragment!=null) {detectorResults.add(allDetectorFragment);}
