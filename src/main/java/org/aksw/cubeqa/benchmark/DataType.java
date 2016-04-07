@@ -3,9 +3,9 @@ package org.aksw.cubeqa.benchmark;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.XSD;
 
 enum DataType
 {

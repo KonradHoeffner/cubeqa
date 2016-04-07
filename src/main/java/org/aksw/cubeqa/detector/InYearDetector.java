@@ -10,7 +10,7 @@ import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.ValueRestriction;
 import org.aksw.cubeqa.template.Fragment;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.vocabulary.XSD;
 
 /** Detects phrases like "in 2009" with the year ranging from 1000 to 2999. **/
 public enum InYearDetector implements Detector

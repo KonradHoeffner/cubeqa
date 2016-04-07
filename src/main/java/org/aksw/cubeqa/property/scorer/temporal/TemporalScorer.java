@@ -13,8 +13,8 @@ import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorer;
 import org.joda.time.Instant;
 import org.joda.time.Interval;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.RDFNode;
 
 /** Scorer for temporal intervals. */
 @Slf4j

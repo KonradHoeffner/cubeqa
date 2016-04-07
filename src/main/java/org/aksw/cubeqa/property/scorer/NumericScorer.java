@@ -4,8 +4,8 @@ import java.util.Optional;
 import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.google.common.collect.Range;
-import com.hp.hpl.jena.datatypes.DatatypeFormatException;
-import com.hp.hpl.jena.query.QuerySolution;
+import org.apache.jena.datatypes.DatatypeFormatException;
+import org.apache.jena.query.QuerySolution;
 import lombok.extern.slf4j.Slf4j;
 
 /** tests if a number is included in the range. */

@@ -1,6 +1,8 @@
 package de.konradhoeffner.commons.rdf;
 
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.*;
 
 /** RDF Data Cube vocabulary */
 public class DataCube

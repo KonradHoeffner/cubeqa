@@ -12,8 +12,8 @@
 //import org.aksw.cubeqa.template.CubeTemplateFragment;
 //import org.apache.lucene.search.spell.NGramDistance;
 //import org.apache.lucene.search.spell.StringDistance;
-//import com.hp.hpl.jena.rdf.model.Resource;
-//import com.hp.hpl.jena.vocabulary.XSD;
+//import org.apache.jena.rdf.model.Resource;
+//import org.apache.jena.vocabulary.XSD;
 //
 ///** maps "year" to a restriction with all xsd:gYear properties.**/
 //@Slf4j

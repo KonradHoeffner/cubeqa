@@ -3,7 +3,6 @@ package org.aksw.cubeqa;
 import static org.junit.Assert.*;
 import static org.aksw.cubeqa.AnswerType.*;
 import java.util.EnumSet;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class AnswerTypeTest

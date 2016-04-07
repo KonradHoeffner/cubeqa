@@ -34,19 +34,20 @@ public class StanfordNlp
 		// disable logging
 		// TODO do this more elegantly
 		PrintStream err = System.err;
-		System.setErr(new PrintStream(new NullOutputStream()));
+		try(PrintStream nulls = new PrintStream(new NullOutputStream()))
 		{
+			System.setErr(nulls);
 			Properties props = new Properties();
 			props.put("annotators", "tokenize, ssplit, pos, parse");
 			treeParser = new StanfordCoreNLP(props);
+			System.setErr(err);
+			//		{
+			//		Properties props = new Properties();
+			//		props.put("annotators", "tokenize, ssplit, pos, lemma");
+			//		lemmatizer = new StanfordCoreNLP(props);
+			//		}
+			// enable logging
 		}
-		//		{
-		//		Properties props = new Properties();
-		//		props.put("annotators", "tokenize, ssplit, pos, lemma");
-		//		lemmatizer = new StanfordCoreNLP(props);
-		//		}
-		// enable logging
-		System.setErr(err);
 	}
 
 	public static Tree parse(String sentence)

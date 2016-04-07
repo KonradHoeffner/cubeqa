@@ -3,7 +3,7 @@ package org.aksw.cubeqa.index;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.io.File;
-import org.aksw.commons.util.StopWatch;
+import de.konradhoeffner.commons.StopWatch;
 import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.StopWatches;
 import org.aksw.cubeqa.property.ComponentProperty;

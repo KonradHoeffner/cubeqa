@@ -6,8 +6,8 @@ import java.io.IOException;
 import org.aksw.cubeqa.Algorithm;
 import org.aksw.cubeqa.CubeSparql;
 import org.junit.Test;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.RDF;
 
 public class BenchmarkTest
 {

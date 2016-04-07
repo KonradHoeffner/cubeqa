@@ -3,7 +3,7 @@ package org.aksw.cubeqa.restriction;
 import java.util.Collections;
 import java.util.Set;
 import org.aksw.cubeqa.property.ComponentProperty;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.vocabulary.XSD;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 

@@ -2,9 +2,9 @@ package org.aksw.cubeqa;
 
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 
 public class JenaNanBugTest
 {

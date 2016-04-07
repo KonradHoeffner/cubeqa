@@ -9,8 +9,8 @@ import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.template.Fragment;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.XSD;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 

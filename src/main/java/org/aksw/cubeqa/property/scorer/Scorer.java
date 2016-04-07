@@ -6,8 +6,8 @@ import java.util.stream.Stream;
 import java.io.Serializable;
 import org.aksw.cubeqa.CubeSparql;
 import org.aksw.cubeqa.property.ComponentProperty;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.RDFNode;
 import de.konradhoeffner.commons.Streams;
 
 /** Scorers match phrases or words to component property values.

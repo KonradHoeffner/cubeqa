@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.aksw.cubeqa.Algorithm;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.index.CubeIndex;
-import com.hp.hpl.jena.query.ResultSetFormatter;
+import org.apache.jena.query.ResultSetFormatter;
 import edu.stanford.nlp.io.StringOutputStream;
 
 /** Web service that answers questions as strings with the W3C SPARQL Query Results XML Format. 

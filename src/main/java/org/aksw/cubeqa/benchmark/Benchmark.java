@@ -13,9 +13,9 @@ import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.index.CubeIndex;
 import org.apache.commons.csv.*;
 import org.w3c.dom.*;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.RDFNode;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 

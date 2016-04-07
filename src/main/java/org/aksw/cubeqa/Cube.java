@@ -3,11 +3,11 @@ package org.aksw.cubeqa;
 import java.util.*;
 import java.io.*;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.apache.commons.collections15.MultiMap;
-import org.apache.commons.collections15.multimap.MultiHashMap;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.RDFNode;
 import de.konradhoeffner.commons.TSVReader;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -31,7 +31,7 @@ public class Cube implements Serializable
 
 	static Map<String,Cube> instances = new HashMap<>();
 	/** manually created additional labels in case the original labels are not good enough*/
-	public final MultiMap<String,String> manualLabels;
+	public final MultiValuedMap<String,String> manualLabels;
 
 	static private File cacheFolder = new File("cache");
 	static {cacheFolder.mkdir();}
@@ -122,7 +122,7 @@ public class Cube implements Serializable
 					"}";
 			ResultSet rs = CubeSparql.getLinkedSpendingInstanceForName(cubeName).select(query);
 			
-			MultiMap<String,String> manualLabels = new MultiHashMap<>();
+			MultiValuedMap<String,String> manualLabels = new HashSetValuedHashMap<>();
 
 			if(Config.INSTANCE.useManualLabels)
 			{

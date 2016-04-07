@@ -3,7 +3,7 @@ package org.aksw.cubeqa;
 import static org.junit.Assert.*;
 import org.aksw.cubeqa.template.Template;
 import org.junit.Test;
-import com.hp.hpl.jena.query.ResultSet;
+import org.apache.jena.query.ResultSet;
 
 import lombok.extern.slf4j.Slf4j;
 

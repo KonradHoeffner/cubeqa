@@ -4,7 +4,7 @@ import static org.aksw.cubeqa.Trees.phrase;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.aksw.commons.util.StopWatch;
+import de.konradhoeffner.commons.StopWatch;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Detector;
 import org.aksw.cubeqa.property.ComponentProperty;

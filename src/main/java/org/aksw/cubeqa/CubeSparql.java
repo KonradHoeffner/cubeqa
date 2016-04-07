@@ -3,10 +3,10 @@ package org.aksw.cubeqa;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
-import org.aksw.commons.util.StopWatch;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
-import com.hp.hpl.jena.vocabulary.DCTerms;
+import de.konradhoeffner.commons.StopWatch;
+import org.apache.jena.query.*;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
+import org.apache.jena.vocabulary.DCTerms;
 import de.konradhoeffner.commons.rdf.DataCube;
 
 /** Interface to SPARQL. */

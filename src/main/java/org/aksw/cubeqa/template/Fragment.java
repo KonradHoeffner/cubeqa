@@ -4,7 +4,7 @@ import static org.aksw.cubeqa.AnswerType.*;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import org.aksw.commons.util.StopWatch;
+import de.konradhoeffner.commons.StopWatch;
 import org.aksw.cubeqa.*;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
@@ -44,6 +44,10 @@ public class Fragment
 		return properties;
 	}
 
+	/** Constructs an empty fragment representing the given phrase.
+	 * The fragment is modifiable, thus restrictions, properties and so on can be added later.
+	 * @param cube the cube the fragment belongs to.
+	/* @param phrase zero or more words of an input question.*/
 	public Fragment(Cube cube, String phrase)
 	{
 		this(cube, phrase, new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>(),new HashSet<>());

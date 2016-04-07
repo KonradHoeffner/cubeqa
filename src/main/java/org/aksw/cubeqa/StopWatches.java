@@ -2,9 +2,9 @@ package org.aksw.cubeqa;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.aksw.commons.util.StopWatch;
-import org.apache.commons.collections15.MultiMap;
-import org.apache.commons.collections15.multimap.MultiHashMap;
+import de.konradhoeffner.commons.StopWatch;
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import lombok.ToString;
 
 @ToString
@@ -12,12 +12,13 @@ public enum  StopWatches
 {
 	INSTANCE;
 	
-	MultiMap<String, StopWatch> watches = new MultiHashMap<>();
+	MultiValuedMap<String, StopWatch> watches = new HashSetValuedHashMap<>();
 
 	public StopWatch getWatch(String category)
 	{
 		StopWatch watch = new StopWatch();
-		return watches.put(category, watch);
+		watches.put(category, watch);
+		return watch;
 	}
 
 	public Map<String,Long> elapsedTimesMs()

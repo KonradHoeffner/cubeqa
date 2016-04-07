@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.property.ComponentProperty;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.RDFNode;
 
 @Slf4j
 public abstract class MultiSetScorer extends Scorer
