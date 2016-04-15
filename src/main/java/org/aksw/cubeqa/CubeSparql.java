@@ -2,11 +2,12 @@ package org.aksw.cubeqa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
-import de.konradhoeffner.commons.StopWatch;
 import org.apache.jena.query.*;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.vocabulary.DCTerms;
+import de.konradhoeffner.commons.StopWatch;
 import de.konradhoeffner.commons.rdf.DataCube;
 
 /** Interface to SPARQL. */
@@ -91,5 +92,12 @@ public class CubeSparql implements Serializable
 	public static String suffix(String uri)
 	{
 		return uri.substring(Math.max(uri.lastIndexOf('/'),uri.lastIndexOf('#'))+1);
+	}
+	
+	public static String jsonQueryResults(ResultSet rs)
+	{
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		ResultSetFormatter.outputAsJSON(outputStream, ResultSetFactory.copyResults(rs));		
+		return new String(outputStream.toByteArray());
 	}
 }

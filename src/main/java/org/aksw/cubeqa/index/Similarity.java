@@ -17,6 +17,6 @@ public class Similarity
 	@SneakyThrows
 	static public float similarity(String s, String t)
 	{
-		return metric.compare(parser.parse(s).toString(), parser.parse(t).toString());
+		return metric.compare(parser.parse(QueryParser.escape(s)).toString(), parser.parse(QueryParser.escape(t)).toString());
 	}
 }

@@ -11,10 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 public class Performance
 {
-	final double precision;
-	final double recall;
-	final boolean empty;
+	public final double precision;
+	public final double recall;
+	public final boolean empty;
+	public String jsonAnswer;
 	public String query = null;
+	
 
 	public static final Performance performance(Set<Map<String,String>> correct, Set<Map<String,String>> found)
 	{

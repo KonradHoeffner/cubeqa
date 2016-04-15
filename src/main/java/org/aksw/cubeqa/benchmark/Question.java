@@ -1,6 +1,7 @@
 package org.aksw.cubeqa.benchmark;
 
 import java.util.*;
+import javax.json.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -17,6 +18,7 @@ public class Question
 	/** answer set containing a map from variable name to value*/
 	public final Set<Map<String,String>> answers;
 	public final Map<String,DataType> dataTypes;
+	public String jsonAnswer;
 
 	public Question(String cubeUri, String string, String query)
 	{

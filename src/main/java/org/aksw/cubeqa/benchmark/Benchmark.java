@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.io.*;
 import java.nio.charset.Charset;
+import javax.json.*;
+import javax.json.stream.JsonGenerator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -39,17 +41,20 @@ public class Benchmark
 	{
 		Set<Map<String,String>> answers = new HashSet<>();
 		Map<String,DataType> tagTypes  = new HashMap<>();
-
+		String jsonAnswer = null;
 		if(query.startsWith("ask"))
 		{
+			boolean result = sparql.ask(query);
+			jsonAnswer = "{\"boolean\": "+(result?"true":"false")+" }";
 			tagTypes.put("",DataType.BOOLEAN);
 			Map<String,String> answer = new HashMap<>();
-			answer.put("",String.valueOf(sparql.ask(query)));
+			answer.put("",String.valueOf(result));
 			answers.add(Collections.unmodifiableMap(answer));
 		}
 		else if(query.startsWith("select"))
 		{
 			ResultSet rs = sparql.select(query);
+			jsonAnswer = CubeSparql.jsonQueryResults(rs);
 			Set<String> varNames = new TreeSet<>();
 			while(rs.hasNext())
 			{
@@ -80,7 +85,9 @@ public class Benchmark
 
 			}
 		}
-		return new Question(sparql.cubeUri, string, query, answers, tagTypes);
+		Question q = new Question(sparql.cubeUri, string, query, answers, tagTypes);
+		q.jsonAnswer=jsonAnswer;
+		return q;
 	}
 
 	public void evaluate(Algorithm algorithm)
@@ -88,6 +95,8 @@ public class Benchmark
 		evaluate(algorithm, 1, questions.size());
 	}
 
+	/** @param startQuestionNumber start question number, inclusive
+	/** @param endQuestionNumber end question number, inclusive*/
 	@SneakyThrows
 	public void evaluate(Algorithm algorithm,int startQuestionNumber,int endQuestionNumber)
 	{
@@ -95,8 +104,11 @@ public class Benchmark
 		int count = 0;
 		List<Performance> performances = new ArrayList<>();
 		log.info("Evaluating benchmark "+name+" with "+questions.size()+" questions, ["+startQuestionNumber+","+endQuestionNumber+"]");
+		JsonObjectBuilder jsonBuilder = Json.createObjectBuilder()
+				.add("dataset", Json.createObjectBuilder().add("id",name));
+		JsonArrayBuilder questionsBuilder = Json.createArrayBuilder();		
 		try(CSVPrinter out = new CSVPrinter(new PrintWriter("benchmark/"+this.name+System.currentTimeMillis()+".csv"), CSVFormat.DEFAULT))
-		{
+		{						
 			int unionCount = 0;
 			int subqueryCount = 0;
 			int askCount = 0;
@@ -110,11 +122,31 @@ public class Benchmark
 				if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
 				//			//			// remove ask queries
 				if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
+
 				count++;
 				Performance p = evaluate(algorithm,i);
 				performances.add(p);
 				if(p.empty) {emptyCount++;}
+				// don't include empty answers in the json file as we assume them to be wrong
+				if(!p.jsonAnswer.isEmpty())
+				{
+					JsonObjectBuilder questionBuilder = Json.createObjectBuilder();				
+					questionBuilder.add("id", i);				
+					questionBuilder.add("answers", Json.createReader(new StringReader(p.jsonAnswer)).readObject());
+					questionsBuilder.add(questionBuilder);
+				}
 				out.printRecord(i,Cube.linkedSpendingCubeName(q.cubeUri),q.string,q.query,p.query,p.precision,p.recall,p.fscore());
+			}
+			try(PrintWriter writer = new PrintWriter("benchmark/"+name+".json"))
+			{
+				Map<String, Boolean> config = new HashMap<>();
+				config.put(JsonGenerator.PRETTY_PRINTING, true);
+				JsonWriterFactory jwf = Json.createWriterFactory(config);				
+				try(JsonWriter jsonWriter = jwf.createWriter(writer))
+				{
+					jsonBuilder.add("questions", questionsBuilder);
+					jsonWriter.writeObject(jsonBuilder.build());
+				}
 			}
 			log.info(count+" questions processed, "+emptyCount+" with no answers");
 			log.debug(unionCount+ "union queries");
@@ -162,6 +194,7 @@ public class Benchmark
 		log.debug("found answer: "+found.answers);
 		Performance p = Performance.performance(question.answers, found.answers);
 		p.query = found.query;
+		p.jsonAnswer=found.jsonAnswer;
 		log.info(p.toString());
 		return p;
 	}

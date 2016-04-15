@@ -43,15 +43,25 @@ public class Template
 		ComponentProperty answerProperty = answerProperties.iterator().next();
 		switch(answerProperty.answerType)
 		{
-			case UNCOUNTABLE: resultDef = "xsd:decimal(?"+answerProperties.iterator().next().var+")";break;
-			case COUNTABLE: resultDef = "xsd:integer(?"+answerProperties.iterator().next().var+")";break;
+			case UNCOUNTABLE: resultDef = "xsd:decimal(?"+answerProperty.var+")";break;
+			case COUNTABLE: resultDef = "xsd:integer(?"+answerProperty.var+")";break;
 			case ENTITY:
 			case TEMPORAL:
-			resultDef = "distinct(?"+answerProperties.iterator().next().var+")";break;
-			default: resultDef = "distinct(?"+answerProperties.iterator().next().var+")";
+//			resultDef = "distinct(?"+answerProperties.iterator().next().var+")";break;
+			default:
+				// those aggregates can only apply to numbers
+				aggregates.remove(Aggregate.SUM);
+				aggregates.remove(Aggregate.AVG);
+				aggregates.remove(Aggregate.MIN);
+				aggregates.remove(Aggregate.MAX);
+				resultDef = "distinct(?"+answerProperty.var+")";
 		}
 
-		if(!aggregates.isEmpty()) {resultDef = aggregates.iterator().next()+"("+resultDef+")";}
+		if(!aggregates.isEmpty())
+		{
+			Aggregate aggregate = aggregates.iterator().next(); // only one is supported yet			
+			resultDef = aggregate+"("+resultDef+")";
+		}
 		sb.append("select "+resultDef+" ");
 		perProperties.removeAll(answerProperties);
 		for(ComponentProperty p: perProperties) {sb.append(" ?"+p.var);}
