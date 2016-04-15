@@ -116,12 +116,14 @@ public class Benchmark
 			{
 				//			if(i==74) {performances.add(new Performance(0,0,true));continue;} // q 74 gets wrongly positively evaluated // removed as for old benchmark
 				Question q = questions.get(i-1);
+				
 				//			// remove questions with unions
+				// nr. 23 somehow freezes. removed the other two because gold standard access can't be assumed
 				if(q.query.toLowerCase().contains("union")) {unionCount++;continue;}
 				//			//			// remove questions with subqueries
-				if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
+//				if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
 				//			//			// remove ask queries
-				if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
+//				if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
 
 				count++;
 				Performance p = evaluate(algorithm,i);
@@ -129,12 +131,12 @@ public class Benchmark
 				if(p.empty) {emptyCount++;}
 //				// don't include empty answers in the json file as we assume them to be wrong
 //				if(!p.jsonAnswer.isEmpty())
-//				{
-//					JsonObjectBuilder questionBuilder = Json.createObjectBuilder();				
-//					questionBuilder.add("id", i);				
-//					questionBuilder.add("answers", Json.createReader(new StringReader(p.jsonAnswer)).readObject());
-//					questionsBuilder.add(questionBuilder);
-//				}
+				{
+					JsonObjectBuilder questionBuilder = Json.createObjectBuilder();				
+					questionBuilder.add("id", i);				
+					questionBuilder.add("answers", Json.createArrayBuilder().add(Json.createReader(new StringReader(p.jsonAnswer)).readObject()));
+					questionsBuilder.add(questionBuilder);
+				}
 				out.printRecord(i,Cube.linkedSpendingCubeName(q.cubeUri),q.string,q.query,p.query,p.precision,p.recall,p.fscore());
 			}
 			try(PrintWriter writer = new PrintWriter("benchmark/"+name+".json"))
