@@ -127,14 +127,14 @@ public class Benchmark
 				Performance p = evaluate(algorithm,i);
 				performances.add(p);
 				if(p.empty) {emptyCount++;}
-				// don't include empty answers in the json file as we assume them to be wrong
-				if(!p.jsonAnswer.isEmpty())
-				{
-					JsonObjectBuilder questionBuilder = Json.createObjectBuilder();				
-					questionBuilder.add("id", i);				
-					questionBuilder.add("answers", Json.createReader(new StringReader(p.jsonAnswer)).readObject());
-					questionsBuilder.add(questionBuilder);
-				}
+//				// don't include empty answers in the json file as we assume them to be wrong
+//				if(!p.jsonAnswer.isEmpty())
+//				{
+//					JsonObjectBuilder questionBuilder = Json.createObjectBuilder();				
+//					questionBuilder.add("id", i);				
+//					questionBuilder.add("answers", Json.createReader(new StringReader(p.jsonAnswer)).readObject());
+//					questionsBuilder.add(questionBuilder);
+//				}
 				out.printRecord(i,Cube.linkedSpendingCubeName(q.cubeUri),q.string,q.query,p.query,p.precision,p.recall,p.fscore());
 			}
 			try(PrintWriter writer = new PrintWriter("benchmark/"+name+".json"))
