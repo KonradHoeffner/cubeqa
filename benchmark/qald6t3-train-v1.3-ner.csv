@@ -1,0 +1,711 @@
+How much was spent on public works and utilities by the Town of Cary in 2011?,How much was spent on public works and utilities by the <city>Town of Cary</city> in <year>2011</year>?,"select sum(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/town_of_cary_expenditures>
+{
+?obs qb:dataSet ls:town_of_cary_expenditures.
+?obs lso:town_of_cary_expenditures-amount ?amount.
+?obs lso:town_of_cary_expenditures-Class <https://openspending.org/town_of_cary_expenditures/Class/6>.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+}",town_of_cary_expenditures
+Which programs were done under the class of public works and utilities in the expenditure of the Town of Cary?,Which programs were done under the class of public works and utilities in the expenditure of the <city>Town of Cary</city>?,"select ?program from <http://linkedspending.aksw.org/town_of_cary_expenditures>
+{
+?obs qb:dataSet ls:town_of_cary_expenditures.
+?obs lso:town_of_cary_expenditures-Program ?program.
+?obs lso:town_of_cary_expenditures-Class <https://openspending.org/town_of_cary_expenditures/Class/6>.
+}",town_of_cary_expenditures
+How much did the Town of Cary earn in 2009?,How much did the <city>Town of Cary</city> earn in <year>2009</year>?,"select sum(xsd:decimal(?amount))  from <http://linkedspending.aksw.org/town_of_cary_revenues>
+{
+?obs qb:dataSet ls:town_of_cary_revenues.
+?obs lso:refYear ?year.
+filter(year(?year)=2009).
+?obs lso:town_of_cary_revenues-amount ?amount.
+}",town_of_cary_revenues
+Which program earned the most for the Town of Cary?,Which program earned the most for the <city>Town of Cary</city>?,"select ?program  from <http://linkedspending.aksw.org/town_of_cary_revenues>
+{
+?obs qb:dataSet ls:town_of_cary_revenues.
+?obs lso:town_of_cary_revenues-Program ?program.
+?obs lso:town_of_cary_revenues-amount ?amount.
+}
+order by desc(sum(xsd:decimal(?amount))) limit 1",town_of_cary_revenues
+Which department of whiteacre spent the most in 2010?,Which department of <city>Whiteacre</city> spent the most in <year>2010</year>?,"select ?dep from <http://linkedspending.aksw.org/city-of-whiteacre-spending>
+{
+?obs qb:dataSet ls:city-of-whiteacre-spending.
+?obs lso:city-of-whiteacre-spending-to ?dep.
+?obs lso:city-of-whiteacre-spending-amount ?amount.
+?obs lso:refYear ?year.
+filter (year(?year)=2010).
+}
+order by desc(sum(xsd:decimal(?amount))) limit 1",city-of-whiteacre-spending
+How much did social services in Whiteacre spend for refugee resettlement?,How much did social services in <city>Whiteacre</city> spend for refugee resettlement?,"select sum(xsd:decimal(?amount)) as ?result from <http://linkedspending.aksw.org/city-of-whiteacre-spending>
+{
+?obs qb:dataSet ls:city-of-whiteacre-spending.
+?obs lso:city-of-whiteacre-spending-object <https://openspending.org/city-of-whiteacre-spending/object/5819.0>.
+?obs lso:city-of-whiteacre-spending-to <https://openspending.org/city-of-whiteacre-spending/to/531004>.
+?obs lso:city-of-whiteacre-spending-amount ?amount.
+?obs lso:refYear ?year.
+}",city-of-whiteacre-spending
+Which agencies in the Maldives have proposed expenditure amounts of more than 1 billion Maldivian rufiyaa in 2015?,Which agencies in the <location>Maldives</location> have proposed expenditure amounts of more than <money>1 billion Maldivian rufiyaa</money> in <year>2015</year>?,"select ?agency from <http://linkedspending.aksw.org/maldives_proposed_expenditure_2015>
+{
+?obs qb:dataSet ls:maldives_proposed_expenditure_2015.
+?obs lso:maldives_proposed_expenditure_2015-Agency ?agency.
+?obs lso:maldives_proposed_expenditure_2015-amount ?amount.
+filter(xsd:decimal(?amount)>1000000000).
+}",maldives_proposed_expenditure_2015
+What is the total aid to the Anti Corruption Commission in the Maldives in 2015?,What is the total aid to the <organization>Anti Corruption Commission</organization> in the <location>Maldives</location> in <year>2015</year>?,"select sum(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/maldives_proposed_expenditure_2015>
+{
+?obs qb:dataSet ls:maldives_proposed_expenditure_2015.
+?obs lso:maldives_proposed_expenditure_2015-Agency <https://openspending.org/maldives_proposed_expenditure_2015/Agency/anti-corruption-commission>.
+?obs lso:maldives_proposed_expenditure_2015-amount ?amount.
+}",maldives_proposed_expenditure_2015
+Which Ugandan district had the highest budget in 2014?,Which <location>Ugandan</location> district had the highest budget in <year>2014</year>?,"select ?district from <http://linkedspending.aksw.org/ministry_of_health>
+{
+?obs qb:dataSet ls:ministry_of_health.
+?obs lso:ministry_of_health-District ?district.
+?obs lso:ministry_of_health-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2014).
+}
+order by desc(sum(xsd:decimal(?amount))) limit 1",ministry_of_health
+What was the average Uganda health budget over all districts in 2014?,What was the average <location>Uganda</location> health budget over all districts in <year>2014</year>?,"select avg(?sum) as ?sum
+{
+select ?district sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ministry_of_health>
+{
+?obs qb:dataSet ls:ministry_of_health.
+?obs lso:ministry_of_health-District ?district.
+?obs lso:ministry_of_health-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2014).
+}
+}",ministry_of_health
+What is the highest Newcastle city council payment for supplies and services?,What is the highest <organization>Newcastle city council</organization> payment for supplies and services?,"select max(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/newcastle-city-council-payments-over-500>
+{
+?obs qb:dataSet ls:newcastle-city-council-payments-over-500.
+?obs lso:newcastle-city-council-payments-over-500-expenditure-category ""Supplies & Services"".
+?obs lso:newcastle-city-council-payments-over-500-amount ?amount.
+}",newcastle-city-council-payments-over-500
+What's are the 10 highest payments of the Newcastle city council?,What's are the 10 highest payments of the <organization>Newcastle city council</organization>?,"select xsd:decimal(?amount) as ?amount from <http://linkedspending.aksw.org/newcastle-city-council-payments-over-500>
+{
+?obs qb:dataSet ls:newcastle-city-council-payments-over-500.
+?obs lso:newcastle-city-council-payments-over-500-amount ?amount.
+} order by desc(xsd:decimal(?amount)) limit 10",newcastle-city-council-payments-over-500
+How much did the Waltham Forest Council spend on Environment and Regeneration?,How much did the <organization>Waltham Forest Council</organization> spend on Environment and Regeneration?,"select sum(xsd:decimal(?amount)) as ?amount from <http://linkedspending.aksw.org/uk-local-walthamforest>
+{
+?obs qb:dataSet ls:uk-local-walthamforest.
+?obs lso:uk-local-walthamforest-ExpenseArea <https://openspending.org/uk-local-walthamforest/ExpenseArea/environment-regeneration>.
+?obs lso:uk-local-walthamforest-amount ?amount.
+}",uk-local-walthamforest
+"On the Waltham Forest Council, how much money was given to Synarbor Global Solutions Ltd?","On the <organization>Waltham Forest Council</organization>, how much money was given to <organization>Synarbor Global Solutions Ltd</organization>?","select sum(xsd:decimal(?amount)) as ?amount from <http://linkedspending.aksw.org/uk-local-walthamforest>
+{
+?obs qb:dataSet ls:uk-local-walthamforest.
+?obs lso:uk-local-walthamforest-to <https://openspending.org/uk-local-walthamforest/to/15519>.
+?obs lso:uk-local-walthamforest-amount ?amount.
+}",uk-local-walthamforest
+How much money give Cheshire West and Chester on Adult Social Care and Health?,How much money give <organization>Cheshire West and Chester</organization> on Adult Social Care and Health?,"select sum(xsd:decimal(?amount)) as ?amount from <http://linkedspending.aksw.org/cheshire_west_and_chester_april_2013>
+{
+?obs qb:dataSet ls:cheshire_west_and_chester_april_2013.
+?obs lso:cheshire_west_and_chester_april_2013-service-label ""Adult Social Care & Health"".
+?obs lso:cheshire_west_and_chester_april_2013-amount ?amount.
+}",cheshire_west_and_chester_april_2013
+What are the top 5 narratives in Cheshire West and Chester?,What are the top 5 narratives in <organization>Cheshire West and Chester</organization>?,"select distinct(?narrative) from <http://linkedspending.aksw.org/cheshire_west_and_chester_april_2013>
+{
+?obs qb:dataSet ls:cheshire_west_and_chester_april_2013.
+?obs lso:cheshire_west_and_chester_april_2013-narrative ?narrative.
+?obs lso:cheshire_west_and_chester_april_2013-amount ?amount.
+} order by desc(sum(xsd:decimal(?amount))) limit 5",cheshire_west_and_chester_april_2013
+How much did the City of Redacre expend from the insurance fund?,How much did the <city>City of Redacre</city> expend from the insurance fund?,"select sum(xsd:decimal(?amount)) as ?amount from <http://linkedspending.aksw.org/city-of-redacre-spending>
+{
+?obs qb:dataSet ls:city-of-redacre-spending.
+?obs lso:city-of-redacre-spending-from <https://openspending.org/city-of-redacre-spending/from/510>.
+?obs lso:city-of-redacre-spending-amount ?amount.
+}",city-of-redacre-spending
+How much receives each division in the City of Redacre?,How much receives each division in the <city>City of Redacre</city>?,"select ?division sum(xsd:decimal(?amount)) as ?amount from <http://linkedspending.aksw.org/city-of-redacre-spending>
+{
+?obs qb:dataSet ls:city-of-redacre-spending.
+?obs lso:city-of-redacre-spending-to ?division.
+?obs lso:city-of-redacre-spending-amount ?amount.
+}",city-of-redacre-spending
+What is the total Wandsworth spending from all departments?,What is the total <location>Wandsworth</location> spending from all departments?,"select sum(xsd:decimal(?amount)) as ?amount from <http://linkedspending.aksw.org/wandsworthspending_2013>
+{
+?obs qb:dataSet ls:wandsworthspending_2013.
+?obs lso:wandsworthspending_2013-amount ?amount.
+}",wandsworthspending_2013
+How much money Wandsworth spends on the criminal records bureau?,How much money <location>Wandsworth</location> spends on the criminal records bureau?,"select sum(xsd:decimal(?amount)) as ?amount from <http://linkedspending.aksw.org/wandsworthspending_2013>
+{
+?obs qb:dataSet ls:wandsworthspending_2013.
+?obs lso:wandsworthspending_2013-DetailedExpenses ""CRIMINAL RECORDS BUREAU"".
+?obs lso:wandsworthspending_2013-amount ?amount.
+}",wandsworthspending_2013
+Top 10 IW Council Spending expense types?,Top 10 <dataset>IW Council Spending</dataset> expense types?,"select ?et from <http://linkedspending.aksw.org/iw-council-spending-2012-13-test>
+{
+?obs qb:dataSet ls:iw-council-spending-2012-13-test.
+?obs lso:iw-council-spending-2012-13-test-expensestype ?et.
+?obs lso:iw-council-spending-2012-13-test-amount ?amount.
+} order by desc(sum(xsd:decimal(?amount))) limit 10",iw-council-spending-2012-13-test
+Which IW Council service area has the highest spending?,Which <dataset>IW Council</dataset> service area has the highest spending?,"select ?area from <http://linkedspending.aksw.org/iw-council-spending-2012-13-test>
+{
+?obs qb:dataSet ls:iw-council-spending-2012-13-test.
+?obs lso:iw-council-spending-2012-13-test-servicearea ?area.
+?obs lso:iw-council-spending-2012-13-test-amount ?amount.
+} order by desc(sum(xsd:decimal(?amount))) limit 1",iw-council-spending-2012-13-test
+Which departments of the city of Springfield had a higher budget in 2005 then in 2006?,Which departments of the city of <city>Springfield</city> had a higher budget in <year>2005</year> then in <year>2006</year>?,"select ?dep
+{ 
+ select ?dep sum(xsd:decimal(?amount5)) as ?sum5 sum(xsd:decimal(?amount6)) as ?sum6
+ from <http://linkedspending.aksw.org/city-of-springfield-budget>
+ {
+ ?obs qb:dataSet ls:city-of-springfield-budget.
+ ?obs lso:city-of-springfield-budget-to ?dep.
+ {
+ ?obs lso:city-of-springfield-budget-amount ?amount5.
+ ?obs lso:refYear ?year5.
+ filter(year(?year5)=2005).
+ }
+ union
+ {
+ ?obs lso:city-of-springfield-budget-amount ?amount6.
+ ?obs lso:refYear ?year6.
+ filter(year(?year6)=2006).
+ }
+ } 
+} group by ?dep having(?sum5>?sum6)",city-of-springfield-budget
+What is the highest single budget amount in the city of Springfield for public works?,What is the highest single budget amount in the city of <city>Springfield</city> for public works?,"select max(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/city-of-springfield-budget>
+{
+?obs qb:dataSet ls:city-of-springfield-budget.
+?obs lso:city-of-springfield-budget-deptgroup <https://openspending.org/city-of-springfield-budget/deptgroup/public-works>.
+?obs lso:city-of-springfield-budget-amount ?amount.
+}",city-of-springfield-budget
+Which proportion went to Fullerton of the amount spent on Californian cities in 2010?,Which proportion went to <city>Fullerton</city> of the amount spent on <location>Californian</location> cities in <year>2010</year>?,"select ?sum_fullerton/?sum_all
+{
+select sum(xsd:decimal(?fullerton)) as ?sum_fullerton sum(xsd:decimal(?all)) as ?sum_all
+from <http://linkedspending.aksw.org/pscs_ca_cities>
+{
+?obs qb:dataSet ls:pscs_ca_cities.
+{
+?obs lso:pscs_ca_cities-gov-full-name ""Fullerton"".
+?obs lso:pscs_ca_cities-amount ?fullerton.
+}
+union 
+{
+?obs lso:pscs_ca_cities-amount ?all.
+}
+}
+}",pscs_ca_cities
+How many categories are there for californian cities?,How many categories are there for californian cities?,"select count(distinct(?category)) from <http://linkedspending.aksw.org/pscs_ca_cities>
+{
+?obs qb:dataSet ls:pscs_ca_cities.
+?obs lso:pscs_ca_cities-caption ?category.
+}",pscs_ca_cities
+What was the highest Washington DC employee salary in 2011?,What was the highest <city>Washington DC</city> employee salary in <year>2011</year>?,"select max(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/dc-city-salaries>
+{
+?obs qb:dataSet ls:dc-city-salaries.
+?obs lso:dc-city-salaries-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+}
+",dc-city-salaries
+What is the average salary of an Engineering Technician in Washington DC?,What is the average salary of an <class>Engineering Technician</class> in <city>Washington DC</city>?,"select avg(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/dc-city-salaries>
+{
+?obs qb:dataSet ls:dc-city-salaries.
+?obs lso:dc-city-salaries-amount ?amount.
+?obs lso:dc-city-salaries-position ""Engineering Technician"".
+}",dc-city-salaries
+What was the amount recieved by King George's Field from Big Lottery Fund grants?,What was the amount recieved by <organization>King George's Field</organization> from <organization>Big Lottery Fund</organization> grants?,"select xsd:decimal(?amount) from <http://linkedspending.aksw.org/big-lottery-fund-grants>
+{
+?obs qb:dataSet ls:big-lottery-fund-grants.
+?obs lso:big-lottery-fund-grants-amount ?amount.
+?obs lso:big-lottery-fund-grants-to <https://openspending.org/big-lottery-fund-grants/to/king-george-s-field>.
+}
+",big-lottery-fund-grants
+Over which programmes more than 1000000 pound but less than 10000000 pound in grants were given by the Big Lottery Fund?,Over which programmes more than <money>1000000 pound</money> but less than <money>10000000 pound</money> in grants were given by the <organization>Big Lottery Fund</organization>?,"select ?programme from <http://linkedspending.aksw.org/big-lottery-fund-grants>
+{
+?obs qb:dataSet ls:big-lottery-fund-grants.
+?obs lso:big-lottery-fund-grants-programme-name ?programme.
+?obs lso:big-lottery-fund-grants-amount ?amount.
+}
+group by ?programme
+having (sum(xsd:decimal(?amount))>1000000&&sum(xsd:decimal(?amount))<10000000)",big-lottery-fund-grants
+On which service areas of Gloucestershire was spent more than 1000000 pound in total?,On which service areas of <city>Gloucestershire</city> was spent more than <money>1000000 pound</money> in total?,"select ?area from <http://linkedspending.aksw.org/uk-local-gloucestershirev1>
+{
+?obs qb:dataSet ls:uk-local-gloucestershirev1.
+?obs lso:uk-local-gloucestershirev1-service-area ?area.
+?obs lso:uk-local-gloucestershirev1-amount ?amount.
+}
+group by ?area
+having (sum(xsd:decimal(?amount))>1000000)",uk-local-gloucestershirev1
+How much money did the Gloucestershire Police Authority receive?,How much money did the <organization>Gloucestershire Police Authority</organization> receive?,"select sum(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/uk-local-gloucestershirev1>
+{
+?obs qb:dataSet ls:uk-local-gloucestershirev1.
+?obs lso:uk-local-gloucestershirev1-to <https://openspending.org/uk-local-gloucestershirev1/to/gloucestershire-police-authority>.
+?obs lso:uk-local-gloucestershirev1-amount ?amount.
+}",uk-local-gloucestershirev1
+How much did the department for education pay for extra education services in Scotland?,How much did the <organization>department for education</organization> pay for extra education services in <location>Scotland</location>?,"select sum(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/ukgov-finances-cra>
+{
+?obs qb:dataSet ls:ukgov-finances-cra.
+?obs lso:ukgov-finances-cra-region <https://openspending.org/ukgov-finances-cra/region/scotland>.
+?obs lso:ukgov-finances-cra-cofog2 <https://openspending.org/ukgov-finances-cra/cofog2/09.6>.
+?obs lso:ukgov-finances-cra-from <https://openspending.org/ukgov-finances-cra/from/Dept022>.
+?obs lso:ukgov-finances-cra-amount ?amount.
+}",ukgov-finances-cra
+What HTM functions are paid from the department for education the UK?,What HTM functions are paid from the <organization>department for education</organization> the <location>UK</location>?,"select distinct(?function) from <http://linkedspending.aksw.org/ukgov-finances-cra>
+{
+?obs qb:dataSet ls:ukgov-finances-cra.
+?obs lso:ukgov-finances-cra-hmt1 ?function.
+?obs lso:ukgov-finances-cra-from <https://openspending.org/ukgov-finances-cra/from/Dept022>.
+}",ukgov-finances-cra
+What are the activity statuses of basic health care in Urozgan?,What are the activity statuses of basic health care in <location>Urozgan</location>?,"select distinct(?status) from <http://linkedspending.aksw.org/iati_cordaid_af>
+{
+?obs qb:dataSet ls:iati_cordaid_af.
+?obs lso:iati_cordaid_af-Unique <https://openspending.org/iati_cordaid_af/Unique/195>.
+?obs lso:iati_cordaid_af-Activity_Status ?status. 
+}",iati_cordaid_af
+What is the total amount of basic nutrition aid by Cordaid in Afghanistan?,What is the total amount of basic nutrition aid by <organization>Cordaid</organization> in <location>Afghanistan</location>?,"select sum(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/iati_cordaid_af>
+{
+?obs qb:dataSet ls:iati_cordaid_af.
+?obs lso:iati_cordaid_af-Sector <https://openspending.org/iati_cordaid_af/Sector/12240>.
+?obs lso:iati_cordaid_af-amount ?amount.
+}",iati_cordaid_af
+What was the total budget on Technical Services in City of Toronto in 2009?,What was the total budget on Technical Services in </city>City of Toronto</city> in <year>2009</year>?,"select sum(xsd:decimal(?amount)) from <http://linkedspending.aksw.org/ca-local-toronto>
+{
+?obs qb:dataSet ls:ca-local-toronto.
+?obs lso:ca-local-toronto-division ""Technical Services"".
+?obs lso:ca-local-toronto-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2009).
+}",ca-local-toronto
+"Which divisions of the City of Toronto received more than 10000000 canadian dollar in 2010?
+",Which divisions of the <city>City of Toronto</city> received more than 10000000 canadian dollar in <year><year>2010</year></year>?,"select ?division from <http://linkedspending.aksw.org/ca-local-toronto>
+{
+?obs qb:dataSet ls:ca-local-toronto.
+?obs lso:ca-local-toronto-division ?division.
+?obs lso:ca-local-toronto-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2010).
+} group by ?division
+having (sum(xsd:decimal(?amount)) > 10000000)",ca-local-toronto
+How much did the Sightsavers charity in Ireland pay in total?,How much did the <organization>Sightsavers</organization> charity in <location>Ireland</location> pay in total?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ie_charity_exp>
+{
+?obs qb:dataSet ls:ie_charity_exp.
+?obs lso:ie_charity_exp-Charity <https://openspending.org/ie_charity_exp/Charity/15437>. 
+?obs lso:ie_charity_exp-amount ?amount.
+}",ie_charity_exp
+How much money does the Special Olympics Ireland charity spend on generating funds?,How much money does the <organization>Special Olympics Ireland charity</organization> spend on generating funds?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ie_charity_exp>
+{
+?obs qb:dataSet ls:ie_charity_exp.
+?obs lso:ie_charity_exp-Charity <https://openspending.org/ie_charity_exp/Charity/7556>. 
+?obs lso:ie_charity_exp-Level3 <https://openspending.org/ie_charity_exp/Level3/b1-5100>.
+?obs lso:ie_charity_exp-amount ?amount.
+}",ie_charity_exp
+What is the frontex budget for administrative expenditure?,What is the <dataset>frontex</dataset> budget for administrative expenditure?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/frontex>
+{
+?obs qb:dataSet ls:frontex.
+?obs lso:frontex-Heading <https://openspending.org/frontex/Heading/a-2>.
+?obs lso:frontex-amount ?amount.
+}",frontex
+What is the average frontex budget chapter budget?,What is the average <dataset>frontex</dataset> budget chapter budget?,"select avg(?sum)
+{
+select ?chapter sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/frontex>
+{
+?obs qb:dataSet ls:frontex.
+?obs lso:frontex-Chapter ?chapter.
+?obs lso:frontex-amount ?amount.
+}
+}",frontex
+What was the largest amount spent on housing and building in the Dublin City Council Expenditure Budget of 2013?,What was the largest amount spent on housing and building in the <dataset>Dublin City Council Expenditure Budget</dataset> of <year>2013</year>?,"select max(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/dcc_exp_budget2013>
+{
+?obs qb:dataSet ls:dcc_exp_budget2013.
+?obs lso:dcc_exp_budget2013-Division <https://openspending.org/dcc_exp_budget2013/Division/a>.
+?obs lso:dcc_exp_budget2013-amount ?amount.
+}",dcc_exp_budget2013
+How much was the budget amount of the Dublin City Council in 2013?,How much was the budget amount of the <dataset>Dublin City Council</dataset> in <year>2013</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/dcc_exp_budget2013>
+{
+?obs qb:dataSet ls:dcc_exp_budget2013.
+?obs lso:dcc_exp_budget2013-amount ?amount.
+}",dcc_exp_budget2013
+"How much financial crisis aid did Austria receive in Guaranetees?
+",How much financial crisis aid did <location>Austria</location> receive in <money>Guaranetees</money>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/financial_aid>
+{
+?obs qb:dataSet ls:financial_aid.
+?obs lso:financial_aid-amount ?amount.
+?obs lso:financial_aid-aid ""Guarantees (1)"".
+?obs lso:financial_aid-country <https://openspending.org/financial_aid/country/austria>.
+}",financial_aid
+How much financial crisis aid did Belgium receive in the year of 2011?,How much financial crisis aid did <location>Belgium</location> receive in the year of <year>2011</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/financial_aid>
+{
+?obs qb:dataSet ls:financial_aid.
+?obs lso:financial_aid-amount ?amount.
+?obs lso:financial_aid-country <https://openspending.org/financial_aid/country/belgium>.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+}",financial_aid
+How much was charity spending was expended for charitable activities in Bangladesh?,How much was charity spending was expended for charitable activities in <location>Bangladesh</location>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/concern2012>
+{
+?obs qb:dataSet ls:concern2012.
+?obs lso:concern2012-Level1 <https://openspending.org/concern2012/Level1/expended>.
+?obs lso:concern2012-Level3 <https://openspending.org/concern2012/Level3/charitable-activities>.
+?obs lso:concern2012-Level4 <https://openspending.org/concern2012/Level4/bangladesh>.
+?obs lso:concern2012-amount ?amount.
+}",concern2012
+What is the total cost of generating funds for public appeals events?,What is the total cost of generating funds for public appeals events?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/concern2012>
+{
+?obs qb:dataSet ls:concern2012.
+?obs lso:concern2012-Level3 <https://openspending.org/concern2012/Level3/costs-of-generating-funds>.
+?obs lso:concern2012-Level4 <https://openspending.org/concern2012/Level4/public-appeals-events>.
+?obs lso:concern2012-amount ?amount.
+}",concern2012
+What is the amount given by the Department of Health to VWR International LLC?,What is the amount given by the <organization>Department of Health</organization> to <organization>VWR International LLC</organization>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/dc-vendors-contractors>
+{
+?obs qb:dataSet ls:dc-vendors-contractors.
+?obs lso:dc-vendors-contractors-from <https://openspending.org/dc-vendors-contractors/from/department-of-health>.
+?obs lso:dc-vendors-contractors-to <https://openspending.org/dc-vendors-contractors/to/vwr-international-llc>.
+?obs lso:dc-vendors-contractors-amount ?amount.
+}",dc-vendors-contractors
+How much was given in total to the Riverside Publishing vendor for educational purposes.,How much was given in total to the <organization>Riverside Publishing</organization> vendor for educational purposes.,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/dc-vendors-contractors>
+{
+?obs qb:dataSet ls:dc-vendors-contractors.
+?obs lso:dc-vendors-contractors-objecttitle <https://openspending.org/dc-vendors-contractors/objecttitle/educational>.
+?obs lso:dc-vendors-contractors-to <https://openspending.org/dc-vendors-contractors/to/the-riverside-publishing>.
+?obs lso:dc-vendors-contractors-amount ?amount.
+}",dc-vendors-contractors
+What was the highest amount for materials and supplies used in Cameroon in 2008?,What was the highest amount for materials and supplies used in <location>Cameroon</location> in <year>2008</year>?,"select max(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/cameroon_visualisation>
+{
+?obs qb:dataSet ls:cameroon_visualisation.
+?obs lso:cameroon_visualisation-head_account <https://openspending.org/cameroon_visualisation/head_account/610-xxx>.
+?obs lso:cameroon_visualisation-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2008).
+}",cameroon_visualisation
+How much is the total expenditure of the Tigerne Council in Cameroon?,How much is the total expenditure of the <organization>Tigerne Council</organization> in <location>Cameroon</location>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/cameroon_visualisation>
+{
+?obs qb:dataSet ls:cameroon_visualisation.
+?obs lso:cameroon_visualisation-revenue_expenditure ""EXPENDITURE"".
+?obs lso:cameroon_visualisation-council_name <https://openspending.org/cameroon_visualisation/council_name/tignere-council>.
+?obs lso:cameroon_visualisation-amount ?amount.
+}",cameroon_visualisation
+When did London get Nominet Trust funding?,When did <city>London</city> get <organization>Nominet Trust</organization> funding?,"select distinct(?date) from <http://linkedspending.aksw.org/nominettrust_funding>
+{
+?obs qb:dataSet ls:nominettrust_funding.
+?obs lso:nominettrust_funding-region <https://openspending.org/nominettrust_funding/region/london>.
+?obs lso:refDate ?date.
+}",nominettrust_funding
+When did the Web in Society programme get Nominet Trust funding?,When did the <organization>Web in Society</organization> programme get <organization>Nominet Trust</organization> funding?,"select distinct(?date) from <http://linkedspending.aksw.org/nominettrust_funding>
+{
+?obs qb:dataSet ls:nominettrust_funding.
+?obs lso:nominettrust_funding-programme <https://openspending.org/nominettrust_funding/programme/web-in-society>.
+?obs lso:refDate ?date.
+}",nominettrust_funding
+How much did Armenia spent in 2009 on general public services?,How much did <location>Armenia</location> spent in <year>2009</year> on general public services?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/618ac3ec98384f44a9ef142356ce476d>
+{
+?obs qb:dataSet ls:618ac3ec98384f44a9ef142356ce476d.
+?obs lso:618ac3ec98384f44a9ef142356ce476d-cofog1 <https://openspending.org/618ac3ec98384f44a9ef142356ce476d/cofog1/01>.
+?obs lso:618ac3ec98384f44a9ef142356ce476d-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2009).
+}",618ac3ec98384f44a9ef142356ce476d
+What are the budgetary classifications of running expenses in Armenia?,What are the budgetary classifications of running expenses in <location>Armenia</location>?,"select distinct(?type) from <http://linkedspending.aksw.org/618ac3ec98384f44a9ef142356ce476d>
+{
+?obs qb:dataSet ls:618ac3ec98384f44a9ef142356ce476d.
+?obs lso:618ac3ec98384f44a9ef142356ce476d-type ?type.
+?obs lso:618ac3ec98384f44a9ef142356ce476d-economiclevel1 ""Running expenses"".
+}",618ac3ec98384f44a9ef142356ce476d
+"In Nigerias proposed budget of 2013, how much is assigned to total overhead costs?","In <location>Nigerias</location> proposed budget of <year>2013</year>, how much is assigned to total overhead costs?","select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/propbudg13>
+{
+?obs qb:dataSet ls:propbudg13.
+?obs lso:propbudg13-to <https://openspending.org/propbudg13/to/total-overhead-cost>.
+?obs lso:propbudg13-amount ?amount.
+}",propbudg13
+How much did Nigernian Ministry of Petroleum Resources receive from ministries and department agencies?,How much did <location>Nigernian</location> <organization>Ministry of Petroleum Resources</organization> receive from ministries and department agencies?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/propbudg13>
+{
+?obs qb:dataSet ls:propbudg13.
+?obs lso:propbudg13-from <https://openspending.org/propbudg13/from/ministries-and-department-agencies>.
+?obs lso:propbudg13-recipient <https://openspending.org/propbudg13/recipient/ministry-of-petroleum-resources>.
+?obs lso:propbudg13-amount ?amount.
+}",propbudg13
+How much did the New York City Council members give to the Gun Hill Basketball Association?,How much did the <organization>New York City Council</organization> members give to the <organization>Gun Hill Basketball Association</organization>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/nyc-council-member-items>
+{
+?obs qb:dataSet ls:nyc-council-member-items.
+?obs lso:nyc-council-member-items-to <https://openspending.org/nyc-council-member-items/to/gun-hill-basketball-association-inc>.
+?obs lso:nyc-council-member-items-amount ?amount.
+}",nyc-council-member-items
+"In how many years did Dickens give money to American Performing Arts Collaborative, Inc.?","In how many years did <person>Dickens</person> give money to <organization>American Performing Arts Collaborative, Inc.</organization>?","select count(distinct(year(?year))) as ?years from <http://linkedspending.aksw.org/nyc-council-member-items>
+{
+?obs qb:dataSet ls:nyc-council-member-items.
+?obs lso:nyc-council-member-items-from <https://openspending.org/nyc-council-member-items/from/dickens>.
+?obs lso:nyc-council-member-items-to <https://openspending.org/nyc-council-member-items/to/american-performing-arts-collaborative-inc>.
+?obs lso:refYear ?year.
+}",nyc-council-member-items
+How high were the service support costs of the Fingal County Council Expenditure Budget of 2011?,How high were the service support costs of the <dataset>Fingal County Council Expenditure Budget<dataset> of <year>2011</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/fingal_exp_budget>
+{
+?obs qb:dataSet ls:fingal_exp_budget.
+?obs lso:fingal_exp_budget-ref2-desc ""Service Support Costs"".
+?obs lso:fingal_exp_budget-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+}",fingal_exp_budget
+"What was the lowest amount for the veterinary service in the Fingal County Council expenditure budget?
+","What was the lowest amount for the veterinary service in the <dataset>Fingal County Council expenditure budget</dataset>?
+","select min(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/fingal_exp_budget>
+{
+?obs qb:dataSet ls:fingal_exp_budget.
+?obs lso:fingal_exp_budget-Service <https://openspending.org/fingal_exp_budget/Service/g04>.
+?obs lso:fingal_exp_budget-amount ?amount.
+}",fingal_exp_budget
+"What is the total investment budget for basic education in Mezam, Cameroon?","What is the total investment budget for basic education in Mezam, Cameroon?","select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/cm-nwr-investments>
+{
+?obs qb:dataSet ls:cm-nwr-investments.
+?obs lso:cm-nwr-investments-area <https://openspending.org/cm-nwr-investments/area/mezam>.
+?obs lso:cm-nwr-investments-chapter <https://openspending.org/cm-nwr-investments/chapter/15>.
+?obs lso:cm-nwr-investments-amount ?amount.
+}",cm-nwr-investments
+Which areas in Cameroon had an investment budget of more than 5 billion CFA in 2010?,Which areas in Cameroon had an investment budget of more than 5 billion CFA in <year><year>2010</year></year>?,"select ?area from <http://linkedspending.aksw.org/cm-nwr-investments>
+{
+?obs qb:dataSet ls:cm-nwr-investments.
+?obs lso:cm-nwr-investments-area ?area.
+?obs lso:cm-nwr-investments-amount ?amount.
+}
+group by ?area
+having (sum(xsd:decimal(?amount))>5000000000)",cm-nwr-investments
+"How much money was given to works and transport in the Ugandan budget?
+","How much money was given to works and transport in the Ugandan budget?
+","select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ug_budget_subcategories>
+{
+?obs qb:dataSet ls:ug_budget_subcategories.
+?obs lso:ug_budget_subcategories-to <https://openspending.org/ug_budget_subcategories/to/works-and-transport>.
+?obs lso:ug_budget_subcategories-amount ?amount.
+}",ug_budget_subcategories
+In which years did the Uganda budget contain money for Education?,In which years did the Uganda budget contain money for Education?,"select distinct(year(?year)) as ?year from <http://linkedspending.aksw.org/ug_budget_subcategories>
+{
+?obs qb:dataSet ls:ug_budget_subcategories.
+?obs lso:ug_budget_subcategories-to <https://openspending.org/ug_budget_subcategories/to/education>.
+?obs lso:ug_budget_subcategories-amount ?amount.
+?obs lso:refYear ?year.
+}",ug_budget_subcategories
+How many donor entities provided foreign aid for Typhoon Yolanda?,How many donor entities provided foreign aid for Typhoon Yolanda?,"select count(distinct(?entity)) from <http://linkedspending.aksw.org/faith>
+{
+?obs qb:dataSet ls:faith.
+?obs lso:faith-target <https://openspending.org/faith/target/typhoon-yolanda>.
+?obs lso:faith-from ?entity.
+}",faith
+How much foreign aid went over the Red Cross from China?,How much foreign aid went over the Red Cross from China?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/faith>
+{
+?obs qb:dataSet ls:faith.
+?obs lso:faith-conduit <https://openspending.org/faith/conduit/red-cross>. 
+?obs lso:faith-from <https://openspending.org/faith/from/china>.
+?obs lso:faith-amount ?amount.
+}",faith
+Which type of sector is receiving the most Finland foreign aid in India?,Which type of sector is receiving the most Finland foreign aid in India?,"select ?result
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/in>.
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-sector ?result.
+}
+order by desc(sum(xsd:decimal(?amount)))
+limit 1",finland-aid
+What types of foreign aid from Finland did Belarus receive in 2011?,What types of foreign aid from Finland did Belarus receive in <year>2011</year>?,"select distinct(?result)
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/by>.
+?obs lso:finland-aid-type-of-aid ?result.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+}",finland-aid
+What was the proposed City of Providence budget amount for City Courts by the Muncipal Court?,What was the proposed City of Providence budget amount for City Courts by the Muncipal Court?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/pvd2014proposed>
+{
+?obs qb:dataSet ls:pvd2014proposed.
+?obs lso:pvd2014proposed-acct-dept ""101-106: Muncipal Court"".
+?obs lso:pvd2014proposed-acct-div ""City Courts"".
+?obs lso:pvd2014proposed-amount ?amount.
+}",pvd2014proposed
+How much was the City of Providence budget for educational materials?,How much was the City of Providence budget for educational materials?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/pvd2014proposed>
+{
+?obs qb:dataSet ls:pvd2014proposed.
+?obs lso:pvd2014proposed-gl-account ""54625: EDUCATIONAL MATERIALS"".
+?obs lso:pvd2014proposed-amount ?amount.
+}",pvd2014proposed
+When was upgrading and greening in ward 49 paid?,When was upgrading and greening in ward 49 paid?,"select distinct(?date) from <http://linkedspending.aksw.org/pbw-ct>
+{
+?obs qb:dataSet ls:pbw-ct.
+?obs lso:pbw-ct-Category <https://openspending.org/pbw-ct/Category/upgrading-and-greening-in-ward-49>.
+?obs lso:refDate ?date.
+}",pbw-ct
+What are the funding sources for Cape Town Electricity?,What are the funding sources for Cape Town Electricity?,"select distinct(?source) from <http://linkedspending.aksw.org/pbw-ct>
+{
+?obs qb:dataSet ls:pbw-ct.
+?obs lso:pbw-ct-Department <https://openspending.org/pbw-ct/Department/cape-town-electricity>.
+?obs lso:pbw-ct-FundingSource ?source.
+}",pbw-ct
+Which investor type using CKAN technology received the most funding?,Which investor type using CKAN technology received the most funding?,"select ?type from <http://linkedspending.aksw.org/trends_in_civi_tech_open_gov>
+{
+?obs qb:dataSet ls:trends_in_civi_tech_open_gov.
+?obs lso:trends_in_civi_tech_open_gov-tech ""CKAN"".
+?obs lso:trends_in_civi_tech_open_gov-amount ?amount.
+?obs lso:trends_in_civi_tech_open_gov-investor_type ?type.
+} order by desc(sum(xsd:decimal(?amount))) limit 1",trends_in_civi_tech_open_gov
+When did Pew Charitable Trust invest?,When did Pew Charitable Trust invest?,"select ?date from <http://linkedspending.aksw.org/trends_in_civi_tech_open_gov>
+{
+?obs qb:dataSet ls:trends_in_civi_tech_open_gov.
+?obs lso:trends_in_civi_tech_open_gov-from <https://openspending.org/trends_in_civi_tech_open_gov/from/pew-charitable-trust>.
+?obs lso:refDate ?date.
+}",trends_in_civi_tech_open_gov
+How much did Armenia spend in 2006 for buildings and edifices?,How much did Armenia spend in <year>2006</year> for buildings and edifices?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/e27f4ef7601446798cfa733a06cea8d9>
+{
+?obs qb:dataSet ls:e27f4ef7601446798cfa733a06cea8d9.
+?obs lso:e27f4ef7601446798cfa733a06cea8d9-economiclevel3 ""Buildings and edifices"".
+?obs lso:e27f4ef7601446798cfa733a06cea8d9-amount ?amount.
+}",e27f4ef7601446798cfa733a06cea8d9
+Which were the admins for personal and catering materials in Armenia in 2006?,Which were the admins for personal and catering materials in Armenia in <year>2006</year>?,"select distinct(?admin) from <http://linkedspending.aksw.org/e27f4ef7601446798cfa733a06cea8d9>
+{
+?obs qb:dataSet ls:e27f4ef7601446798cfa733a06cea8d9.
+?obs lso:e27f4ef7601446798cfa733a06cea8d9-economic <https://openspending.org/e27f4ef7601446798cfa733a06cea8d9/economic/4267>.
+?obs lso:e27f4ef7601446798cfa733a06cea8d9-from ?admin.
+}",e27f4ef7601446798cfa733a06cea8d9
+How much was spent on public utilities in Armenia in 2007?,How much was spent on public utilities in Armenia in <year>2007</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/f0bd947d9854445987d6ece304840a3c>
+{
+?obs qb:dataSet ls:f0bd947d9854445987d6ece304840a3c.
+?obs lso:f0bd947d9854445987d6ece304840a3c-economic <https://openspending.org/f0bd947d9854445987d6ece304840a3c/economic/4213>.
+?obs lso:f0bd947d9854445987d6ece304840a3c-amount ?amount.
+}",f0bd947d9854445987d6ece304840a3c
+What was the total cost of running expenses for Armenia in 2007?,What was the total cost of running expenses for Armenia in <year>2007</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/f0bd947d9854445987d6ece304840a3c>
+{
+?obs qb:dataSet ls:f0bd947d9854445987d6ece304840a3c.
+?obs lso:f0bd947d9854445987d6ece304840a3c-economiclevel1 ""Running expenses"".
+?obs lso:f0bd947d9854445987d6ece304840a3c-amount ?amount.
+}",f0bd947d9854445987d6ece304840a3c
+What was the total Scottish Government expenditure of 2013-01-09?,What was the total Scottish Government expenditure of <year>2013</year>-01-09?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/scottish-spending-jan13>
+{
+?obs qb:dataSet ls:scottish-spending-jan13.
+?obs lso:scottish-spending-jan13-amount ?amount.
+?obs lso:refDate ?date.
+filter(strstarts(str(?date), ""2013-01-09"")).
+}",scottish-spending-jan13
+What was the smallest amount expended for Environment and Forestry by the Scottish Government in January of 2013?,What was the smallest amount expended for Environment and Forestry by the Scottish Government in January of <year>2013</year>?,"select min(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/scottish-spending-jan13>
+{
+?obs qb:dataSet ls:scottish-spending-jan13.
+?obs lso:scottish-spending-jan13-amount ?amount.
+?obs lso:scottish-spending-jan13-directorate ""Environment and Forestry"".
+}",scottish-spending-jan13
+In which year did the City of Oakland have the highest total expenditure budget?,In which year did the City of Oakland have the highest total expenditure budget?,"select year(?year) from <http://linkedspending.aksw.org/oakland-adopted-budget-fy-2011-13-expenditures>
+{
+?obs qb:dataSet ls:oakland-adopted-budget-fy-2011-13-expenditures.
+?obs lso:oakland-adopted-budget-fy-2011-13-expenditures-amount ?amount.
+?obs lso:refYear ?year.
+}
+order by desc(sum(xsd:decimal(?amount))) limit 1",oakland-adopted-budget-fy-2011-13-expenditures
+What was the total City of Oakland budget for the Administrative Unit in 2012?,What was the total City of Oakland budget for the Administrative Unit in <year><year>2012</year></year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/oakland-adopted-budget-fy-2011-13-expenditures>
+{
+?obs qb:dataSet ls:oakland-adopted-budget-fy-2011-13-expenditures.
+?obs lso:oakland-adopted-budget-fy-2011-13-expenditures-unit ""Administrative Unit"".
+?obs lso:oakland-adopted-budget-fy-2011-13-expenditures-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2012)
+}",oakland-adopted-budget-fy-2011-13-expenditures
+How high was the recurrent expenditure for the Sierra Leona Government budget in 2013?,How high was the recurrent expenditure for the Sierra Leona Government budget in <year>2013</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/allexp13budg>
+{
+?obs qb:dataSet ls:allexp13budg.
+?obs lso:allexp13budg-level0 ""RECURRENT EXPENDITURE"".
+?obs lso:allexp13budg-amount ?amount.
+}",allexp13budg
+How much was budgeted for general services for the Office of the President of Sierra Leona in 2013?,How much was budgeted for general services for the Office of the President of Sierra Leona in <year>2013</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/allexp13budg>
+{
+?obs qb:dataSet ls:allexp13budg.
+?obs lso:allexp13budg-level1 ""GENERAL SERVICES"".
+?obs lso:allexp13budg-level2 ""Office of the President"".
+?obs lso:allexp13budg-amount ?amount.
+}",allexp13budg
+Which clients received lobbying contributions of more than 50000000 $?,Which clients received lobbying contributions of more than 50000000 $?,"select ?client sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/lobbying_dataset_qy>
+{
+?obs qb:dataSet ls:lobbying_dataset_qy.
+?obs lso:lobbying_dataset_qy-client ?client.
+?obs lso:lobbying_dataset_qy-amount ?amount.
+}
+group by ?client
+having sum(xsd:decimal(?amount))>50000000",lobbying_dataset_qy
+Which industry received the most lobbying contributions?,Which industry received the most lobbying contributions?,"select ?industry from <http://linkedspending.aksw.org/lobbying_dataset_qy>
+{
+?obs qb:dataSet ls:lobbying_dataset_qy.
+?obs lso:lobbying_dataset_qy-industry ?industry.
+?obs lso:lobbying_dataset_qy-amount ?amount.
+}
+order by desc(sum(xsd:decimal(?amount))) limit 1",lobbying_dataset_qy
+How much did the Manchester City Council give for  Learning Disabilities to SLC Paragon?,How much did the Manchester City Council give for  Learning Disabilities to SLC Paragon?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/mcc_spend>
+{
+?obs qb:dataSet ls:mcc_spend.
+?obs lso:mcc_spend-amount ?amount.
+?obs lso:mcc_spend-supplier-name ""SLC Paragon"".
+}",mcc_spend
+Which service areas do the Manchester City Council spendings contain?,Which service areas do the Manchester City Council spendings contain?,"select distinct(?area) from <http://linkedspending.aksw.org/mcc_spend>
+{
+?obs qb:dataSet ls:mcc_spend.
+?obs lso:mcc_spend-service-area ?area.
+}",mcc_spend
+How much was Albanias 2013 budget for education?,How much was Albanias <year>2013</year> budget for education?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/alb_planned_budget_2013>
+{
+?obs qb:dataSet ls:alb_planned_budget_2013.
+?obs lso:alb_planned_budget_2013-cofog1 <https://openspending.org/alb_planned_budget_2013/cofog1/09>.
+?obs lso:alb_planned_budget_2013-amount ?amount.
+}",alb_planned_budget_2013
+What are the identification numbers of housing and community amenities in Albanias 2013 budget?,What are the identification numbers of housing and community amenities in Albanias <year>2013</year> budget?,"select distinct(?id) from <http://linkedspending.aksw.org/alb_planned_budget_2013>
+{
+?obs qb:dataSet ls:alb_planned_budget_2013.
+?obs lso:alb_planned_budget_2013-cofog1 <https://openspending.org/alb_planned_budget_2013/cofog1/06>.
+?obs lso:alb_planned_budget_2013-UniqueID ?id.
+}",alb_planned_budget_2013
+What was the total Kenya County Expenditure in Kiambu by the Thika administration?,What was the total Kenya County Expenditure in Kiambu by the Thika administration?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ke-county-exp>
+{
+?obs qb:dataSet ls:ke-county-exp.
+?obs lso:ke-county-exp-administration <https://openspending.org/ke-county-exp/administration/thika>.
+?obs lso:ke-county-exp-county <https://openspending.org/ke-county-exp/county/kiambu>.
+?obs lso:ke-county-exp-amount ?amount.
+}",ke-county-exp
+Which Kenya country administration had the highest expenditure budget?,Which Kenya country administration had the highest expenditure budget?,"select ?admin from <http://linkedspending.aksw.org/ke-county-exp>
+{
+?obs qb:dataSet ls:ke-county-exp.
+?obs lso:ke-county-exp-administration ?admin.
+?obs lso:ke-county-exp-amount ?amount.
+}
+order by desc(sum(xsd:decimal(?amount))) limit 1
+",ke-county-exp
+What was the Albania budget for public order and safety in 2007?,What was the Albania budget for public order and safety in <year>2007</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/al_planned_budget_2007to2013>
+{
+?obs qb:dataSet ls:al_planned_budget_2007to2013.
+?obs lso:al_planned_budget_2007to2013-cofog1 <https://openspending.org/al_planned_budget_2007to2013/cofog1/public-order-and-safety>.
+?obs lso:refYear ?year.
+filter(year(?year)=2007).
+?obs lso:al_planned_budget_2007to2013-amount ?amount.
+}
+",al_planned_budget_2007to2013
+What was the combined Albania budget for health from 2007 to 2010?,What was the combined Albania budget for health from <year>2007</year> to <year><year>2010</year></year>?,"select  sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/al_planned_budget_2007to2013>
+{
+?obs qb:dataSet ls:al_planned_budget_2007to2013.
+?obs lso:al_planned_budget_2007to2013-cofog1 <https://openspending.org/al_planned_budget_2007to2013/cofog1/health>.
+?obs lso:al_planned_budget_2007to2013-amount ?amount.
+?obs lso:refYear ?year.
+filter((year(?year)>=2007)&&year(?year)<=2010)
+}
+",al_planned_budget_2007to2013
+What is the external debt amount of Kwara?,What is the external debt amount of Kwara?,"select  sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/external-debts>
+{
+?obs qb:dataSet ls:external-debts.
+?obs lso:external-debts-to <https://openspending.org/external-debts/to/kwara>.
+?obs lso:external-debts-amount ?amount.
+}
+",external-debts
+How much external debt did rivers have in 2010?,How much external debt did rivers have in <year><year>2010</year></year>?,"select  sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/external-debts>
+{
+?obs qb:dataSet ls:external-debts.
+?obs lso:external-debts-to <https://openspending.org/external-debts/to/rivers>.
+?obs lso:external-debts-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2010)
+}
+",external-debts
+How many admins were responsible for mandatory payments in the Armenian approved budget of 2010?,How many admins were responsible for mandatory payments in the Armenian approved budget of <year><year>2010</year></year>?,"select count(distinct(?admin)) from <http://linkedspending.aksw.org/ddc94682cc95482a8deefc60596686fc>
+{
+?obs qb:dataSet ls:ddc94682cc95482a8deefc60596686fc.
+?obs lso:ddc94682cc95482a8deefc60596686fc-economic <https://openspending.org/ddc94682cc95482a8deefc60596686fc/economic/4823>.
+?obs lso:ddc94682cc95482a8deefc60596686fc-from ?admin.
+}
+",ddc94682cc95482a8deefc60596686fc
+How much total running expenses under budgetary classification did the Armenian approved budget of 2010 have for personnel?,How much total running expenses under budgetary classification did the Armenian approved budget of <year><year>2010</year></year> have for personnel?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ddc94682cc95482a8deefc60596686fc>
+{
+?obs qb:dataSet ls:ddc94682cc95482a8deefc60596686fc.
+?obs lso:ddc94682cc95482a8deefc60596686fc-economiclevel1 ""Running expenses"".
+?obs lso:ddc94682cc95482a8deefc60596686fc-type ""personnel"".
+?obs lso:ddc94682cc95482a8deefc60596686fc-amount ?amount.
+}",ddc94682cc95482a8deefc60596686fc
