@@ -6,6 +6,12 @@ public enum Config
 {
 	INSTANCE;
 
+	@Option(name="-endpoint")
+	public String endpoint = "http://linkedspending.aksw.org/sparql";
+
+	@Option(name="-graphs")
+	public String graphs = "http://linkedgeodata.org/;http://linkedspending.aksw.org/;http://dbpedia.org";
+
 	@Option(name="-intervalMinSimilarity",usage="Sets the minimum similarity for named entity detection in intervals")
 	public double intervalMinSimilarity = 0.3;
 
@@ -28,7 +34,7 @@ public enum Config
 	@Option(name="-indexQueries")
 	public IndexQueries indexQueries = IndexQueries.BOTH;
 
-	@Option(name="-boostDate")
+	@Option(name="-boostTemporal")
 	public double boostTemporal = 0.99;
 	@Option(name="-boostNumeric")
 	public double boostNumeric = 0.98;

@@ -134,7 +134,7 @@ public class Benchmark
 				{
 					JsonObjectBuilder questionBuilder = Json.createObjectBuilder();				
 					questionBuilder.add("id", i);				
-					questionBuilder.add("answers", Json.createArrayBuilder().add(Json.createReader(new StringReader(p.jsonAnswer)).readObject()));
+						
 					questionsBuilder.add(questionBuilder);
 				}
 				out.printRecord(i,Cube.linkedSpendingCubeName(q.cubeUri),q.string,q.query,p.query,p.precision,p.recall,p.fscore());
@@ -169,11 +169,11 @@ public class Benchmark
 		log.info("Question Number "+questionNumber+": Answering "+question.string);
 		log.debug("correct query: "+question.query);
 		log.debug("correct answer: "+question.answers);
-
+		
 		String cubeName;
 		if(!Config.INSTANCE.givenDataSets)
 		{
-			List<String> uris = CubeIndex.INSTANCE.getCubeUris(question.string);;
+			List<String> uris = CubeIndex.INSTANCE.getCubeUris(question.string);
 			if(uris.isEmpty()) {return new Performance(0, 0, true);}
 			cubeName = Cube.linkedSpendingCubeName(uris.get(0));
 		} else

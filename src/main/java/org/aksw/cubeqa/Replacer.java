@@ -15,6 +15,7 @@ public class Replacer
 	}
 	static
 	{
+		numbers.put(pattern("hundred"),100);
 		numbers.put(pattern("thousand"),1000);
 		numbers.put(pattern("million"),1000_000);
 		numbers.put(pattern("billion"),1000_000_000);

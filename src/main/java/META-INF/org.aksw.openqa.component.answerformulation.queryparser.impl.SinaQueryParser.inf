@@ -1,0 +1,5 @@
+label=CubeQaQueryParser
+author=Konrad Höffner
+contact=http://aksw.org/KonradHoeffner
+description=CubeQA plugin for OpenQA. See http://aksw.org/Projects/CubeQA.html.
+license=GPLv3

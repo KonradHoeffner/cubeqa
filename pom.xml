@@ -67,12 +67,14 @@
 			<artifactId>guava</artifactId>
 			<version>19.0</version>
 		</dependency>
-		<!-- <dependency> <artifactId>algorithm-tbsl</artifactId> <groupId>org.aksw.autosparql</groupId> <version>1.0-SNAPSHOT</version> 
-			<exclusions> <exclusion> <artifactId>slf4j-api</artifactId> <groupId>org.slf4j</groupId> </exclusion> <exclusion> <artifactId>slf4j-ext</artifactId> 
-			<groupId>org.slf4j</groupId> </exclusion> <exclusion> <artifactId>slf4j-log4j12</artifactId> <groupId>org.slf4j</groupId> 
-			</exclusion> <exclusion> <artifactId>jcl-over-slf4j</artifactId> <groupId>org.slf4j</groupId> </exclusion> <exclusion> <artifactId>solr-core</artifactId> 
-			<groupId>org.apache.solr</groupId> </exclusion> <exclusion> <artifactId>log4j</artifactId> <groupId>log4j</groupId> </exclusion> 
-			</exclusions> </dependency> -->
+		<!-- <dependency> <artifactId>algorithm-tbsl</artifactId> <groupId>org.aksw.autosparql</groupId> 
+			<version>1.0-SNAPSHOT</version> <exclusions> <exclusion> <artifactId>slf4j-api</artifactId> 
+			<groupId>org.slf4j</groupId> </exclusion> <exclusion> <artifactId>slf4j-ext</artifactId> 
+			<groupId>org.slf4j</groupId> </exclusion> <exclusion> <artifactId>slf4j-log4j12</artifactId> 
+			<groupId>org.slf4j</groupId> </exclusion> <exclusion> <artifactId>jcl-over-slf4j</artifactId> 
+			<groupId>org.slf4j</groupId> </exclusion> <exclusion> <artifactId>solr-core</artifactId> 
+			<groupId>org.apache.solr</groupId> </exclusion> <exclusion> <artifactId>log4j</artifactId> 
+			<groupId>log4j</groupId> </exclusion> </exclusions> </dependency> -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -99,9 +101,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- <dependency> <groupId>org.aksw</groupId> <artifactId>openspending2rdf</artifactId> <type>jar</type> <version>0.0.1-SNAPSHOT</version> 
-			<exclusions> <exclusion> <artifactId>slf4j-api</artifactId> <groupId>org.slf4j</groupId> </exclusion> <exclusion> <artifactId>jersey-container-grizzly2-http</artifactId> 
-			<groupId>org.glassfish.jersey.containers</groupId> </exclusion> <exclusion> <artifactId>jersey-media-moxy</artifactId> <groupId>org.glassfish.jersey.media</groupId> 
+		<!-- <dependency> <groupId>org.aksw</groupId> <artifactId>openspending2rdf</artifactId> 
+			<type>jar</type> <version>0.0.1-SNAPSHOT</version> <exclusions> <exclusion> 
+			<artifactId>slf4j-api</artifactId> <groupId>org.slf4j</groupId> </exclusion> 
+			<exclusion> <artifactId>jersey-container-grizzly2-http</artifactId> <groupId>org.glassfish.jersey.containers</groupId> 
+			</exclusion> <exclusion> <artifactId>jersey-media-moxy</artifactId> <groupId>org.glassfish.jersey.media</groupId> 
 			</exclusion> </exclusions> </dependency> -->
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
@@ -128,6 +132,11 @@
 			<artifactId>javax.json</artifactId>
 			<version>1.0.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.aksw.openqa</groupId>
+			<artifactId>engine</artifactId>
+			<version>0.0.7-beta</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -137,7 +146,8 @@
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
-			<!-- to prevent "ClassCastException: java.lang.Long cannot be cast to java.lang.Integer" -->
+			<!-- to prevent "ClassCastException: java.lang.Long cannot be cast to 
+				java.lang.Integer" -->
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
