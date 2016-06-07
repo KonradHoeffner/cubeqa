@@ -29,3 +29,6 @@ You will see the results on the console and also in the file `benchmark/qbench<t
 ##Warning: Research Prototype##
 While CubeQA is implemented in Java using Maven so it theoretically should run everywhere, it is under development, using snapshots and generally
 of the status of a research prototype so I don't give any guarantee of it successfully running on your machine but I'm happy to help with your questions (best to open a new issue).
+
+##License##
+The source code of CubeQA is freely available under the GPLv3 license (see the LICENSE file), which requires you to publish derivative works under the same license. If this creates a licensing conflict or for commercial usage, please [contact us](mailto:konrad.hoeffner@uni-leipzig.de?subject=CubeQA License&body=Dear Konrad,).
