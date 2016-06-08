@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.aksw.cubeqa.Algorithm;
+import org.aksw.cubeqa.Config;
 import org.aksw.cubeqa.Cube;
-import org.aksw.cubeqa.benchmark.Performance;
 import org.aksw.cubeqa.index.CubeIndex;
 import org.aksw.openqa.Properties;
 import org.aksw.openqa.component.answerformulation.AbstractQueryParser;
@@ -16,6 +16,8 @@ import org.aksw.openqa.component.param.IResultMap;
 import org.aksw.openqa.component.param.ResultMap;
 import org.aksw.openqa.component.providers.impl.ServiceProvider;
 import org.aksw.openqa.component.service.cache.ICacheService;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.MapParser;
 
 /** @author {@linkplain http://konradhoeffner.de} */
 public class CubeQaQueryParser extends AbstractQueryParser {
@@ -65,15 +67,19 @@ public class CubeQaQueryParser extends AbstractQueryParser {
 		results.add(r);
 		return results;
 	}
-		
-		@Override
-		public void setProperties(Map<String, Object> params)
-		{
-//			String endPoint = (String) params.get(END_POINT_PARAM);
-//			TODO: get properties from config
-			super.setProperties(params); // saving parameters into the Interpreter
-		}
-		
+
+	@Override
+	public void setProperties(Map<String, Object> params)
+	{
+		//			String endPoint = (String) params.get(END_POINT_PARAM);
+		//			TODO: get properties from config
+		// TODO: super.setProperties first or last or doesn't matter? ask edgard
+		super.setProperties(params); // saving parameters into the Interpreter
+		// args4j is made for command line options (-this -that) but we can transform our map in such a string so we don't have to assign each parameter by hand
+		MapParser parser = new MapParser(new CmdLineParser(Config.INSTANCE));
+		parser.parse(params);
+	}
+
 	@Override public void startup()
 	{
 		algorithm = new Algorithm();

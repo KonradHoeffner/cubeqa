@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public enum CubeIndex
 {
 	INSTANCE;
-	
+
 	private static final Analyzer analyzer = new EnglishAnalyzer();
 	private static final int	NUMBER_OF_HITS	= 3;
 
@@ -27,10 +27,18 @@ public enum CubeIndex
 	private final Directory dir;
 	private IndexReader reader;
 
+	private boolean isRunningInJar()
+	{
+		String className = this.getClass().getName().replace('.', '/');
+		String classJar = this.getClass().getResource("/" + className + ".class").toString();
+		return classJar.startsWith("jar:");
+	}
+
 	@SneakyThrows
 	private CubeIndex()
 	{
-		File folder = new File(new File(new File("cache"),"lucene"),"cubecache");
+		File cacheFolder = new File(isRunningInJar()?System.getProperty("java.io.tmpdir"):"cache");
+		File folder = new File(new File(cacheFolder,"lucene"),"cubecache");
 		folder.mkdirs();
 		dir = FSDirectory.open(folder.toPath());
 		if(DirectoryReader.indexExists(dir))
