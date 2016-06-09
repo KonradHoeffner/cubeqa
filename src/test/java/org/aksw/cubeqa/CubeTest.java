@@ -14,7 +14,7 @@ public class CubeTest
 	@Test public void testSerialization()
 	{
 		Cube cube = Cube.getInstance("finland-aid");
-		assertTrue(new File("cache/finland-aid.ser").exists());
+		assertTrue(new File(Files.localFolder("cache"),"finland-aid.ser").exists());
 		log.debug("{}",cube.properties.size());
 		log.debug("{}",cube.properties);
 	}

@@ -33,7 +33,7 @@ public class Cube implements Serializable
 	/** manually created additional labels in case the original labels are not good enough*/
 	public final MultiValuedMap<String,String> manualLabels;
 
-	static private File cacheFolder = new File("cache");
+	static private File cacheFolder = Files.localFolder("cache");
 	static {cacheFolder.mkdir();}
 
 	static public Cube finlandAid()

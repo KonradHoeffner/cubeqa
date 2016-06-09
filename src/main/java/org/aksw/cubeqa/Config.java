@@ -1,16 +1,21 @@
 package org.aksw.cubeqa;
 
+import java.io.File;
+
 import org.kohsuke.args4j.Option;
 
 public enum Config
 {
 	INSTANCE;
 
-	@Option(name="-endpoint")
+	@Option(name="-folder",metaVar="<folder>",usage="Output folder where CubeQA will put its cache and other files. The default value is local to the program if running outside a jar, otherwise $tempdir/cubeqa.")
+	public File folder;
+	
+	@Option(name="-endpoint",usage="SPARQL endpoint URL")
 	public String endpoint = "http://linkedspending.aksw.org/sparql";
 
-	@Option(name="-graphs")
-	public String graphs = "http://linkedgeodata.org/;http://linkedspending.aksw.org/;http://dbpedia.org";
+	@Option(name="-graphs",usage="space separated graph list")
+	public String[] graphs = {"http://linkedgeodata.org/","http://linkedspending.aksw.org/","http://dbpedia.org"};
 
 	@Option(name="-intervalMinSimilarity",usage="Sets the minimum similarity for named entity detection in intervals")
 	public double intervalMinSimilarity = 0.3;

@@ -1,0 +1,774 @@
+What was the average aid committed per month in year 2010?,"select (sum(xsd:decimal(?aid))/12) as ?result
+{
+?obs lso:finland-aid-commitments ?aid.
+?obs lso:refYear ?year.
+filter(year(?year)=2010).
+}"
+What is the average yearly aid over the Finnfund channel?,"select avg(?yearly) as ?result
+{
+select sum(xsd:decimal(?aid)) as ?yearly ?year
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:refYear ?year.
+?obs lso:finland-aid-channel-of-delivery-name ""Finnfund"".
+}
+}"
+How much money was given to strengthen civil society in Yemen?,"select sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15150>.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/ye>.
+}"
+How much is committed in Ethiopia?,"select sum(xsd:decimal(?c)) as ?result
+{
+?obs lso:finland-aid-commitments ?c.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/et>.
+}"
+How much does Peru receive for fishery research a year?,"select avg(?sum) as ?result
+{
+select sum(xsd:decimal(?aid)) as ?sum ?year
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/pe>.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/31382>.
+?obs lso:refYear ?year.
+}
+}"
+How many countries have extended amounts of  > 1000000 $?,"select count(?country) as ?result
+{
+select ?country
+{
+?obs lso:finland-aid-amounts-extended ?extended.
+?obs lso:finland-aid-recipient-country ?country.
+}
+group by ?country
+having sum(xsd:decimal(?extended))>1000000
+}"
+What is the total aid to Egypt?,"select sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/eg>.
+}"
+Which were the top 10 aided countries in 2011?,"select ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-recipient-country ?result.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+}
+order by desc(sum(xsd:decimal(?aid)))
+limit 10"
+How much money give Finnish Red Cross on health education?,"select sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12261>.
+?obs lso:finland-aid-channel-of-delivery-name ""Finnish Red Cross"".
+}"
+What is the amount of aid and the amount of commitments per country per year?,"select sum(xsd:decimal(?aid)) as ?total_aid sum(xsd:decimal(?commitments)) as ?total_commitments ?country
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-commitments ?commitments.
+?obs lso:finland-aid-recipient-country ?country.
+}
+group by ?country"
+How much money did the Egyptian government receive for rural development?,"select sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/43040>.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/eg>.
+}"
+What's are the 10 highest aid amounts?,"select xsd:decimal(?result)
+{
+?obs lso:finland-aid-amount ?result.
+} order by desc(xsd:decimal(?result)) limit 10"
+How much did Uruguay receive?,"select sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/uy>.
+}"
+"How much money goes into food crop production
+over time?","select ?date sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/31161>.
+?obs lso:refDate ?date.
+} group by ?date"
+"In South and Central Asia, how much aid was given to the regional FLEG programme in Mekong?","select sum(xsd:decimal(?amount)) as ?result
+{
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-short-description-project-title ""Regional FLEG Programme in Mekong"".
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/0>.
+}"
+How much money Embassy of Finland contribute to Egyptian projects?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-channel-of-delivery-name ""Embassy of Finland"".
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/eg>.
+}"
+Are there observations whose start date is after their end date?,"ask
+{
+?obs lso:finland-aid-start-date ?sd.
+?obs lso:finland-aid-end-date ?ed.
+filter(?sd>?ed).
+}"
+What is average aid amount per aid sector?,"select ?sector avg(xsd:decimal(?amount)) as ?average
+{
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-sector ?sector.
+}"
+How much money gets each country in 2008?,"select ?country sum(xsd:decimal(?amount)) as ?sum
+{
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-recipient-country ?country.
+ ?obs lso:refYear ?year.
+ filter(year(?year)=2008)
+}"
+How much extended amounts are given to Tajikistan for rescheduling and refinancing?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs lso:finland-aid-amounts-extended ?amount.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/tj>.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/60040>.
+}"
+How much aid receives a country?,"select ?country sum(xsd:decimal(?amount)) as ?sum
+{
+?obs lso:finland-aid-amounts-extended ?amount.
+?obs lso:finland-aid-recipient-country ?country.
+}"
+What is the total Dignity International aid from all sectors?,"select sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-channel-of-delivery-name ""Dignity International"".
+}"
+How much money Nepal receives for Environmental policy and administrative management?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs lso:finland-aid-amounts-extended ?amount.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/np>.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/41010>.
+}"
+Top 10 aid receiving geographic areas in south east and central asia?,"select ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-recipient-country ?country.
+?obs lso:finland-aid-geographical-target-area ?result.
+
+filter(?aid!=0&&?result!="""").
+}
+order by desc(sum(xsd:decimal(?aid)))
+limit 10"
+Which country has the lowest amount of commitments?,"select ?result
+{
+?obs lso:finland-aid-commitments ?c.
+?obs lso:finland-aid-recipient-country ?result.
+}
+order by asc(sum(xsd:decimal(?c)))
+limit 1"
+Which countries received more than they were committed?,"select ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-commitments ?c.
+?obs lso:finland-aid-recipient-country ?result.
+}
+group by ?result
+having sum(xsd:decimal(?aid))>sum(xsd:decimal(?c))"
+Where is the biggest aid for medical services?,"select ?result
+{
+?obs lso:finland-aid-commitments ?aid.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12191>.
+?obs lso:finland-aid-recipient-country ?result.
+}
+order by desc(sum(xsd:decimal(?aid)))
+limit 1"
+Which country receives the biggest share of its aid from Fida International?,"select ?country
+{
+select ?country sum(xsd:decimal(?aid_fida))/sum(xsd:decimal(?aid_all)) as ?fida_share
+{
+?obs lso:finland-aid-recipient-country ?country.
+{
+?obs lso:finland-aid-amount ?aid_fida.
+?obs lso:finland-aid-channel-of-delivery-name ""Finnish NGO, Fida International"".
+}
+UNION
+{
+?obs lso:finland-aid-amount ?aid_all.
+}
+}
+} order by desc(?fida_share) limit 1"
+Which types of flow are there?,"select distinct(?result)
+{
+?obs lso:finland-aid-type-of-flow-main-dac-1-category ?result.
+}"
+"For which sectors is the money, invested into Sierra Leona, used for?","select ?result
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/sl>.
+?obs lso:finland-aid-sector ?result.
+}
+"
+How many percent aid of a country is for that countries administrative costs?,"select ?country sum(xsd:decimal(?aid_admin))/sum(xsd:decimal(?aid_all))*100 as ?admin_percent
+{
+?obs lso:finland-aid-recipient-country ?country.
+{
+?obs lso:finland-aid-amount ?aid_admin.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/91010>.
+}
+UNION
+{
+?obs lso:finland-aid-amount ?aid_all.
+}
+}"
+Which type of sector is receiving the most in India?,"select ?result
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/in>.
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-sector ?result.
+}
+order by desc(sum(xsd:decimal(?amount)))
+limit 1"
+How much aid is received by Zambia on a single day?,"select ?total/?years/365.242
+{
+{
+select count(distinct(?year)) as ?years
+{
+?obs lso:refYear ?year.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/zm>.
+}
+}
+{
+select sum(xsd:decimal(?amount)) as ?total
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/zm>.
+?obs lso:finland-aid-amount ?amount.
+}
+}
+}"
+What was the total amount recieved by Yemen in 2010?,"select sum(xsd:decimal(?aid))
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:refYear ?year.
+filter(year(?year)=2010).
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/ye>.
+}"
+Which countries got more than 1000000 € but less than 10000000 € in 2010?,"select ?country
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:refYear ?year.
+filter(year(?year)=2010).
+?obs lso:finland-aid-recipient-country ?country.
+}
+group by ?country
+having (sum(xsd:decimal(?aid))>1000000&&sum(xsd:decimal(?aid))<10000000)"
+Which countries got between 10000 € and 100000 € in 2011?,"select ?country
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+?obs lso:finland-aid-recipient-country ?country.
+}
+group by ?country
+having (sum(xsd:decimal(?aid))>10000&&sum(xsd:decimal(?aid))<100000)"
+How much money did Pyongyang receive for health education?,"select sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12261>.
+?obs lso:finland-aid-geographical-target-area ""Pyongyang"".
+}"
+What types of aid did Mexico receive?,"select distinct(?result)
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/mx>.
+?obs lso:finland-aid-type-of-aid ?result
+}"
+What types of aid did Belarus receive in 2011?,"select distinct(?result)
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/by>.
+?obs lso:finland-aid-type-of-aid ?result.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+}"
+What types of aid did the Maldives receive in 2011 for Oil-fired power plants?,"select distinct(?result)
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/mv>.
+?obs lso:finland-aid-type-of-aid ?result.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/23061>.
+?obs lso:refYear ?year.
+filter(year(?year)=2011).
+}"
+What is the total amount of Gambia in 2008?,"select sum(xsd:decimal(?aid)) as ?result
+{
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/gm>.
+?obs lso:finland-aid-amount ?aid.
+?obs lso:refYear ?year.
+filter(year(?year)=2008).
+}"
+How many countries had amounts of more than 1000000 € in 2010?,"select count(?country) as ?result
+{
+select ?country
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:refYear ?year.
+filter(year(?year)=2009).
+?obs lso:finland-aid-recipient-country ?country.
+}
+group by ?country
+having sum(xsd:decimal(?aid))>1000000
+}"
+"How many countries received more than 1000000 € for government administration
+     in 2006?
+","select count(?country) as ?result
+{
+select distinct(?country)
+{
+?obs lso:finland-aid-amount ?aid.
+?obs lso:refYear ?year.
+filter(year(?year)=2006).
+?obs lso:finland-aid-recipient-country ?country.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15140>.
+}
+group by ?country
+having sum(xsd:decimal(?aid))>1000000
+}"
+How much does Crisis Management Initiative spend on strengthening civil society compared to legal and judicial development?,"select sum(xsd:decimal(?society)) as ?society_total sum(xsd:decimal(?legal)) as ?legal_total
+{
+?obs lso:finland-aid-channel-of-delivery-name ""Crisis Management Initiative"".
+{
+?obs lso:finland-aid-amount ?society.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15150>.
+}
+UNION
+{
+?obs lso:finland-aid-amount ?legal.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15130>.
+}
+}
+"
+"How much money, does the UNDP spend on elections compared to post-conflict peace building?","select sum(xsd:decimal(?elections)) as ?elections_total sum(xsd:decimal(?peace)) as ?peace_total
+{
+?obs lso:finland-aid-channel-of-delivery-name ""UNDP"".
+{
+?obs lso:finland-aid-amount ?elections.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15161>.
+}
+UNION
+{
+?obs lso:finland-aid-amount ?peace.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15230>.
+}
+}
+"
+What is the type of aid with the lowest total amount?,"select ?type
+{
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-type-of-aid ?type.
+}
+order by asc(sum(xsd:decimal(?amount))) limit 1
+"
+What are the top 5 types of aid regarding the amount?,"select ?type
+{
+?obs a qb:Observation.
+?obs qb:dataSet ls:finland-aid.
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-type-of-aid ?type.
+}
+order by desc(sum(xsd:decimal(?amount))) limit 5"
+What total amount did Zimbabwe get?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/zw>.
+?obs lso:finland-aid-amount ?amount.
+}"
+What is the average commitment for chemicals?,"select avg(xsd:decimal(?commitment)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-commitments ?commitment.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/32164>.
+}"
+What was the largest aid for debt forgiveness in 2008?,"select max(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/60020>.
+?obs lso:refYear ?year.
+filter(year(?year)=2008).
+}
+"
+How much is the total aid amount by the World Health Organization?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-channel-of-delivery-name ""World Health Organisation"".
+}"
+"How much did Nepal receive for agricultural extension?
+","select sum(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/31166>.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/np>.
+}"
+"How much did the Philippines receive in the year of 2007?
+","select sum(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+?obs lso:finland-aid-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2007).
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/ph>.
+}"
+How much was spent for strenthening civil society in 2007?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2007).
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15150>.
+}"
+What is the total amount given over the World Vision Colombia channel in 2007?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2007).
+?obs lso:finland-aid-channel-of-delivery-name ""World Vision Colombia"".
+}"
+What is the amount given to Tajikistan in 2007 for Rescheduling and refinancing?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-amount ?amount.
+?obs lso:refYear ?year.
+filter(year(?year)=2007).
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/60040>.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/tj>.
+}"
+How much was committed in total for Namibia over Martinus-säätiö for Basic health infrastructure?,"select sum(xsd:decimal(?c)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-commitments ?c.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12230>.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/na>.
+?obs lso:finland-aid-channel-of-delivery-name  ""Finnish NGO, Martinus-säätiö"".
+}"
+What were the average extended amounts for Pakistan over Suomen Lähetysseura ry in 2009?,"select avg(xsd:decimal(?ae)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-amounts-extended ?ae.
+?obs lso:refYear ?year.
+filter(year(?year)=2009).
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/pk>.
+?obs lso:finland-aid-channel-of-delivery-name ""Finnish NGO, Suomen Lähetysseura ry"".
+}"
+What were the total commitments for Agricultural extension by the Embassy of Finland before 2010?,"select sum(xsd:decimal(?c)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-commitments ?c.
+?obs lso:refYear ?year.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/31166>.
+?obs lso:finland-aid-channel-of-delivery-name ""Embassy of Finland"".
+filter(year(?year)<2010)
+}
+"
+What was the highest commitment for support to local and regional NGOs for Guatemala after 2005 and before 2010 given by the Embassy of Finland?,"select max(xsd:decimal(?c)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-commitments ?c.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/gt>.
+?obs lso:refYear ?year.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/92030>.
+?obs lso:finland-aid-channel-of-delivery-name ""Embassy of Finland"".
+filter(year(?year)>2005&&year(?year)<2010)
+}
+"
+How much money does Uruguay get from Finnfund for forest industries?,"select sum(xsd:decimal(?amount)) as ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-amount ?amount.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/uy>.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/32162>.
+?obs lso:finland-aid-channel-of-delivery-name ""Finnfund"".
+}"
+How many countries were aided by World Vision Peru?,"select count(distinct(?country))
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-channel-of-delivery-name ""World Vision Peru"".
+?obs lso:finland-aid-recipient-country ?country.
+}"
+How many sectors does Kvaerner Tamturbine Ltd fund?,"select count(distinct(?sector))
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-channel-of-delivery-name ""Kvaerner Tamturbine Ltd"".
+?obs lso:finland-aid-sector ?sector.
+}"
+When was money committed for vocational training?,"select distinct(?date)
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:finland-aid-commitments ?commitment.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/11330>.
+?obs lso:refDate ?date.
+filter(xsd:decimal(?commitment>0))
+}"
+Which year had the highest total commitment for agricultural research?,"select ?result
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:refYear ?result.
+?obs lso:finland-aid-commitments ?commitment.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/31182>.
+}
+order by desc(sum(xsd:decimal(?commitment)))
+limit 1"
+When was the highest commitment for agricultural research and what was its amount?,"select ?date xsd:decimal(?commitment) as ?total_commitment
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:refDate ?date.
+?obs lso:finland-aid-commitments ?commitment.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/31182>.
+}
+order by desc(xsd:decimal(?commitment))
+limit 1"
+When was money committed for supporting state-tribe dialogue in Yemen?,"select ?date
+{
+?obs a qb:Observation. ?obs qb:dataSet ls:finland-aid.
+
+?obs lso:refDate ?date.
+?obs lso:finland-aid-commitments ?commitment.
+?obs lso:finland-aid-short-description-project-title ""Supporting State-Tribe Dialogue in Yemen"" .
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/ye>.
+filter(xsd:decimal(?commitment)>0).
+}"
+In which years was the total amount given for medical services higher than that for basic nutrition?,"select ?year
+{
+ {
+  select ?year sum(xsd:integer(?amount1)) as ?sum1 sum(xsd:integer(?amount2)) as ?sum2
+  {
+   ?obs1 lso:refYear ?year.
+   ?obs2 lso:refYear ?year.
+   ?obs1 lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12191>.
+   ?obs2 lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12240>.
+   ?obs1 lso:finland-aid-amount ?amount1.
+   ?obs2 lso:finland-aid-amount ?amount2.
+  }
+  group by ?year
+ }
+ filter(?sum1>?sum2).
+}"
+In which years did Bhutan get aid?,"select ?year
+{
+   ?obs lso:refYear ?year.
+   ?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/bt>.
+ } group by ?year"
+How many of the countries got more than 100000000 € in 2011?,"select count(distinct(?country))
+{
+select ?country
+{
+ ?obs lso:refYear ?year.
+ filter(year(?year)=2011).
+ ?obs lso:finland-aid-recipient-country ?country.
+ ?obs lso:finland-aid-amount ?amount.
+}
+group by ?country
+having (sum(xsd:decimal(?amount)) > 1000000)
+}"
+How many sectors per recipient country?,select count(?sector) as ?count_sector ?country {?obs lso:finland-aid-sector ?sector. ?obs lso:finland-aid-recipient-country ?country.} group by ?country
+How much money was given each country for Health education?,"select sum(xsd:decimal(?amount)) as ?sum_amount ?country
+{
+ ?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12261>.
+ ?obs lso:finland-aid-recipient-country ?country.
+ ?obs lso:finland-aid-amount ?amount.
+} group by ?country"
+How many sectors does WFP fund?,"select count(?sector) {?obs lso:finland-aid-sector ?sector. ?obs lso:finland-aid-channel-of-delivery-name ""WFP"".}"
+How much did the top 10 aided countries get in 2008?,"select sum(xsd:decimal(?amount)) as ?total ?country
+{
+ ?obs lso:refYear ?year.
+ filter(year(?year)=2008).
+ ?obs lso:finland-aid-recipient-country ?country.
+ ?obs lso:finland-aid-amount ?amount.
+} group by ?country
+order by desc(?total)
+limit 10"
+"How many countries received aid in 2009?
+","select count(distinct(?country))
+{
+ ?obs lso:refYear ?year.
+ filter(year(?year)=2009).
+   ?obs lso:finland-aid-recipient-country ?country
+ }"
+Which country received aid for the most sectors?,"select ?country
+{
+   ?obs lso:finland-aid-sector ?sector.
+   ?obs lso:finland-aid-recipient-country ?country
+ } group by ?country
+order by desc(count(?sector))
+limit 1"
+When did Namibia get aid for basic health infrastructure?,"select ?date
+{
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12230>.
+?obs lso:refDate ?date.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/na>.
+}"
+When did Kenya receive aid in the year 2010?,"select distinct(?date)
+{
+ ?obs lso:refYear ?year.
+ filter(year(?year)=2010).
+?obs lso:refDate ?date.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/ke>.
+}"
+When did Paraguy get money from the Finish Red Cross?,"select ?date
+{
+?obs lso:finland-aid-channel-of-delivery-name ""Finnish NGO, Finnish Red Cross"".
+?obs lso:refDate ?date.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/py>.
+}"
+When was the earliest start date for agricultural extension aid in 2009?,"select distinct(?date)
+{
+?obs lso:finland-aid-start-date ?date.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/31166>.
+ ?obs lso:refYear ?year.
+ filter(year(?year)=2009).
+}
+order by asc(xsd:date(?date))
+limit 1"
+What is the latest start date of disaster prevention and preparedness aid over the Suomen Punainen Risti channel?,"select distinct(?date)
+{
+?obs lso:finland-aid-start-date ?date.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/74010>.
+?obs lso:finland-aid-channel-of-delivery-name ""Finnish NGO, Suomen Punainen Risti"".
+}
+order by desc(xsd:date(?date))
+limit 1"
+When are the end dates of aid from Finnfund to Ethiopia for Energy policy and administrative management?,"select distinct(?date)
+{
+?obs lso:finland-aid-end-date ?date.
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/23010>.
+?obs lso:finland-aid-channel-of-delivery-name ""Finnfund"".
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/et>.
+}
+"
+What are the titles of projects which teach basic life skills for youth and adults in Tanzania?,"select distinct(?title)
+{
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/11230>.
+?obs lso:finland-aid-short-description-project-title ?title.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/tz>.
+}
+"
+How much did UNDSS commit in 2006?,"select sum(xsd:decimal(?commit))
+{
+?obs lso:finland-aid-commitments ?commit.
+ ?obs lso:refYear ?year.
+ filter(year(?year)=2006).
+?obs lso:finland-aid-channel-of-delivery-name ""UNDSS"".
+?obs lso:finland-aid-recipient-country ?country.
+}"
+In which countries was education on sexual and reproductive health in evening schools funded?,"select ?country
+{
+?obs lso:finland-aid-description ""Education on sexual and reproductive health in evening schools of Lima."".
+?obs lso:finland-aid-recipient-country ?country.
+}"
+What types of aid were given to the Project to support the Geological Survey of Tanzania?,"select distinct(?type)
+{
+?obs lso:finland-aid-short-description-project-title ""Project to support the Geological Survey of Tanzania"".
+?obs lso:finland-aid-type-of-aid ?type.
+
+}
+"
+When were commitments made to the area of Lusaka and Ndola?,"select distinct ?date {?obs lso:finland-aid-geographical-target-area ""Lusaka and Ndola"". ?obs lso:refDate ?date.}"
+When was the first start date of aid by the Crisis Management Initiative in Liberia?,"select ?date {?obs lso:finland-aid-channel-of-delivery-name ""Finnish NGO, Crisis Management Initiative"". ?obs lso:finland-aid-start-date ?date.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/lr>} order by asc(?date) limit 1"
+Did the Ukraine receive money in 2009?,ask {?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/ua>. ?obs lso:refYear ?year. filter(year(?year)=2009).}
+Was Ethiopia given money for primary education?,ask {?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/et>. ?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/11220>.}
+Did Finnish Church Aid give money to Somalia?,"ask {?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/so>. ?obs lso:finland-aid-channel-of-delivery-name ""Finnish NGO, Finnish Church Aid"".}"
+Which countries got aid for human rights as well as for nuclear power plants?,"select distinct(?co) {
+?obs1 lso:finland-aid-sector <https://openspending.org/finland-aid/sector/15162>.
+?obs2 lso:finland-aid-sector <https://openspending.org/finland-aid/sector/23064>.
+?obs1 lso:finland-aid-recipient-country ?co.
+?obs2 lso:finland-aid-recipient-country ?co.
+}"
+What is the average number of full years between between the start and end date?,"select avg(year(?end)-year(?start)){
+?obs lso:finland-aid-start-date ?start.
+?obs lso:finland-aid-end-date ?end.
+}"
+How many countries recieved more aid in 2011 than in 2010?,"select count(?country)
+{
+select distinct(?country)
+{
+{
+?obs1 lso:finland-aid-amount ?amount1.
+ ?obs1 lso:refYear ?year.
+ filter(year(?year)=2010).
+?obs1 lso:finland-aid-recipient-country ?country.
+}
+UNION
+{
+?obs2 lso:finland-aid-amount ?amount2.
+ ?obs2 lso:refYear ?year.
+ filter(year(?year)=2011).
+?obs2 lso:finland-aid-recipient-country ?country.
+}
+} group by ?country
+having (sum(xsd:decimal(?amount1))<sum(xsd:decimal(?amount2)))
+}"
+What are the 10 sectors with the highest total amount?,"select distinct ?sector
+{
+?obs lso:finland-aid-amount ?amount.
+?obs  lso:finland-aid-sector ?sector.
+}
+order by desc(sum(xsd:decimal(?amount)))
+limit 10"
+How many countries recieve aid both in 2006 and in 2010?,"select count(?country)
+{
+select distinct(?country)
+{
+{
+?obs1 lso:finland-aid-amount ?amount1.
+ ?obs1 lso:refYear ?year.
+ filter(year(?year)=2006).
+?obs1 lso:finland-aid-recipient-country ?country.
+}
+UNION
+{
+?obs2 lso:finland-aid-amount ?amount2.
+ ?obs2 lso:refYear ?year.
+ filter(year(?year)=2010).
+?obs2 lso:finland-aid-recipient-country ?country.
+}
+} group by ?country
+having (sum(xsd:decimal(?amount1))>0&&sum(xsd:decimal(?amount2))>0)
+}"
+What is the country with the lowest average aid amount?,"select ?country
+{
+?obs lso:finland-aid-recipient-country ?country.
+?obs lso:finland-aid-amount ?amount.
+}
+order by asc(avg(xsd:decimal(?amount)))
+limit 1"
+Which are the sectors of aid to the geographical area of Dhaka?,"select distinct(?sector)
+{
+?obs lso:finland-aid-sector ?sector.
+?obs lso:finland-aid-geographical-target-area ""Dhaka"".
+}"
+In how many years did Sierra Leona recieve aid for malaria control?,"select count(distinct(?year))
+{
+?obs lso:finland-aid-sector <https://openspending.org/finland-aid/sector/12262>.
+?obs lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/sl>.
+?obs lso:refYear ?year.
+}"
+Which sectors have Paraguay and the Central African Republic in common?,"select distinct ?sector
+{
+?obs1 lso:finland-aid-sector ?sector.
+?obs1 lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/cf>.
+?obs2 lso:finland-aid-sector ?sector.
+?obs2 lso:finland-aid-recipient-country <https://openspending.org/finland-aid/recipient-country/py>.
+}"

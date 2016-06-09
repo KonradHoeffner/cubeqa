@@ -2,9 +2,11 @@ package org.aksw.cubeqa.benchmark;
 
 import static org.junit.Assert.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import org.aksw.cubeqa.Algorithm;
 import org.aksw.cubeqa.CubeSparql;
+import org.aksw.cubeqa.Files;
 import org.junit.Test;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDF;
@@ -22,12 +24,12 @@ public class BenchmarkTest
 	@Test public void testEvaluate()
 	{
 		// TODO: choose a faster example, 10 s is too long for a test
-		Benchmark.fromQald("qald6t3-train").evaluate(new Algorithm(),6);
+		Benchmark.fromQald("qald6t3-train-v1.2").evaluate(new Algorithm(),6);
 	}
 
 	@Test public void testFromCsv() throws IOException
 	{
-		assertEquals(Benchmark.fromCsv("qald6t3-train").questions.get(0).string,"How much was spent on public works and utilities by the Town of Cary in 2011?");
+		assertEquals(Benchmark.fromCsv("qald6t3-train-v1.2").questions.get(0).string,"How much was spent on public works and utilities by the Town of Cary in 2011?");
 	}
 
 	@Test public void testNodeString()
@@ -48,8 +50,8 @@ public class BenchmarkTest
 	@Test public void testSaveAndLoadQald() throws IOException
 	{
 		Benchmark b = Benchmark.fromQald("finland-aid");
-		b.saveAsQald(new File(new File("benchmark"),"test.xml"));
-		Benchmark c = Benchmark.fromQald("test");
+		b.saveAsQald(new File(Files.localFolder("benchmark"),"test.xml"));
+		Benchmark c = Benchmark.fromQald("finland-aid",new FileInputStream(new File(Files.localFolder("benchmark"),"test.xml")));
 		for(int i=0;i<100;i++)
 		{
 			Question q = b.questions.get(i);

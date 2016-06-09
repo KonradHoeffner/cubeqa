@@ -205,7 +205,7 @@ public class Benchmark
 	public static Benchmark fromCsv(String name) throws IOException
 	{
 		List<Question> questions = new LinkedList<>();
-		try(CSVParser parser = CSVParser.parse(new File(new File("benchmark"),name+".csv"),Charset.defaultCharset(),CSVFormat.DEFAULT))
+		try(CSVParser parser = CSVParser.parse(Benchmark.class.getClassLoader().getResource("benchmark/"+name+".csv"),Charset.defaultCharset(),CSVFormat.DEFAULT))
 		{
 			for(CSVRecord record: parser)
 			{
@@ -240,7 +240,12 @@ public class Benchmark
 	@SneakyThrows
 	public static Benchmark fromQald(String name)
 	{
-		File file= new File("benchmark/"+name+".xml");
+		return fromQald(name,Benchmark.class.getClassLoader().getResource("benchmark/"+name+".xml").openStream());
+	}
+	
+	@SneakyThrows
+	public static Benchmark fromQald(String name, InputStream in)
+	{
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		// only works with xsd not dtd?
 		//		dbFactory.setValidating(true);
@@ -248,7 +253,7 @@ public class Benchmark
 		//			factory.setSchema(schemaFactory.newSchema(
 		//			    new Source[] {new StreamSource("benchmark/qaldcube.dtd")}));
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(file);
+		Document doc = dBuilder.parse(in);
 		doc.getDocumentElement().normalize();
 		List<Question> questions = new ArrayList<>();
 		NodeList questionNodes = doc.getElementsByTagName("question");
@@ -288,7 +293,7 @@ public class Benchmark
 	}
 
 	/** {@link #} */
-	public void saveAsQald() {saveAsQald(new File (new File("benchmark"),name+".xml"));}
+	public void saveAsQald() {saveAsQald(new File (Files.localFolder("benchmark"),name+".xml"));}
 
 	/**	 */
 	@SneakyThrows

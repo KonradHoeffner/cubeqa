@@ -26,6 +26,8 @@ Virtuoso needs to be accessible at localhost:8890 (default), but you can change 
 * run the main class org.aksw.cubeqa.scripts.EvaluateQBench2 via `mvn compile exec:java -Dexec.mainClass="org.aksw.cubeqa.scripts.EvaluateQBench2"`.
 
 You will see the results on the console and also in the file `benchmark/qbench<timestamp>.csv`.
+##Graphical User Interface##
+CubeQA can be used as a plugin for [openQA](https://bitbucket.org/emarx/openqa/wiki/FAQ), which offers a graphical user interface. 
 ##Warning: Research Prototype##
 While CubeQA is implemented in Java using Maven so it theoretically should run everywhere, it is under development, using snapshots and generally
 of the status of a research prototype so I don't give any guarantee of it successfully running on your machine but I'm happy to help with your questions (best to open a new issue).

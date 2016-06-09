@@ -35,11 +35,13 @@ public class ComponentPropertyTest
 			log.debug("{}",ea.match("amounts extended"));
 			assertTrue(ea.match("amounts extended")>=0.9);
 			log.debug("{}",ea.match("extended amounts"));
-			assertTrue(ea.match("extended amounts")>=0.6);
+			assertTrue(ea.match("extended amounts")>=0.5);
 		}
 		{
 			ComponentProperty a = ComponentProperty.getInstance(Cube.finlandAid(), "http://linkedspending.aksw.org/ontology/finland-aid-amount");
+			log.debug("{}",a.match("extended amounts"));
 			assertTrue(a.match("extended amounts")<0.4);
+			log.debug("{}",a.match("amounts"));
 			assertTrue(a.match("amounts")>0.6);
 		}
 	}

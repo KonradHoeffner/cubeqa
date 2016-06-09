@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.io.File;
 import de.konradhoeffner.commons.StopWatch;
 import org.aksw.cubeqa.Config;
+import org.aksw.cubeqa.Files;
 import org.aksw.cubeqa.StopWatches;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.apache.lucene.analysis.Analyzer;
@@ -48,7 +49,7 @@ public abstract class Index
 	protected Index(ComponentProperty property)
 	{
 		this.property=property;
-		File folder = new File(new File(new File("cache"),"lucene"),property.cube.probablyUniqueAsciiId());
+		File folder = new File(new File(Files.localFolder("cache"),"lucene"),property.cube.probablyUniqueAsciiId());
 		folder.mkdirs();
 		subFolder = new File(folder,property.shortName());
 		dir = FSDirectory.open(subFolder.toPath());

@@ -3,6 +3,7 @@ package org.aksw.cubeqa.index;
 import java.util.*;
 import java.io.File;
 import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.Files;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.*;
@@ -11,6 +12,7 @@ import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,18 +29,10 @@ public enum CubeIndex
 	private final Directory dir;
 	private IndexReader reader;
 
-	private boolean isRunningInJar()
-	{
-		String className = this.getClass().getName().replace('.', '/');
-		String classJar = this.getClass().getResource("/" + className + ".class").toString();
-		return classJar.startsWith("jar:");
-	}
-
 	@SneakyThrows
 	private CubeIndex()
 	{
-		File cacheFolder = new File(isRunningInJar()?System.getProperty("java.io.tmpdir"):"cache");
-		File folder = new File(new File(cacheFolder,"lucene"),"cubecache");
+		File folder = new File(new File(Files.localFolder("cache"),"lucene"),"cubecache");
 		folder.mkdirs();
 		dir = FSDirectory.open(folder.toPath());
 		if(DirectoryReader.indexExists(dir))
