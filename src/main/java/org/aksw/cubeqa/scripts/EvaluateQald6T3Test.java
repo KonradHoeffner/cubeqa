@@ -11,7 +11,7 @@ public class EvaluateQald6T3Test
 	public static void main(String[] args)
 	{
 		long start = System.currentTimeMillis();
-		Benchmark.fromQald("qald-6-test-datacube").evaluate(new Algorithm());
+		Benchmark.fromQald("qald6t3-test").evaluate(new Algorithm());
 		System.out.println(System.currentTimeMillis()-start+" ms");
 	}
 }

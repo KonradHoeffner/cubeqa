@@ -202,7 +202,8 @@ public class Fragment
 		log.info(candidates.size()+" property name references found, "+fittingAnswerType+" with the right answer type.");
 
 		if(fittingAnswerType.isEmpty())
-		{
+		{		
+			log.warn("No property name reference with the right answer type found");
 			// no property references with the right type, is it a count?
 			EnumSet<AnswerType> canBeCounted = EnumSet.of(ENTITY,TEMPORAL,LOCATION);
 			if(expectedAnswerTypes.contains(AnswerType.COUNT))

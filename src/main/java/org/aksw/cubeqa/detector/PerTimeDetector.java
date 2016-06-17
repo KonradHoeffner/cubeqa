@@ -66,6 +66,7 @@ public enum PerTimeDetector implements Detector
 		{
 			if(label==null) throw new IllegalArgumentException("label is null" );
 			this.cube=cube;
+			String[] prepositions = {"per","a","each"};
 			List<String> prePatterns = Arrays.asList("per "+label,label.replaceAll("y$","i")+"ly");
 			for(String prePattern: prePatterns)
 			{

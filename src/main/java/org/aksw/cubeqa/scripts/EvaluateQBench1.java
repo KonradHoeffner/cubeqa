@@ -9,7 +9,7 @@ public class EvaluateQBench1
 	public static void main(String[] args)
 	{
 		long start = System.currentTimeMillis();
-		Benchmark.fromQald("finland-aid").evaluate(new Algorithm(),8);
+		Benchmark.fromQald("finland-aid").evaluate(new Algorithm(),6);
 		System.out.println(System.currentTimeMillis()-start+" ms");
 	}
 }
