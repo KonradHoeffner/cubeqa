@@ -3,6 +3,7 @@ src/main/java/org/aksw/cubeqa/scripts/Csv2Qald.java
 benchmark
 *.class
 *~
+.idea
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

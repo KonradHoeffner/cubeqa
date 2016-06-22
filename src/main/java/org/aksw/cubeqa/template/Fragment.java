@@ -1,18 +1,27 @@
 package org.aksw.cubeqa.template;
 
-import static org.aksw.cubeqa.AnswerType.*;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import de.konradhoeffner.commons.StopWatch;
-import org.aksw.cubeqa.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.aksw.cubeqa.AnswerType;
+import org.aksw.cubeqa.Config;
+import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.StopWatches;
 import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.PropertyType;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.Restriction;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.sparql.function.library.leviathan.log;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.aksw.cubeqa.AnswerType.*;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode
@@ -38,6 +47,7 @@ public class Fragment
 	private Set<ComponentProperty> unreferredProperties()
 	{
 		Set<ComponentProperty> properties = new HashSet<>(cube.properties.values());
+		new Vector<String>().stream().map(String::toString);
 		properties.removeAll(restrictions.stream().map(Restriction::getProperty).collect(Collectors.toSet()));
 		properties.removeAll(answerProperties);
 		properties.removeAll(perProperties);
