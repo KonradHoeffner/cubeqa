@@ -11,7 +11,7 @@ import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.property.scorer.Scorers;
 import java.util.*;
 
-/** Generates the Cube Template. */
+/** Generates the query template for a question. */
 @Slf4j
 public abstract class Templator
 {
@@ -25,6 +25,8 @@ public abstract class Templator
 	protected EnumSet<AnswerType> eats;
 
 	public Templator(Cube cube) {this.cube=cube;}
+
+	abstract public Template buildTemplate(String question);
 
 	protected void preprocess(String question)
  {
@@ -65,9 +67,7 @@ public abstract class Templator
 	 detectFragment=detectResult.a;
  }
 
-	abstract public Template buildTemplate(String question);
-
-	/** @param question the full question used on all detectors
+		/** @param question the full question used on all detectors
 	 * @return the combined detected fragment and the leftover phrase
 	 */
 	Pair<Fragment,String> detect(final String question)

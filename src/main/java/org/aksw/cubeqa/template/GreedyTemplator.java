@@ -8,9 +8,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/**
- * Generates the Cube Template.
- */
+/** Used in the ISWC 2016 paper and for the qald6t3 challenge.*/
 @Slf4j
 public class GreedyTemplator extends Templator
 {

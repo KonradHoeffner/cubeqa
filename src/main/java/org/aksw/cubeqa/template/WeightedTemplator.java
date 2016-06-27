@@ -22,7 +22,7 @@ public class WeightedTemplator extends Templator
 		return null;
 	}
 
-	protected Set<Fragment> visitRecursive(Tree tree) {visitRecursive(tree, new HashSet<Fragment>());}
+	protected Set<Fragment> visitRecursive(Tree tree) {return visitRecursive(tree, new HashSet<Fragment>());}
 
 	/** The recursive algorithm. */
 	protected Set<Fragment> visitRecursive(Tree tree, Set<Fragment> fragments)
@@ -60,10 +60,11 @@ public class WeightedTemplator extends Templator
 		}
 		// either we didn't match because the phrase is too long or matching didn't find anything, so match subtrees separately
 		log.trace("unmatched, looking at subtrees");
-		List<Fragment> childFragments = fragments(tree.getChildrenAsList(), x -> true);
+		List<Fragment> childFragments = tree.getChildrenAsList().stream().flatMap(t->visitRecursive(t).stream()).collect(Collectors.toList());
 		if (childFragments.isEmpty())
 		{
-			return new Fragment(cube, phrase);
+			fragments.add(new Fragment(cube, phrase));
+			return fragments;
 		}
 		List<Fragment> childFragmentsWithRefs = childFragments.stream().filter(f -> !f.isEmpty()).collect(Collectors.toList());
 		List<Fragment> childFragmentsWithoutRefs = new LinkedList<>(childFragments);
@@ -100,10 +101,12 @@ public class WeightedTemplator extends Templator
 		if (usefulChildFragments.isEmpty())
 		{
 			log.trace("no match found for phrase \"" + phrase + "\"");
-			return new Fragment(cube, phrase);
+			fragments.add(new Fragment(cube, phrase));
+			return fragments;
 		} else
 		{
-			return Fragment.combine(usefulChildFragments);
+			fragments.add(Fragment.combine(usefulChildFragments));
+			return fragments;
 		}
 	}
 }
