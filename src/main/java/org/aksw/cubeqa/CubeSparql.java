@@ -8,7 +8,7 @@ import org.apache.jena.query.*;
 import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.vocabulary.DCTerms;
 import de.konradhoeffner.commons.StopWatch;
-import de.konradhoeffner.commons.rdf.DataCube;
+import org.aksw.cubeqa.rdf.DataCube;
 
 /** Interface to SPARQL. */
 public class CubeSparql implements Serializable

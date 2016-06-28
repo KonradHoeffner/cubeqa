@@ -1,6 +1,6 @@
 package org.aksw.cubeqa.property;
 
-import de.konradhoeffner.commons.rdf.DataCube;
+import org.aksw.cubeqa.rdf.DataCube;
 
 public enum PropertyType
 {

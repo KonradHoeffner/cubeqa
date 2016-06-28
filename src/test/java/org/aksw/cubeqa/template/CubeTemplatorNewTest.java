@@ -10,7 +10,7 @@ public class CubeTemplatorNewTest
 {
 	@Test public void templatorTest()
 	{
-		Templator templator = new Templator(Cube.getInstance("finland-aid"));
+		Templator templator = new GreedyTemplator(Cube.getInstance("finland-aid"));
 		Match wholePhraseResult = templator.identify("How much money was invested to strengthen civil society in Yemen?");
 		assertTrue(wholePhraseResult.toString(),wholePhraseResult.isEmpty());
 		log.debug("{}",templator.identify("Yemen"));

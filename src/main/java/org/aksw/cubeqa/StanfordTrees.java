@@ -1,12 +1,12 @@
 package org.aksw.cubeqa;
 
+import edu.stanford.nlp.trees.Tree;
 import java.util.List;
 import java.util.Set;
-import edu.stanford.nlp.trees.Tree;
 
 /** Utility class for stanford trees.
  * @author Konrad Höffner */
-public class Trees
+public class StanfordTrees
 {
 	static public String phrase(Tree tree) {return tree.getLeaves().toString().replace(", ", " ").replaceAll("[\\[\\]]", "").trim();}
 

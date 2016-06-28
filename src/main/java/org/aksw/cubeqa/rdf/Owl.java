@@ -1,4 +1,4 @@
-package de.konradhoeffner.commons.rdf;
+package org.aksw.cubeqa.rdf;
 
 public class Owl
 {

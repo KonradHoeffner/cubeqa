@@ -1,4 +1,4 @@
-package de.konradhoeffner.commons.rdf;
+package org.aksw.cubeqa.rdf;
 
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;

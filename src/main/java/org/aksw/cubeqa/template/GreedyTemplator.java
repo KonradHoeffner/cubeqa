@@ -3,7 +3,7 @@ package org.aksw.cubeqa.template;
 import edu.stanford.nlp.trees.Tree;
 import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.Cube;
-import static org.aksw.cubeqa.Trees.phrase;
+import static org.aksw.cubeqa.StanfordTrees.phrase;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
