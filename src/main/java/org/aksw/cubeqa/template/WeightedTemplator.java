@@ -1,15 +1,19 @@
 package org.aksw.cubeqa.template;
 
 import de.konradhoeffner.commons.ListTree;
+import de.konradhoeffner.commons.StopWatch;
 import edu.stanford.nlp.trees.Tree;
 import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.Cube;
 import static org.aksw.cubeqa.StanfordTrees.phrase;
-import java.util.Arrays;
+import org.aksw.cubeqa.StopWatches;
+import org.aksw.cubeqa.detector.Aggregate;
+import org.aksw.cubeqa.property.ComponentProperty;
+import org.aksw.cubeqa.restriction.Restriction;
+import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- * Generates the Cube Template.
- */
+/** Generates the Cube Template. */
 @Slf4j
 public class WeightedTemplator extends Templator
 {
@@ -32,9 +36,7 @@ public class WeightedTemplator extends Templator
 		return fragments;
 	}
 
-	/**
-	 * The recursive algorithm.
-	 */
+	/** The recursive algorithm. */
 	protected void visitRecursive(Tree parseTree, ListTree<Fragment> parent, int depth)
 	{
 		String phrase = phrase(parseTree);
@@ -140,5 +142,79 @@ public class WeightedTemplator extends Templator
 //			return parent;
 //		}
 //	}
+
+	public static Fragment combine(ListTree<Fragment> fragments)
+	{
+		StopWatch fragmentCombineWatch = StopWatches.INSTANCE.getWatch("fragmentcombine");
+		fragmentCombineWatch.start();
+		if(fragments.isEmpty())
+		{throw new IllegalArgumentException("empty fragment set, can't combine");}
+		//		{log.warn("empty fragment set, combination empty");}
+
+		// *** new sets are unions over all fragment sets **********************************************************
+		if(fragments.stream().map(f->f.cube.uri).collect(Collectors.toSet()).size()>1) {
+			throw new IllegalArgumentException("different cube uris, can't combine");
+		}
+		// TODO join restrictions if possible (e.g. intervals for numericals, detect impossibilities)
+		Set<Restriction> restrictions = new HashSet<>();
+		Set<ComponentProperty> answerProperties = new HashSet<>();
+		Set<ComponentProperty> perProperties = new HashSet<>();
+		Set<Aggregate> aggregates = new HashSet<>();
+		Set<Match> matchResults = new HashSet<>();
+		fragments.forEach(f->
+		{
+			restrictions.addAll(f.restrictions);
+			answerProperties.addAll(f.answerProperties);
+			perProperties.addAll(f.perProperties);
+			aggregates.addAll(f.aggregates);
+		});
+		// *** phrases are added in list order with space in between ***********************************************
+		String combinedPhrase = fragments.stream().map(Fragment::getPhrase).reduce("", (a,b)->a+" "+b).trim();
+		Fragment fragment = new Fragment(fragments.iterator().next().cube,combinedPhrase,
+				restrictions, answerProperties, perProperties, aggregates,matchResults);
+
+		// *** combining match results *****************************************************************************
+		// **** get all properties that are not yet assigned but somewhere referenced both as name and as value
+		// strictly, they should be referenced in different matchresult objects but that calculation would be too complicated, sort that out later
+		Set<ComponentProperty> properties = fragment.unreferredProperties();
+		Set<Match> fragmentsMatchResults = fragments.stream().map(Fragment::getMatches).map(Set::stream).flatMap(id->id).collect(Collectors.toSet());
+		properties.retainAll(fragmentsMatchResults.stream().map(mr->mr.nameRefs.keySet()).flatMap(Set::stream).collect(Collectors.toSet()));
+		properties.retainAll(fragmentsMatchResults .stream().map(mr->mr.valueRefs.keySet()).flatMap(Set::stream).collect(Collectors.toSet()));
+		for(ComponentProperty property: properties)
+		{
+			// greedy algorithm, does not work when highestNameRef has the only value Ref TODO intelligently check more pairs
+			// we should always get a highest name in the first iteration per construction of fragmentsMatchResults
+			// but later this one can be used for another property, so use ifpresent
+
+			fragmentsMatchResults.stream().max(Comparator.comparingDouble(mr->mr.nameRefs.get(property)==null?0:mr.nameRefs.get(property)))
+					.ifPresent(highestNameRef->
+					{
+						fragmentsMatchResults.stream().filter(mr->mr!=highestNameRef)
+								.max(Comparator.comparingDouble(mr->mr.valueRefs.get(property)==null?0:mr.valueRefs.get(property).score))
+								.ifPresent(highestValueRef->
+								{
+									if(highestNameRef.nameRefs.get(property)!=null&&highestValueRef.valueRefs.get(property)!=null)
+									{
+										double score = highestNameRef.nameRefs.get(property)*highestValueRef.valueRefs.get(property).score;
+										if(score>MIN_COMBINED_SCORE)
+										{
+											restrictions.add(highestValueRef.valueRefs.get(property).toRestriction());
+											fragmentsMatchResults.remove(highestNameRef);
+											fragmentsMatchResults.remove(highestValueRef);
+										}
+									}
+								});
+					});
+		}
+		// add back all non used match results
+		matchResults.addAll(fragmentsMatchResults);
+		// **** end combining match resuls *************************************************************************
+
+		//		Set<ComponentProperty> nameValue = this.nameRefs.keySet();
+		//		nameValue.retainAll(otherResult.valueRefs.keySet());
+
+		fragmentCombineWatch.stop();
+		return fragment;
+	}
 
 }
