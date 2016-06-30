@@ -10,7 +10,7 @@ public class EvaluateQald6T3Train
 	public static void main(String[] args)
 	{
 		long start = System.currentTimeMillis();
-		Benchmark.fromQald("qald6t3-train-v1.2").evaluate(new Algorithm(),18);
+		Benchmark.fromQald("qald6t3-train-v1.2").evaluate(new Algorithm());
 		System.out.println(System.currentTimeMillis()-start+" ms");
 	}
 }

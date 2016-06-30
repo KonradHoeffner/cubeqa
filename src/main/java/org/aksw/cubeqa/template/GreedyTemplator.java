@@ -17,9 +17,7 @@ public class GreedyTemplator extends Templator
 		super(cube);
 	}
 
-	/**
-	 * The recursive algorithm.
-	 */
+	/** The recursive algorithm. */
 	protected Fragment visitRecursive(Tree tree)
 	{
 		while (/*!tree.isPreTerminal()&&*/tree.children().length == 1)
