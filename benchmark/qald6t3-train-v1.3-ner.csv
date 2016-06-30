@@ -623,18 +623,18 @@ Which industry received the most lobbying contributions?,Which industry received
 ?obs lso:lobbying_dataset_qy-amount ?amount.
 }
 order by desc(sum(xsd:decimal(?amount))) limit 1",lobbying_dataset_qy
-How much did the Manchester City Council give for  Learning Disabilities to SLC Paragon?,How much did the Manchester City Council give for  Learning Disabilities to SLC Paragon?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/mcc_spend>
+How much did the Manchester City Council give for  Learning Disabilities to SLC Paragon?,How much did the <organization>Manchester City Council give for  Learning Disabilities to SLC Paragon?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/mcc_spend>
 {
 ?obs qb:dataSet ls:mcc_spend.
 ?obs lso:mcc_spend-amount ?amount.
 ?obs lso:mcc_spend-supplier-name ""SLC Paragon"".
 }",mcc_spend
-Which service areas do the Manchester City Council spendings contain?,Which service areas do the Manchester City Council spendings contain?,"select distinct(?area) from <http://linkedspending.aksw.org/mcc_spend>
+Which service areas do the Manchester City Council spendings contain?,Which service areas do the <organization>Manchester City Council</organization> spendings contain?,"select distinct(?area) from <http://linkedspending.aksw.org/mcc_spend>
 {
 ?obs qb:dataSet ls:mcc_spend.
 ?obs lso:mcc_spend-service-area ?area.
 }",mcc_spend
-How much was Albanias 2013 budget for education?,How much was Albanias <year>2013</year> budget for education?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/alb_planned_budget_2013>
+How much was Albanias 2013 budget for education?,How much was <location>Albanias</location> <year>2013</year> budget for education?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/alb_planned_budget_2013>
 {
 ?obs qb:dataSet ls:alb_planned_budget_2013.
 ?obs lso:alb_planned_budget_2013-cofog1 <https://openspending.org/alb_planned_budget_2013/cofog1/09>.
@@ -646,14 +646,14 @@ What are the identification numbers of housing and community amenities in Albani
 ?obs lso:alb_planned_budget_2013-cofog1 <https://openspending.org/alb_planned_budget_2013/cofog1/06>.
 ?obs lso:alb_planned_budget_2013-UniqueID ?id.
 }",alb_planned_budget_2013
-What was the total Kenya County Expenditure in Kiambu by the Thika administration?,What was the total Kenya County Expenditure in Kiambu by the Thika administration?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ke-county-exp>
+What was the total Kenya County Expenditure in Kiambu by the Thika administration?,What was the total <dataset>Kenya County Expenditure</dataset> in <location>Kiambu</location> by the <organization>Thika</organization> administration?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ke-county-exp>
 {
 ?obs qb:dataSet ls:ke-county-exp.
 ?obs lso:ke-county-exp-administration <https://openspending.org/ke-county-exp/administration/thika>.
 ?obs lso:ke-county-exp-county <https://openspending.org/ke-county-exp/county/kiambu>.
 ?obs lso:ke-county-exp-amount ?amount.
 }",ke-county-exp
-Which Kenya country administration had the highest expenditure budget?,Which Kenya country administration had the highest expenditure budget?,"select ?admin from <http://linkedspending.aksw.org/ke-county-exp>
+Which Kenya country administration had the highest expenditure budget?,Which <location>Kenya</location> country administration had the highest expenditure budget?,"select ?admin from <http://linkedspending.aksw.org/ke-county-exp>
 {
 ?obs qb:dataSet ls:ke-county-exp.
 ?obs lso:ke-county-exp-administration ?admin.
@@ -661,7 +661,7 @@ Which Kenya country administration had the highest expenditure budget?,Which Ken
 }
 order by desc(sum(xsd:decimal(?amount))) limit 1
 ",ke-county-exp
-What was the Albania budget for public order and safety in 2007?,What was the Albania budget for public order and safety in <year>2007</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/al_planned_budget_2007to2013>
+What was the Albania budget for public order and safety in 2007?,What was the <location>Albania</location> budget for public order and safety in <year>2007</year>?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/al_planned_budget_2007to2013>
 {
 ?obs qb:dataSet ls:al_planned_budget_2007to2013.
 ?obs lso:al_planned_budget_2007to2013-cofog1 <https://openspending.org/al_planned_budget_2007to2013/cofog1/public-order-and-safety>.
@@ -670,7 +670,7 @@ filter(year(?year)=2007).
 ?obs lso:al_planned_budget_2007to2013-amount ?amount.
 }
 ",al_planned_budget_2007to2013
-What was the combined Albania budget for health from 2007 to 2010?,What was the combined Albania budget for health from <year>2007</year> to <year><year>2010</year></year>?,"select  sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/al_planned_budget_2007to2013>
+What was the combined Albania budget for health from 2007 to 2010?,What was the combined <location>Albania</location> budget for health from <year>2007</year> to <year><year>2010</year></year>?,"select  sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/al_planned_budget_2007to2013>
 {
 ?obs qb:dataSet ls:al_planned_budget_2007to2013.
 ?obs lso:al_planned_budget_2007to2013-cofog1 <https://openspending.org/al_planned_budget_2007to2013/cofog1/health>.
@@ -679,7 +679,7 @@ What was the combined Albania budget for health from 2007 to 2010?,What was the 
 filter((year(?year)>=2007)&&year(?year)<=2010)
 }
 ",al_planned_budget_2007to2013
-What is the external debt amount of Kwara?,What is the external debt amount of Kwara?,"select  sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/external-debts>
+What is the external debt amount of Kwara?,What is the external debt amount of <location>Kwara</location>?,"select  sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/external-debts>
 {
 ?obs qb:dataSet ls:external-debts.
 ?obs lso:external-debts-to <https://openspending.org/external-debts/to/kwara>.
@@ -695,14 +695,14 @@ How much external debt did rivers have in 2010?,How much external debt did river
 filter(year(?year)=2010)
 }
 ",external-debts
-How many admins were responsible for mandatory payments in the Armenian approved budget of 2010?,How many admins were responsible for mandatory payments in the Armenian approved budget of <year><year>2010</year></year>?,"select count(distinct(?admin)) from <http://linkedspending.aksw.org/ddc94682cc95482a8deefc60596686fc>
+How many admins were responsible for mandatory payments in the Armenian approved budget of 2010?,How many admins were responsible for mandatory payments in the <location>Armenian</location> approved budget of <year><year>2010</year></year>?,"select count(distinct(?admin)) from <http://linkedspending.aksw.org/ddc94682cc95482a8deefc60596686fc>
 {
 ?obs qb:dataSet ls:ddc94682cc95482a8deefc60596686fc.
 ?obs lso:ddc94682cc95482a8deefc60596686fc-economic <https://openspending.org/ddc94682cc95482a8deefc60596686fc/economic/4823>.
 ?obs lso:ddc94682cc95482a8deefc60596686fc-from ?admin.
 }
 ",ddc94682cc95482a8deefc60596686fc
-How much total running expenses under budgetary classification did the Armenian approved budget of 2010 have for personnel?,How much total running expenses under budgetary classification did the Armenian approved budget of <year><year>2010</year></year> have for personnel?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ddc94682cc95482a8deefc60596686fc>
+How much total running expenses under budgetary classification did the Armenian approved budget of 2010 have for personnel?,How much total running expenses under budgetary classification did the <location>Armenian</location> approved budget of <year><year>2010</year></year> have for personnel?,"select sum(xsd:decimal(?amount)) as ?sum from <http://linkedspending.aksw.org/ddc94682cc95482a8deefc60596686fc>
 {
 ?obs qb:dataSet ls:ddc94682cc95482a8deefc60596686fc.
 ?obs lso:ddc94682cc95482a8deefc60596686fc-economiclevel1 ""Running expenses"".
