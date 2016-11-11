@@ -28,5 +28,5 @@ public class ListTree<T>
 
 	public void add(T item) {children.add(new ListTree<>(item));}
 
-	public boolean isEmpty() {return }
+	//public boolean isEmpty() {return }
 }

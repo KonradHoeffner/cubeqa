@@ -142,17 +142,18 @@ public class WeightedTemplator extends Templator
 //			return parent;
 //		}
 //	}
-
+	
+/*
 	public static Fragment combine(ListTree<Fragment> fragments)
 	{
 		StopWatch fragmentCombineWatch = StopWatches.INSTANCE.getWatch("fragmentcombine");
 		fragmentCombineWatch.start();
-		if(fragments.isEmpty())
-		{throw new IllegalArgumentException("empty fragment set, can't combine");}
+//		if(fragments.isEmpty())
+		//{throw new IllegalArgumentException("empty fragment set, can't combine");}
 		//		{log.warn("empty fragment set, combination empty");}
 
 		// *** new sets are unions over all fragment sets **********************************************************
-		if(fragments.stream().map(f->f.cube.uri).collect(Collectors.toSet()).size()>1) {
+		if(fragments.nodes().stream().map(f->f.item.cube.uri).collect(Collectors.toSet()).size()>1) {
 			throw new IllegalArgumentException("different cube uris, can't combine");
 		}
 		// TODO join restrictions if possible (e.g. intervals for numericals, detect impossibilities)
@@ -161,8 +162,9 @@ public class WeightedTemplator extends Templator
 		Set<ComponentProperty> perProperties = new HashSet<>();
 		Set<Aggregate> aggregates = new HashSet<>();
 		Set<Match> matchResults = new HashSet<>();
-		fragments.forEach(f->
+		fragments.nodes().forEach(node->
 		{
+			Fragment f = node.item;
 			restrictions.addAll(f.restrictions);
 			answerProperties.addAll(f.answerProperties);
 			perProperties.addAll(f.perProperties);
@@ -216,5 +218,6 @@ public class WeightedTemplator extends Templator
 		fragmentCombineWatch.stop();
 		return fragment;
 	}
+	*/
 
 }
