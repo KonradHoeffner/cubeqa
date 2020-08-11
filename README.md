@@ -22,7 +22,7 @@ CubeQA contains a benchmark ([View Benchmark](https://github.com/AKSW/cubeqa/tre
 The benchmark source package is [`org.aksw.cubeqa.benchmark`](https://github.com/AKSW/cubeqa/tree/master/src/main/java/org/aksw/cubeqa/benchmark).
 
 ### Run the Evaluation yourself
-We believe that good science should be open and reproducible. Feel free to verify our claims by running our evaluation yourself. Please [contact us](mailto:konrad.hoeffner@uni-leipzig.de?subject=CubeQA Evaluation&body=Dear%20Konrad,) if you encounter issues.
+We believe that good science should be open and reproducible. Feel free to verify our claims by running our evaluation yourself. Please [contact us](mailto:konrad.hoeffner@uni-leipzig.de?subject=CubeQA%20Evaluation&body=Dear%20Konrad,) if you encounter issues.
 
 * install [OpenLink Virtuoso](http://virtuoso.openlinksw.com/) (a different triple store may work as well) on your machine and load the [datasets](http://linkedspending.aksw.org/extensions/page/page/export/qbench2datasets.zip) in the graphs `http://linkedspending.aksw.org/<dataseturi>` as well as `http://linkedspending.aksw.org/` (each dataset graph is a subgraph of `http://linkedspending.aksw.org/`.
 Virtuoso needs to be accessible at localhost:8890 (default), but you can change this in org.aksw.cubeqa.CubeSparql.java.
@@ -39,4 +39,4 @@ While CubeQA is implemented in Java using Maven so it theoretically should run e
 of the status of a research prototype so I don't give any guarantee of it successfully running on your machine but I'm happy to help with your questions (best to open a new issue).
 
 ## License
-The source code of CubeQA is freely available under the GPLv3 license (see the LICENSE file), which requires you to publish derivative works under the same license. If this creates a licensing conflict or for commercial usage, please [contact us](mailto:konrad.hoeffner@uni-leipzig.de?subject=CubeQA License&body=Dear%20Konrad,).
+The source code of CubeQA is freely available under the GPLv3 license (see the LICENSE file), which requires you to publish derivative works under the same license. If this creates a licensing conflict or for commercial usage, please [contact us](mailto:konrad.hoeffner@uni-leipzig.de?subject=CubeQA%20License&body=Dear%20Konrad,).
