@@ -240,7 +240,10 @@ public class Benchmark
 	@SneakyThrows
 	public static Benchmark fromQald(String name)
 	{
-		return fromQald(name,Benchmark.class.getClassLoader().getResource("benchmark/"+name+".xml").openStream());
+		String path = "benchmark/"+name+".xml";
+		URL url = Benchmark.class.getClassLoader().getResource(path);
+		if(url==null) {throw new RuntimeException("Cannot find benchmark file "+path);}
+		return fromQald(name,url.openStream());
 	}
 	
 	@SneakyThrows
