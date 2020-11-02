@@ -4,6 +4,7 @@ import static de.konradhoeffner.commons.Streams.stream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.Charset;
 import javax.json.*;
 import javax.json.stream.JsonGenerator;
