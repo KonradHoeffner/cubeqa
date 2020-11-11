@@ -12,6 +12,8 @@ public class SimilarityTest
 		System.out.println(Similarity.similarity("extended amounts", "amounts extended"));
 		System.out.println(Similarity.similarity("Extended Amounts", "amounts extended"));
 		System.out.println(Similarity.similarity("extended amount", "amounts extended"));
+		System.out.println(Similarity.similarity("Philippines", "Phillipines"));
+		System.out.println(Similarity.similarity("Malaysia, Philippines", "Phillipines"));
 	}
 
 }

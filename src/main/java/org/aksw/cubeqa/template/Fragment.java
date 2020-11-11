@@ -140,7 +140,7 @@ public class Fragment
 
 	/** Transforms the final fragment, which likely has undergone many combinations with other fragments in the tree-based algorithm, to a template.
 	 * There will be no further combining so all leftover matchresult values will have to be guessed where they fit or thrown away.
-	 * For each phrase there can be at most one match and each match represents another phrase so we for each match result we take at most one reference.
+	 * For each phrase there can be at most one match and each match represents another phrase so for each match result we take at most one reference.
 	 * @param expectedAnswerTypes The expected answer types of the question based on its question word. Used to choose the answer property.
 	 * @return An optional containing the cube template or an empty optional, if no answer property could identified.
 	 */

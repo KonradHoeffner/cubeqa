@@ -21,4 +21,12 @@ public class StringScorerTest
 //		test(scorer.score("Finnish Red Cross").get(),"Finnish Red Cross");		
 		test(scorer.score("Finland Embassy").get(),"Embassy of Finland");
 	}
+	
+	@Test public void testTargetArea()
+	{		
+		Cube cube = Cube.getInstance("finland-aid");
+		StringScorer scorer = (StringScorer) cube.properties.get("http://linkedspending.aksw.org/ontology/finland-aid-geographical-target-area").scorer;
+//		test(scorer.score("Finnish Red Cross").get(),"Finnish Red Cross");
+		test(scorer.score("Philippines").get(),"Malaysia, Philippines");
+	}
 }

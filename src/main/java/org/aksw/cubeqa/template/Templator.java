@@ -53,7 +53,8 @@ public abstract class Templator
 	 if(Config.INSTANCE.removeStopWords)
 	 {
 		 //			noStop = Stopwords.remove(noStop, Stopwords.FINLAND_AID_WORDS);
-		 noStop = Stopwords.remove(noStop, Stopwords.PROPERTY_WORDS);
+		 //noStop = Stopwords.remove(noStop, Stopwords.PROPERTY_WORDS);
+		 noStop = Stopwords.remove(noStop, Stopwords.STOPWORDS);
 	 }
 	 if(!question.equals(noStop)) {log.info("removed stop words, result: "+noStop);}
 	 StopWatch detectWatch = StopWatches.INSTANCE.getWatch("detect");

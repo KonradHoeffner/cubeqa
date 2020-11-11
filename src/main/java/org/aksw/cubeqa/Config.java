@@ -53,7 +53,7 @@ public enum Config
 	@Option(name="-useCubeCache")
 	public boolean USE_CUBE_CACHE = true;
 
-	public boolean	removeStopWords = false;
+	public boolean	removeStopWords = true;
 
 	public boolean	useDefaultAnswerProperty = true;
 
