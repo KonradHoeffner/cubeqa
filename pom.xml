@@ -160,17 +160,17 @@
 		<repository>
 			<id>maven.aksw.internal</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
-			<url>http://maven.aksw.org/repository/internal</url>
+			<url>https://maven.aksw.org/repository/internal</url>
 		</repository>
 		<repository>
 			<id>maven.aksw.snapshots</id>
 			<name>University Leipzig, AKSW Maven2 Repository</name>
-			<url>http://maven.aksw.org/repository/snapshots</url>
+			<url>https://maven.aksw.org/repository/snapshots</url>
 		</repository>
 		<repository>
 			<id>UK</id>
 			<name>UK Central</name>
-			<url>http://uk.maven.org/maven2</url>
+			<url>https://uk.maven.org/maven2</url>
 		</repository>
 	</repositories>
 	<build>
