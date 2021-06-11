@@ -23,24 +23,29 @@ public class ComponentPropertyTest
 		assertEquals(vars.size(),c.properties.size());
 	}
 
+	// does not seem to be available by default in JUnit 4 or 5
+	static void assertGreaterOrEquals(double large, double small) {assertTrue(large+" is not larger than or equal to "+small,large>=small);}
+	static void assertGreater(double large, double small) {assertTrue(large+" is not larger than "+small,large>small);}
+	static void assertSmaller(double small, double large) {assertTrue(small+" is not smaller than "+large,small<large);}
+	
 	@Test public void testMatch()
 	{
 		{
 			ComponentProperty rc = ComponentProperty.getInstance(Cube.finlandAid(), "http://linkedspending.aksw.org/ontology/finland-aid-recipient-country");
 			log.debug("{}",rc.match("country"));
-			assertTrue(rc.match("country")>=0.4);
+			assertGreaterOrEquals(rc.match("country"),0.4);
 		}
 		{
 			ComponentProperty ea = ComponentProperty.getInstance(Cube.finlandAid(), "http://linkedspending.aksw.org/ontology/finland-aid-amounts-extended");
 			log.debug("{}",ea.match("amounts extended"));
-			assertTrue(ea.match("amounts extended")>=0.9);
+			assertGreaterOrEquals(ea.match("amounts extended"),0.9);
 			log.debug("{}",ea.match("extended amounts"));
-			assertTrue(ea.match("extended amounts")>=0.5);
+			assertGreaterOrEquals(ea.match("extended amounts"),0.5);
 		}
 		{
 			ComponentProperty a = ComponentProperty.getInstance(Cube.finlandAid(), "http://linkedspending.aksw.org/ontology/finland-aid-amount");
 			log.debug("{}",a.match("extended amounts"));
-			assertTrue(a.match("extended amounts")<0.4);
+			assertSmaller(a.match("extended amounts"),0.55);
 			log.debug("{}",a.match("amounts"));
 			assertTrue(a.match("amounts")>0.6);
 		}

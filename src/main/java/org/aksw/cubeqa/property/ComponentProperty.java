@@ -108,7 +108,7 @@ public class ComponentProperty implements Serializable
 		String propertyTypeQuery = "select ?p {?spec ?p <"+uri+">. filter(contains(str(?p),\"http://purl.org/linked-data/cube#\"))} limit 1";
 		String pt;
 		try {pt = cube.sparql.select(propertyTypeQuery).next().get("?p").asResource().getURI();}
-		catch(Exception e) {throw new RuntimeException("error with sparql query "+propertyTypeQuery,e);}
+		catch(Exception e) {throw new RuntimeException("error with SPARQL query "+propertyTypeQuery,e);}
 		switch(pt)
 		{
 			case "http://purl.org/linked-data/cube#measure": this.propertyType=PropertyType.MEASURE;break;

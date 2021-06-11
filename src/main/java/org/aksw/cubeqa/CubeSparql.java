@@ -85,7 +85,7 @@ public class CubeSparql implements Serializable
 		{
 			qe.setDefaultGraphURIs(defaultGraphs);
 			return ResultSetFactory.copyResults(qe.execSelect());
-		} catch(Exception e) {throw new RuntimeException("Error on sparql select on endpoint "+endpoint+" with query:\n"+query,e);}
+		} catch(Exception e) {throw new RuntimeException("Error on SPARQL SELECT on endpoint "+endpoint+" with query:\n"+query,e);}
 		finally {watch.stop();}
 	}
 

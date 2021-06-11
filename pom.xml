@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.aksw.cubeqa</groupId>
 	<artifactId>cubeqa</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -12,7 +12,6 @@
 		<lucene.version>5.5.0</lucene.version>
 		<slf4j.version>1.7.18</slf4j.version>
 		<log4j.version>2.5</log4j.version>
-		<!-- <lucene.version>5.4.1</lucene.version> -->
 	</properties>
 
 	<dependencies>
