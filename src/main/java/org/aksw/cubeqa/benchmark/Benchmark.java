@@ -1,25 +1,63 @@
 package org.aksw.cubeqa.benchmark;
 
 import static de.konradhoeffner.commons.Streams.stream;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.io.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
-import javax.json.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonWriter;
+import javax.json.JsonWriterFactory;
 import javax.json.stream.JsonGenerator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-import org.aksw.cubeqa.*;
+
+import org.aksw.cubeqa.Algorithm;
+import org.aksw.cubeqa.Config;
+import org.aksw.cubeqa.Cube;
+import org.aksw.cubeqa.CubeSparql;
+import org.aksw.cubeqa.Files;
+import org.aksw.cubeqa.StopWatches;
 import org.aksw.cubeqa.index.CubeIndex;
-import org.apache.commons.csv.*;
-import org.w3c.dom.*;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.jena.atlas.json.JSON;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonValue;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
-import lombok.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 /** Benchmark class with the evaluate function that is used for the papers.
@@ -117,25 +155,25 @@ public class Benchmark
 			{
 				//			if(i==74) {performances.add(new Performance(0,0,true));continue;} // q 74 gets wrongly positively evaluated // removed as for old benchmark
 				Question q = questions.get(i-1);
-				
+
 				//			// remove questions with unions
 				// nr. 23 somehow freezes. removed the other two because gold standard access can't be assumed
 				if(q.query.toLowerCase().contains("union")) {unionCount++;continue;}
 				//			//			// remove questions with subqueries
-//				if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
+				//				if(q.query.toLowerCase().substring(5).contains("select")) {subqueryCount++;continue;}
 				//			//			// remove ask queries
-//				if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
+				//				if(q.query.toLowerCase().startsWith("ask")) {askCount++;continue;}
 
 				count++;
 				Performance p = evaluate(algorithm,i);
 				performances.add(p);
 				if(p.empty) {emptyCount++;}
-//				// don't include empty answers in the json file as we assume them to be wrong
-//				if(!p.jsonAnswer.isEmpty())
+				//				// don't include empty answers in the json file as we assume them to be wrong
+				//				if(!p.jsonAnswer.isEmpty())
 				{
 					JsonObjectBuilder questionBuilder = Json.createObjectBuilder();				
 					questionBuilder.add("id", i);				
-						
+
 					questionsBuilder.add(questionBuilder);
 				}
 				out.printRecord(i,Cube.linkedSpendingCubeName(q.cubeUri),q.string,q.query,p.query,p.precision,p.recall,p.fscore());
@@ -170,7 +208,7 @@ public class Benchmark
 		log.info("Question Number "+questionNumber+": Answering "+question.string);
 		log.debug("correct query: "+question.query);
 		log.debug("correct answer: "+question.answers);
-		
+
 		String cubeName;
 		if(!Config.INSTANCE.givenDataSets)
 		{
@@ -225,6 +263,38 @@ public class Benchmark
 		return new Benchmark(name,questions,false);
 	}
 
+	/** File gets loaded from benchmark/name.json. */
+	public static Benchmark fromJson(String name) throws IOException
+	{
+		List<Question> questions = new LinkedList<>();
+		JsonObject json = JSON.read("benchmark/"+name+".json");
+		JsonArray questionElements = json.get("questions").getAsArray();
+		for(JsonValue value: questionElements)
+		{
+			JsonObject qob = value.getAsObject();
+			String correctQuery = qob.get("query").getAsObject().get("sparql").getAsString().value();
+			System.out.println(correctQuery);
+			Matcher matcher = Pattern.compile("from \\<http://linkedspending\\.aksw\\.org/([^>]*)").matcher(correctQuery);
+			matcher.find();
+			String datasetName = matcher.group(1); 
+			System.err.println("*******************"+datasetName+"***************************");
+			
+			JsonArray bindings = qob.get("answers").getAsArray().get(0).getAsObject().get("results").getAsObject().get("bindings").getAsArray();
+			
+			Set<Map<String,String>> answers = new HashSet<>();
+			Map<String,DataType> tagTypes = new HashMap<>();
+			
+			for(JsonValue binding: bindings)
+			{
+				// TODO: finish
+			}
+			
+			
+			questions.add(new Question(datasetName,qob.get("question").getAsArray().get(0).getAsObject().get("string").toString(),correctQuery,answers,tagTypes));
+		}		
+		return new Benchmark(name,questions,false);
+	}
+
 	static String nodeString(RDFNode node)
 	{
 		if(node.isLiteral()) {
@@ -246,7 +316,7 @@ public class Benchmark
 		if(url==null) {throw new RuntimeException("Cannot find benchmark file "+path);}
 		return fromQald(name,url.openStream());
 	}
-	
+
 	@SneakyThrows
 	public static Benchmark fromQald(String name, InputStream in)
 	{
