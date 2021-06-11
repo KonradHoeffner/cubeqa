@@ -10,8 +10,10 @@ To our knowledge, this is the first question answering approach for statistical 
 Apart from providing evaluation results, we discuss future challenges in this field.
 
 ## Requirements
-You need to have **Java 8**, Git and Maven 3 installed.
-Clone the project via "`git clone https://github.com/AKSW/cubeqa.git`".
+* CubeQA 1.0 requires **Java 8**, Git and Maven 3 installed.
+* CubeQA 2.0 will require Java 16.
+* Clone the project via "`git clone https://github.com/AKSW/cubeqa.git`" to get the current state.
+* You may checkout release 1.0 for a stable version that runs on Java 8.
 
 ### IDE Setup
 If you use an IDE, you also need to download and execute lombok.jar (doubleclick it, or run java -jar lombok.jar). Follow instructions.
@@ -22,14 +24,26 @@ CubeQA contains a benchmark ([View Benchmark](https://github.com/AKSW/cubeqa/tre
 The benchmark source package is [`org.aksw.cubeqa.benchmark`](https://github.com/AKSW/cubeqa/tree/master/src/main/java/org/aksw/cubeqa/benchmark).
 
 ### Run the Evaluation yourself
-We believe that good science should be open and reproducible. Feel free to verify our claims by running our evaluation yourself. Please [contact us](mailto:konrad.hoeffner@uni-leipzig.de?subject=CubeQA%20Evaluation&body=Dear%20Konrad,) if you encounter issues.
+We believe that good science should be open and reproducible. Feel free to verify our claims by running our evaluation yourself. Please [contact us](mailto:konrad.hoeffner@uni-leipzig.de?subject=CubeQA%20Evaluation&body=Dear%20Konrad,) if you encounter issues. 
 
-* install [OpenLink Virtuoso](http://virtuoso.openlinksw.com/) (a different triple store may work as well) on your machine and load the [datasets](http://linkedspending.aksw.org/extensions/page/page/export/qbench2datasets.zip) in the graphs `http://linkedspending.aksw.org/<dataseturi>` as well as `http://linkedspending.aksw.org/` (each dataset graph is a subgraph of `http://linkedspending.aksw.org/`.
-Virtuoso needs to be accessible at localhost:8890 (default), but you can change this in org.aksw.cubeqa.CubeSparql.java.
+* run the evaluation main classes e.g. for QALD6 Task 3 training set via `mvn compile exec:java -Dexec.mainClass="org.aksw.cubeqa.scripts.EvaluateQald6T3Train"`.
+* You will see the results on the console and also in the file `benchmark/qbench<timestamp>.csv`.
+
+The evaluation code and the JUnit tests are preconfigured to use the SPARQL endpoint <http://cubeqa.aksw.org/sparql> but we do not guarantee that endpoint being available in the future.
+Install and load your own SPARQL endpoint and change the configuration to use your own endpoint as described below in case that endpoint is not available. 
+
+#### Load the Datasets into your own Virtuoso Endpoint
+* install [OpenLink Virtuoso](http://virtuoso.openlinksw.com/) (a different triple store may work as well) on your machine and load the datasets (see below)
+* download the [datasets](http://linkedspending.aksw.org/extensions/page/page/export/qbench2datasets.zip)
+* upload the [LinkedSpending ontology](https://raw.githubusercontent.com/SmartDataAnalytics/openspending2rdf/master/schema/ontology.ttl) into graph <http://linkedspending.aksw.org/ontology/> and add that graph to the graph group <http://linkedspending.aksw.org/>  
+* upload each <x>.nt file into graph `http://linkedspending.aksw.org/<x>` and add them to graph group <http://linkedspending.aksw.org/>
+* you can automate this with the `virtloadbench` script adapted to your use case 
+* then go to the folder containing the dataset ntriples files and execute the shell command `ls | sed "s|\\.nt||" | xargs -I @ virtloadbench @.nt http://linkedspending.aksw.org/@`
+* alternative virtload scripts are at <https://github.com/SmartDataAnalytics/aksw-commons/tree/master/aksw-commons-scripts/virtuoso>
+* in http://<yourendpoint>/conductor add prefixes qb: <http://purl.org/linked-data/cube#>, ls: <http://linkedspending.aksw.org/instance/> and lso: <http://linkedspending.aksw.org/ontology/>
+* set the URI, such as "localhost:8890" (default) in org.aksw.cubeqa.CubeSparql.java.
 * start Virtuoso
-* run the main class org.aksw.cubeqa.scripts.EvaluateQBench2 via `mvn compile exec:java -Dexec.mainClass="org.aksw.cubeqa.scripts.EvaluateQBench2"`.
-
-You will see the results on the console and also in the file `benchmark/qbench<timestamp>.csv`.
+ 
 
 ## Graphical User Interface
 CubeQA can be used as a plugin for [openQA](https://bitbucket.org/emarx/openqa/wiki/FAQ), which offers a graphical user interface. 
@@ -37,6 +51,10 @@ CubeQA can be used as a plugin for [openQA](https://bitbucket.org/emarx/openqa/w
 ## Warning: Research Prototype
 While CubeQA is implemented in Java using Maven so it theoretically should run everywhere, it is under development, using snapshots and generally
 of the status of a research prototype so I don't give any guarantee of it successfully running on your machine but I'm happy to help with your questions (best to open a new issue).
+CubeQA was part of my PhD thesis and is not my current research topic, so I can perform maintenance only very rarely.
+While I do plan on creating a version 2 eventually, this will just be a quick move to Java 16.
+If you want to know more about current research, I recommend reading "R. Cocco, M. Atzori, and C. Zaniolo. Machine learning of SPARQL templates for Question Answering over LinkedSpending. In 2019 IEEE 28th International Conference on Enabling Technologies:
+Infrastructure for Collaborative Enterprises (WETICE), pages 156–161, 06 2019." ([IEEE page](https://ieeexplore.ieee.org/document/8795383), [PDF](http://ceur-ws.org/Vol-2400/paper-22.pdf)). 
 
 ## License
 The source code of CubeQA is freely available under the GPLv3 license (see the LICENSE file), which requires you to publish derivative works under the same license. If this creates a licensing conflict or for commercial usage, please [contact us](mailto:konrad.hoeffner@uni-leipzig.de?subject=CubeQA%20License&body=Dear%20Konrad,).
