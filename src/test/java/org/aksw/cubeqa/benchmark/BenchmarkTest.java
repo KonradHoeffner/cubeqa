@@ -1,13 +1,14 @@
 package org.aksw.cubeqa.benchmark;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.aksw.cubeqa.Algorithm;
 import org.aksw.cubeqa.CubeSparql;
 import org.aksw.cubeqa.Files;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDF;
 

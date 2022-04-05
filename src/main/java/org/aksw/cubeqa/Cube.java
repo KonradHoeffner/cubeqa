@@ -66,7 +66,7 @@ public class Cube implements Serializable
 		}
 		catch(InvalidClassException e) {f.delete();return Optional.empty();}
 		catch (FileNotFoundException e) {return Optional.empty();}
-		catch (ClassNotFoundException | IOException e) {throw new RuntimeException(e);}
+		catch (ClassNotFoundException | IOException e) {throw new RuntimeException("Error loading cube file "+f,e);}
 	}
 
 	private void save()

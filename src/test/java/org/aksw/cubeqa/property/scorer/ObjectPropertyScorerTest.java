@@ -1,11 +1,8 @@
 package org.aksw.cubeqa.property.scorer;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.aksw.cubeqa.Cube;
-import org.aksw.cubeqa.property.scorer.ObjectPropertyScorer;
-import org.aksw.cubeqa.property.scorer.ScoreResult;
-import org.aksw.cubeqa.property.scorer.Scorer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ObjectPropertyScorerTest
 {

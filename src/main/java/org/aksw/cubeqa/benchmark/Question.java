@@ -1,7 +1,6 @@
 package org.aksw.cubeqa.benchmark;
 
 import java.util.*;
-import javax.json.JsonValue;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

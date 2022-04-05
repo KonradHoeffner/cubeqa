@@ -1,9 +1,8 @@
 package org.aksw.cubeqa;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
-import org.aksw.cubeqa.Cube;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
 

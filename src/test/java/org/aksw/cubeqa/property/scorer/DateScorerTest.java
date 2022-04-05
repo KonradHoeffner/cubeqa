@@ -1,9 +1,9 @@
 package org.aksw.cubeqa.property.scorer;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.scorer.temporal.TemporalScorer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DateScorerTest
 {

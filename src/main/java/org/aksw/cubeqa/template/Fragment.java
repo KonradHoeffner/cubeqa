@@ -15,12 +15,9 @@ import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.property.PropertyType;
 import org.aksw.cubeqa.property.scorer.ScoreResult;
 import org.aksw.cubeqa.restriction.Restriction;
-import org.apache.jena.sparql.function.library.leviathan.log;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import static org.aksw.cubeqa.AnswerType.*;
 
 @RequiredArgsConstructor

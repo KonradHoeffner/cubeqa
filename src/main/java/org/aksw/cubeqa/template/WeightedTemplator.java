@@ -1,17 +1,11 @@
 package org.aksw.cubeqa.template;
 
 import de.konradhoeffner.commons.ListTree;
-import de.konradhoeffner.commons.StopWatch;
 import edu.stanford.nlp.trees.Tree;
 import lombok.extern.slf4j.Slf4j;
 import org.aksw.cubeqa.Cube;
 import static org.aksw.cubeqa.StanfordTrees.phrase;
-import org.aksw.cubeqa.StopWatches;
-import org.aksw.cubeqa.detector.Aggregate;
-import org.aksw.cubeqa.property.ComponentProperty;
-import org.aksw.cubeqa.restriction.Restriction;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /** Generates the Cube Template. */
 @Slf4j

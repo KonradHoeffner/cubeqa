@@ -1,8 +1,8 @@
 package org.aksw.cubeqa.detector;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.aksw.cubeqa.detector.Aggregate.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AggregateDetectorTest
 {

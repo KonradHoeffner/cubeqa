@@ -1,9 +1,10 @@
 package org.aksw.cubeqa.index;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import com.google.common.collect.Range;
 
 public class LabelIndexTest

@@ -1,10 +1,10 @@
 package org.aksw.cubeqa.detector;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.regex.Pattern;
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.restriction.Restriction;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,15 +1,12 @@
 package org.aksw.cubeqa.detector;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Set;
-
 import org.aksw.cubeqa.Cube;
 import org.aksw.cubeqa.restriction.Restriction;
 import org.aksw.cubeqa.restriction.UriRestriction;
 import org.aksw.cubeqa.template.Fragment;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
 

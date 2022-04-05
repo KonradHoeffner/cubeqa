@@ -1,11 +1,11 @@
 package org.aksw.cubeqa.index;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class StemmerTest
 {
@@ -18,7 +18,7 @@ public class StemmerTest
 	}
 	
 	// expected to fail, Lucene English stemmer not aggressive enough
-	@Ignore @Test public void stemmEgyptianTest() throws ParseException
+	@Disabled @Test public void stemmEgyptianTest() throws ParseException
 	{
 		assertEquals(parser.parse("egyptian"),parser.parse("egypt"));
 	}

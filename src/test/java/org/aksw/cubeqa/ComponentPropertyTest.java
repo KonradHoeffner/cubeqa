@@ -1,14 +1,14 @@
 package org.aksw.cubeqa;
 
-import static org.junit.Assert.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.aksw.cubeqa.property.ComponentProperty;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 import lombok.extern.slf4j.Slf4j;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 public class ComponentPropertyTest
@@ -24,9 +24,9 @@ public class ComponentPropertyTest
 	}
 
 	// does not seem to be available by default in JUnit 4 or 5
-	static void assertGreaterOrEquals(double large, double small) {assertTrue(large+" is not larger than or equal to "+small,large>=small);}
-	static void assertGreater(double large, double small) {assertTrue(large+" is not larger than "+small,large>small);}
-	static void assertSmaller(double small, double large) {assertTrue(small+" is not smaller than "+large,small<large);}
+	static void assertGreaterOrEquals(double large, double small) {assertTrue(large>=small,large+" is not larger than or equal to "+small);}
+	static void assertGreater(double large, double small) {assertTrue(large>small,large+" is not larger than "+small);}
+	static void assertSmaller(double small, double large) {assertTrue(small<large,small+" is not smaller than "+large);}
 	
 	@Test public void testMatch()
 	{
@@ -51,7 +51,7 @@ public class ComponentPropertyTest
 		}
 	}
 
-	@Ignore
+	@Disabled
 	@Test public void testDistances()
 	{
 		StringMetric similarity = StringMetrics.qGramsDistance();

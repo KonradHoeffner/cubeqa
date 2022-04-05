@@ -1,7 +1,7 @@
 //package org.aksw.cubeqa.detector;
 //
-//import static org.junit.Assert.*;
-//import org.junit.Test;
+//import static org.junit.jupiter.api.Assertions.assertTrue;
+//import org.junit.jupiter.api.Test;
 //
 //public class QuestionWordDetectorTest
 //{

@@ -1,4 +1,6 @@
 # CubeQA—Question Answering on Statistical Linked Data
+[![test](https://github.com/AskNowQA/cubeqa/actions/workflows/test.yml/badge.svg)](https://github.com/AskNowQA/cubeqa/actions/workflows/test.yml)
+[![License: GNU GPLv3](https://img.shields.io/badge/license-GPL-blue)](LICENSE)
 
 ## Abstract
 As an increasing amount of statistical data is published as RDF, intuitive ways of satisfying information needs and getting new insights out of this type of data becomes increasingly important.
@@ -10,10 +12,10 @@ To our knowledge, this is the first question answering approach for statistical 
 Apart from providing evaluation results, we discuss future challenges in this field.
 
 ## Requirements
-* CubeQA 1.0 requires **Java 8**, Git and Maven 3 installed.
-* CubeQA 2.0 will require Java 16.
+* CubeQA 1.0 requires **Java 11**, Git and Maven 3 installed.
+* further versions may requirer higher Java versions.
 * Clone the project via "`git clone https://github.com/AKSW/cubeqa.git`" to get the current state.
-* You may checkout release 1.0 for a stable version that runs on Java 8.
+* You may checkout release 1.0 for a stable version that runs on Java 11.
 
 ### IDE Setup
 If you use an IDE, you also need to download and execute lombok.jar (doubleclick it, or run java -jar lombok.jar). Follow instructions.

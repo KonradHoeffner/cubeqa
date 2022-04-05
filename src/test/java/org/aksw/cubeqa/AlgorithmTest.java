@@ -1,8 +1,9 @@
 package org.aksw.cubeqa;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.aksw.cubeqa.template.Template;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.apache.jena.query.ResultSet;
 
 import lombok.extern.slf4j.Slf4j;

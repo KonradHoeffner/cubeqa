@@ -1,10 +1,10 @@
 package org.aksw.cubeqa.property.scorer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Collection;
 import java.util.Comparator;
 import org.aksw.cubeqa.Cube;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -8,8 +8,7 @@ import org.aksw.cubeqa.detector.Aggregate;
 import org.aksw.cubeqa.property.ComponentProperty;
 import org.aksw.cubeqa.restriction.Restriction;
 import org.aksw.cubeqa.restriction.UriRestriction;
-import org.aksw.cubeqa.template.Template;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CubeTemplateTest
 {
