@@ -1,6 +1,7 @@
 # CubeQA—Question Answering on Statistical Linked Data
 [![test](https://github.com/AskNowQA/cubeqa/actions/workflows/test.yml/badge.svg)](https://github.com/AskNowQA/cubeqa/actions/workflows/test.yml)
 [![License: GNU GPLv3](https://img.shields.io/badge/license-GPL-blue)](LICENSE)
+[![JavaDoc](https://img.shields.io/badge/javadoc-here-green)](https://konradhoeffner.github.io/cubeqa)
 
 ## Abstract
 As an increasing amount of statistical data is published as RDF, intuitive ways of satisfying information needs and getting new insights out of this type of data becomes increasingly important.
