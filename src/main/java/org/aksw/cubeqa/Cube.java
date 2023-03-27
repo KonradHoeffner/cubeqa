@@ -112,8 +112,8 @@ public class Cube implements Serializable
 			} catch(NoSuchElementException e) {throw new RuntimeException("Error with query: "+labelCommentQuery,e);}
 
 			String query = "select distinct ?p "+// //?type ?label "+
-					"from <http://linkedspending.aksw.org/"+cubeName+"> "+
-					"from <http://linkedspending.aksw.org/ontology/> "+
+					//"from <http://linkedspending.aksw.org/"+cubeName+"> "+
+					//"from <http://linkedspending.aksw.org/ontology/> "+
 					"{"+
 					" ls:"+cubeName+" qb:structure ?dsd. ?dsd qb:component ?comp."+
 					" {?comp qb:dimension ?p.} UNION {?comp qb:attribute ?p.} UNION {?comp qb:measure ?p.} "+

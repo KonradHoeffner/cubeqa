@@ -17,6 +17,7 @@ public class ComponentPropertyTest
 	{
 		Cube c = Cube.finlandAid();
 		Set<String> vars = c.properties.values().stream().map(p->p.var).collect(Collectors.toSet());
+		assertNotEquals(0, vars.size());
 		for(ComponentProperty p: c.properties.values()) {log.debug(p.var+" "+p.uri);}
 		log.debug(Cube.finlandAid().properties.get("http://linkedspending.aksw.org/ontology/finland-aid-amount").var);
 		log.debug("{}",vars);

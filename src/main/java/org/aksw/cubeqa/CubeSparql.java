@@ -5,13 +5,17 @@ import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import org.apache.jena.query.*;
-import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
-import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
-
+import org.rdfhdt.hdt.hdt.HDT;
+import org.rdfhdt.hdt.hdt.HDTManager;
+import org.rdfhdt.hdtjena.HDTGraph;
 import de.konradhoeffner.commons.StopWatch;
+import lombok.SneakyThrows;
+
 import org.aksw.cubeqa.rdf.DataCube;
 
 /** Interface to SPARQL. */
@@ -30,9 +34,23 @@ public class CubeSparql implements Serializable
 	public final String prefixInstance;
 	public final String prefixOntology;
 	public final String superGraph;
-	private final String	endpoint;
 	private final String prefixes;
 	private List<String> defaultGraphs = new ArrayList<>();
+
+	private static Model qbench2;
+
+	@SneakyThrows
+	private synchronized Model qbench2()
+	{
+		if(qbench2==null)
+		{
+			HDT hdt = HDTManager.mapIndexedHDT("qbench2.hdt", null);
+			HDTGraph graph = new HDTGraph(hdt);
+			qbench2 = ModelFactory.createModelForGraph(graph);
+		}
+		return qbench2;
+	}
+
 
 	static public CubeSparql getLinkedSpendingInstanceForName(String cubeName)
 	{
@@ -44,30 +62,26 @@ public class CubeSparql implements Serializable
 		CubeSparql cs = new CubeSparql(cubeUri,
 				"http://linkedspending.aksw.org/instance/",
 				"http://linkedspending.aksw.org/ontology/",
-				"http://linkedspending.aksw.org/",
-				// local Virtuoso SPARQL endpoint has a NAN bug
-//												"http://localhost:8890/sparql");
-//				"http://linkedspending.aksw.org/sparql");
-			"http://cubeqa.aksw.org/sparql");
+				"http://linkedspending.aksw.org/");
+				//"http://cubeqa.aksw.org/sparql"
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/ontology/");
 		cs.defaultGraphs.add("http://linkedspending.aksw.org/"+cubeUri.substring(cubeUri.lastIndexOf('/')+1));
 		return cs;
 	}
 
-	public CubeSparql(String cubeUri, String prefixInstance, String prefixOntology, String superGraph, String endpoint)
+	public CubeSparql(String cubeUri, String prefixInstance, String prefixOntology, String superGraph)
 	{
 		this.cubeUri=cubeUri;
 		this.prefixInstance = prefixInstance;
 		this.prefixOntology = prefixOntology;
 		this.superGraph = superGraph;
-		this.endpoint = endpoint;
 		this.prefixes = "prefix dcterms: <"+DCTerms.getURI()+">\n"
-		//					+">\n prefix lso: <"+prefixOntology
-		+"prefix : <"+prefixInstance+">\n"
-		+"prefix ls: <http://linkedspending.aksw.org/instance/>\n"
-		+"prefix qb: <"+DataCube.BASE+">\n"
-		+"prefix xsd: <"+XSD.NS+">\n"
-		+"prefix rdfs: <"+RDFS.uri+">\n";
+				//					+">\n prefix lso: <"+prefixOntology
+				+"prefix : <"+prefixInstance+">\n"
+				+"prefix ls: <http://linkedspending.aksw.org/instance/>\n"
+				+"prefix qb: <"+DataCube.BASE+">\n"
+				+"prefix xsd: <"+XSD.NS+">\n"
+				+"prefix rdfs: <"+RDFS.uri+">\n";
 	}
 
 	String cubeUrl(String datasetName) {return prefixInstance+datasetName;}
@@ -76,12 +90,11 @@ public class CubeSparql implements Serializable
 	{
 		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
 		watch.start();
-		QueryExecutionHTTPBuilder builder = QueryExecutionHTTP.create().endpoint(endpoint).query(prefixes+query);
-		defaultGraphs.forEach(builder::addDefaultGraphURI);
-		try(QueryExecution qe = builder.build())
+		
+		try(QueryExecution qe = QueryExecutionFactory.create(query,qbench2()))
 		{
 			return qe.execAsk();
-		} catch(Exception e) {throw new RuntimeException("Error on SPARQL ASK on endpoint "+endpoint+" with query:\n"+query,e);}
+		} catch(Exception e) {throw new RuntimeException("Error on SPARQL ASK with query:\n"+query,e);}
 		finally {watch.stop();}
 	}
 
@@ -90,13 +103,11 @@ public class CubeSparql implements Serializable
 		query = prefixes+query;
 		StopWatch watch = StopWatches.INSTANCE.getWatch("sparql");
 		watch.start();
-		QueryExecutionHTTPBuilder builder = QueryExecutionHTTP.create().endpoint(endpoint);
-		defaultGraphs.forEach(builder::addDefaultGraphURI);
-		try(QueryExecution qe = builder.query(query).build()) 
-		{
-		
+		try(QueryExecution qe = QueryExecutionFactory.create(query,qbench2()))
+		{		
+
 			return ResultSetFactory.copyResults(qe.execSelect());
-		} catch(Exception e) {throw new RuntimeException("Error on SPARQL SELECT on endpoint "+endpoint+" with query:\n"+query,e);}
+		} catch(Exception e) {throw new RuntimeException("Error on SPARQL SELECT on with query:\n"+query,e);}
 		finally {watch.stop();}
 	}
 
@@ -104,7 +115,7 @@ public class CubeSparql implements Serializable
 	{
 		return uri.substring(Math.max(uri.lastIndexOf('/'),uri.lastIndexOf('#'))+1);
 	}
-	
+
 	public static String jsonQueryResults(ResultSet rs)
 	{
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
