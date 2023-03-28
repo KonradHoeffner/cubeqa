@@ -14,7 +14,7 @@ public class TemporalScorerTest
 	{
 		Cube cube = Cube.getInstance("finland-aid");
 		ComponentProperty property = cube.properties.get("http://linkedspending.aksw.org/ontology/refYear");
-		assertFalse(property.scorer.score("2005").isPresent());
+		assertFalse(property.scorer.score("2005").isPresent());  // fails when no graphs are used
 		assertTrue(property.scorer.score("2006").isPresent());
 		assertTrue(property.scorer.score("2007").isPresent());
 		assertTrue(property.scorer.score("2011").isPresent());
@@ -27,7 +27,7 @@ public class TemporalScorerTest
 		// modified is a time but date scorer only uses the date substring
 		ComponentProperty property = cube.properties.get("http://linkedspending.aksw.org/ontology/refDate");
 //		assertTrue(property.scorer.score("2009").isPresent());
-		assertFalse(property.scorer.score("1999").isPresent());
+		assertFalse(property.scorer.score("1999").isPresent()); // fails when no graphs are used
 		assertTrue(property.scorer.score("2009-01-01").isPresent());
 		assertFalse(property.scorer.score("2009-06-07").isPresent());
 	}

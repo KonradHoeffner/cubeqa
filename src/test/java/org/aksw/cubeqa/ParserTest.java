@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.aksw.cubeqa.template.StanfordNlp;
 import org.junit.jupiter.api.Test;
 import edu.stanford.nlp.trees.Tree;
-import lombok.extern.slf4j.Slf4j;
 
 public class ParserTest
 {

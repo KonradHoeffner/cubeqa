@@ -11,7 +11,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<lucene.version>5.5.5</lucene.version><!-- Last minor release of version 5. Anything higher breaks the tests. -->
 		<slf4j.version>2.0.7</slf4j.version>
-		<log4j.version>2.5</log4j.version>
 	</properties>
 
 	<dependencies>
@@ -76,7 +75,8 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>4.4</version>
 		</dependency>
-		<dependency>
+		<!-- transitively available through hdt-jena -->
+		<!--<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>apache-jena-libs</artifactId>
 			<type>pom</type>
@@ -92,6 +92,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
@@ -133,6 +134,12 @@
 			<artifactId>hdt-jena</artifactId>
 			<version>3.0.9</version>
 		</dependency>
+		<!-- needed for Jena, prevent java.lang.NoClassDefFoundError: org/apache/commons/codec/digest/MurmurHash3 --> 
+		<dependency>
+    		<groupId>commons-codec</groupId>
+    		<artifactId>commons-codec</artifactId>
+    		<version>1.15</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -148,6 +155,21 @@
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
 				<version>4.5.14</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jena</groupId>
+				<artifactId>jena-core</artifactId>
+				<version>4.7.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jena</groupId>
+				<artifactId>jena-base</artifactId>
+				<version>4.7.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.jena</groupId>
+				<artifactId>jena-arq</artifactId>
+				<version>4.7.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
