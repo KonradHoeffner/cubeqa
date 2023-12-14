@@ -23,7 +23,7 @@ If you use an IDE, you also need to download and execute lombok.jar (doubleclick
 That is because CubeQA uses [Project Lombok](http://projectlombok.org/), which removes much boilerplate from Java.
 
 ## Benchmark
-CubeQA contains a benchmark ([View Benchmark](https://github.com/AKSW/cubeqa/tree/master/benchmark/qbench2.xml) | [View Results](https://github.com/AKSW/cubeqa/tree/master/benchmark/qbench2-results.csv)) that runs on 50 datasets of LinkedSpending ([Download](http://linkedspending.aksw.org/extensions/page/page/export/qbench2datasets.zip) | [Browse LinkedSpending](http://linkedspending.aksw.org)).
+CubeQA contains a benchmark ([View Benchmark](https://github.com/AKSW/cubeqa/tree/master/benchmark/)) that runs on 50 datasets of LinkedSpending ([Download](https://github.com/KonradHoeffner/linkedspending/releases/download/data-qbench2datasets/qbench2datasets.zip) | [Browse LinkedSpending](https://linkedspending.aksw.org/)).
 The benchmark source package is [`org.aksw.cubeqa.benchmark`](https://github.com/AKSW/cubeqa/tree/master/src/main/java/org/aksw/cubeqa/benchmark).
 
 ### Run the Evaluation yourself
@@ -32,13 +32,13 @@ We believe that good science should be open and reproducible. Feel free to verif
 * run the evaluation main classes e.g. for QALD6 Task 3 training set via `mvn compile exec:java -Dexec.mainClass="org.aksw.cubeqa.scripts.EvaluateQald6T3Train"`.
 * You will see the results on the console and also in the file `benchmark/qbench<timestamp>.csv`.
 
-The evaluation code and the JUnit tests are preconfigured to use the SPARQL endpoint <http://cubeqa.aksw.org/sparql> but we do not guarantee that endpoint being available in the future.
-Install and load your own SPARQL endpoint and change the configuration to use your own endpoint as described below in case that endpoint is not available. 
+The evaluation code and the JUnit tests are preconfigured to use the SPARQL endpoint <http://cubeqa.aksw.org/sparql> but but that is not active anymore.
+You can install and load your own SPARQL endpoint and change the configuration to use your own endpoint as described below.
 
 #### Load the Datasets into your own Virtuoso Endpoint
 * install [OpenLink Virtuoso](http://virtuoso.openlinksw.com/) (a different triple store may work as well) on your machine and load the datasets (see below)
-* download the [datasets](http://linkedspending.aksw.org/extensions/page/page/export/qbench2datasets.zip)
-* upload the [LinkedSpending ontology](https://raw.githubusercontent.com/SmartDataAnalytics/openspending2rdf/master/schema/ontology.ttl) into graph <http://linkedspending.aksw.org/ontology/> and add that graph to the graph group <http://linkedspending.aksw.org/>  
+* download the [datasets](https://github.com/KonradHoeffner/linkedspending/releases/download/data-qbench2datasets/qbench2datasets.zip)
+* upload the [LinkedSpending ontology](https://raw.githubusercontent.com/KonradHoeffner/linkedspending/master/schema/ontology.ttl) into graph <http://linkedspending.aksw.org/ontology/> and add that graph to the graph group <http://linkedspending.aksw.org/>  
 * upload each <x>.nt file into graph `http://linkedspending.aksw.org/<x>` and add them to graph group <http://linkedspending.aksw.org/>
 * you can automate this with the `virtloadbench` script adapted to your use case 
 * then go to the folder containing the dataset ntriples files and execute the shell command `ls | sed "s|\\.nt||" | xargs -I @ virtloadbench @.nt http://linkedspending.aksw.org/@`
