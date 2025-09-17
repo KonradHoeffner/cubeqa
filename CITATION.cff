@@ -1,0 +1,73 @@
+cff-version: 1.2.0
+title: CubeQA—Question Answering on RDF Data Cubes
+message: Please cite CubeQA using the conference paper described here. See also my PhD thesis for more context.
+type: software
+authors:
+  - given-names: Konrad
+    family-names: Höffner
+    orcid: 'https://orcid.org/0000-0001-7358-3217'
+  - given-names: Jens
+    family-names: Lehmann
+    orcid: 'https://orcid.org/0000-0001-9108-4278'
+  - given-names: Ricardo
+    family-names: Usbeck
+    orcid: 'https://orcid.org/0000-0002-0191-7211'
+identifiers:
+  - type: swh
+    value: 'swh:1:dir:bfc71c98d5b0b690ffd2375c0431c74d8713f6ad'
+repository-code: 'https://github.com/KonradHoeffner/cubeqa'
+url: 'https://aksw.org/Projects/CubeQA.html'
+abstract: >-
+  As an increasing amount of statistical data is published
+  as RDF, intuitive ways of satisfying information needs and
+  getting new insights out of this type of data becomes
+  increasingly important. Question answering systems provide
+  intuitive access to data by translating natural language
+  queries into SPARQL, which is the native query language of
+  RDF knowledge bases. Statistical data, however, is
+  structurally very different from other data and cannot be
+  queried using existing approaches. Building upon a
+  question corpus established in previous work, we created a
+  benchmark for evaluating questions on statistical Linked
+  Data in order to evaluate statistical question answering
+  algorithms and to stimulate further research. Furthermore,
+  we designed a question answering algorithm for statistical
+  data, which covers a wide range of question types. To our
+  knowledge, this is the first question answering approach
+  for statistical RDF data and could open up a new research
+  area. Apart from providing evaluation results, we discuss
+  future challenges in this field.
+keywords:
+  - rdf
+  - linked data
+  - data cube
+  - semantic web
+  - datacube
+  - question answering
+license: GPL-3.0
+preferred-citation:
+  type: conference-paper
+  title: CubeQA—Question Answering on RDF Data Cubes
+  doi: 10.1007/978-3-319-46523-4_20
+  year: 2016
+  conference:
+    name: The Semantic Web – ISWC 2016
+  authors:
+    - family-names: Höffner
+      given-names: Konrad
+      orcid: https://orcid.org/0000-0001-7358-3217
+    - family-names: Lehmann
+      given-names: Jens
+      orcid: https://orcid.org/0000-0001-9108-4278
+    - family-names: Usbeck
+      given-names: Ricardo
+      orcid: https://orcid.org/0000-0002-0191-7211
+references:
+  - type: thesis
+    title: "Question Answering on RDF Data Cubes"
+    url: https://nbn-resolving.org/urn:nbn:de:bsz:15-qucosa2-742429
+    year: 2021
+    authors:
+         - family-names: Höffner
+           given-names: Konrad
+           orcid: https://orcid.org/0000-0001-7358-3217
