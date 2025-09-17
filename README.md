@@ -1,3 +1,6 @@
+## :warning: **CubeQA is not maintained and the benchmark SPARQL endpoint is not available anymore.**
+This repository has been archived on 2025-09-17.
+
 # CubeQA—Question Answering on Statistical Linked Data
 [![test](https://github.com/AskNowQA/cubeqa/actions/workflows/test.yml/badge.svg)](https://github.com/AskNowQA/cubeqa/actions/workflows/test.yml)
 [![License: GNU GPLv3](https://img.shields.io/badge/license-GPL-blue)](LICENSE)
@@ -57,7 +60,7 @@ While CubeQA is implemented in Java using Maven so it theoretically should run e
 of the status of a research prototype so I don't give any guarantee of it successfully running on your machine but I'm happy to help with your questions (best to open a new issue).
 CubeQA was part of my PhD thesis and is not my current research topic, so I can perform maintenance only very rarely.
 Due to the large amount of progress, especially using LLMs, this approach is probably not competitive anymore so I just keep it available for historical purposes or as a reference point for future work.
-Successful compilation was last checked with `mvn compile` on 2025-09-17 using Java 24, but the benchmark was not run as the SPARQL endpoint is not online anymore.
+Successful compilation (of the main code, the tests did not compile) was last checked with `mvn compile` on 2025-09-17 using Java 24, but the benchmark was not run as the SPARQL endpoint is not online anymore.
 If you want to know more about current research, I recommend reading "R. Cocco, M. Atzori, and C. Zaniolo. Machine learning of SPARQL templates for Question Answering over LinkedSpending. In 2019 IEEE 28th International Conference on Enabling Technologies:
 Infrastructure for Collaborative Enterprises (WETICE), pages 156–161, 06 2019." ([IEEE page](https://ieeexplore.ieee.org/document/8795383), [PDF](http://ceur-ws.org/Vol-2400/paper-22.pdf)). 
 

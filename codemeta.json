@@ -33,6 +33,6 @@
         "id": "https://github.com/KonradHoeffner/cubeqa/blob/master/.github/workflows/test.yml"
     },
     "continuousIntegration": "https://github.com/KonradHoeffner/cubeqa/blob/master/.github/workflows/test.yml",
-    "developmentStatus": "inactive",
+    "developmentStatus": "unsupported",
     "issueTracker": "https://github.com/KonradHoeffner/cubeqa/issues"
 }
